@@ -1,0 +1,50 @@
+:root {
+  /* Neutral palette */
+  --color-neutral-50: #FAFAFA;
+  --color-neutral-100: #F5F5F5;
+  --color-neutral-200: #EEEEEE;
+  --color-neutral-300: #E0E0E0;
+  --color-neutral-400: #BDBDBD;
+  --color-neutral-500: #9E9E9E;
+  --color-neutral-600: #757575;
+  --color-neutral-700: #616161;
+  --color-neutral-800: #424242;
+  --color-neutral-900: #212121;
+
+  /* Accent */
+  --color-accent-light: #E3F2FD;
+  --color-accent-main: #1E88E5;
+  --color-accent-dark: #0D47A1;
+
+  /* Semantic */
+  --color-success: #4CAF50;
+  --color-warning: #FF9800;
+  --color-error: #F44336;
+  --color-info: #2196F3;
+
+  /* Semantic background variants */
+  --color-success-bg: #E8F5E9;
+  --color-warning-bg: #FFF3E0;
+  --color-error-bg: #FFEBEE;
+  --color-info-bg: #E3F2FD;
+
+  /* Semantic text variants */
+  --color-success-text: #2E7D32;
+  --color-warning-text: #E65100;
+  --color-error-text: #C62828;
+  --color-info-text: #1565C0;
+
+  /* Backgrounds */
+  --color-bg-default: #FAFAFA;
+  --color-bg-paper: #FFFFFF;
+  --color-bg-focus: #E3F2FD;
+
+  /* Text */
+  --color-text-primary: #212121;
+  --color-text-secondary: #757575;
+  --color-text-disabled: #BDBDBD;
+
+  /* Borders */
+  --color-border: #E0E0E0;
+  --color-border-focus: #1E88E5;
+}
