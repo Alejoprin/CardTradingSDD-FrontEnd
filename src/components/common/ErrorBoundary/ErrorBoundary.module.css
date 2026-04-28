@@ -1,0 +1,35 @@
+.fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.title {
+  font-size: var(--font-size-xxl);
+  color: var(--color-neutral-800);
+}
+
+.message {
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  max-width: 400px;
+}
+
+.refreshBtn {
+  padding: var(--spacing-sm) var(--spacing-xl);
+  background-color: var(--color-accent-main);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  cursor: pointer;
+}
+
+.refreshBtn:hover {
+  background-color: var(--color-accent-dark);
+}

@@ -1,0 +1,24 @@
+.page {}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-xxxl);
+}
+
+.error {
+  color: var(--color-error);
+}
+
+.warning {
+  font-size: var(--font-size-sm);
+  color: var(--color-error-text);
+  margin-top: var(--spacing-sm);
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  margin-top: var(--spacing-lg);
+}

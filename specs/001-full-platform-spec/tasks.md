@@ -22,16 +22,16 @@ Tests are NOT included (not requested in spec).
 
 **Purpose**: Project skeleton, environment, design tokens, shared utilities.
 
-- [ ] T001 Create full `src/` directory structure per plan.md (components/common, layout, forms, features, pages, hooks, services, context, styles, utils)
-- [ ] T002 [P] Create `src/styles/theme.js` with all design tokens (colors, spacing, typography, radius, shadows, breakpoints) from constitution §3
-- [ ] T003 [P] Create `src/styles/globals.css` with CSS reset and base body/html styles using theme tokens
-- [ ] T004 [P] Create `src/styles/colors.css` and `src/styles/typography.css` with CSS custom properties from constitution §3
-- [ ] T005 [P] Create `src/utils/constants.js` (API_BASE_URL, MAX_TRADE_CARDS_PER_SIDE=3, DEFAULT_PAGE_SIZE=12, CARD_RARITIES, CARD_CONDITIONS, TRADE_STATUSES, TOAST_DURATION_MS)
-- [ ] T006 [P] Create `src/utils/validators.js` (validateEmail, validatePassword, validateUsername, validateRequired, validateMaxLength, validateImageFile, validateCardSide)
-- [ ] T007 [P] Create `src/utils/formatters.js` (formatDate, formatRelativeTime, formatUsername)
-- [ ] T008 [P] Create `src/utils/errors.js` (AppError class, parseApiError helper)
-- [ ] T009 [P] Create `src/utils/logger.js` (log, warn, error — wraps console, no-op in production)
-- [ ] T010 Create `.env.example` with `REACT_APP_API_BASE_URL=http://localhost:8080/api/v1`
+- [X] T001 Create full `src/` directory structure per plan.md (components/common, layout, forms, features, pages, hooks, services, context, styles, utils)
+- [X] T002 [P] Create `src/styles/theme.js` with all design tokens (colors, spacing, typography, radius, shadows, breakpoints) from constitution §3
+- [X] T003 [P] Create `src/styles/globals.css` with CSS reset and base body/html styles using theme tokens
+- [X] T004 [P] Create `src/styles/colors.css` and `src/styles/typography.css` with CSS custom properties from constitution §3
+- [X] T005 [P] Create `src/utils/constants.js` (API_BASE_URL, MAX_TRADE_CARDS_PER_SIDE=3, DEFAULT_PAGE_SIZE=12, CARD_RARITIES, CARD_CONDITIONS, TRADE_STATUSES, TOAST_DURATION_MS)
+- [X] T006 [P] Create `src/utils/validators.js` (validateEmail, validatePassword, validateUsername, validateRequired, validateMaxLength, validateImageFile, validateCardSide)
+- [X] T007 [P] Create `src/utils/formatters.js` (formatDate, formatRelativeTime, formatUsername)
+- [X] T008 [P] Create `src/utils/errors.js` (AppError class, parseApiError helper)
+- [X] T009 [P] Create `src/utils/logger.js` (log, warn, error — wraps console, no-op in production)
+- [X] T010 Create `.env.example` with `REACT_APP_API_BASE_URL=http://localhost:8080/api/v1`
 
 ---
 
@@ -41,24 +41,24 @@ Tests are NOT included (not requested in spec).
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T011 Create `src/services/api.js` — Axios instance with `baseURL`, `timeout: 15000`, `Content-Type: application/json`, `withCredentials: true` (no interceptors yet — added in US1)
-- [ ] T012 [P] Create `src/services/storageService.js` — module-level `_accessToken` variable with `setTokens`, `getAccessToken`, `clearTokens` exports
-- [ ] T013 [P] Create `src/context/NotificationContext.jsx` — toast queue state, `addToast(type, message)`, `removeToast(id)`, custom `useNotification` hook
-- [ ] T014 [P] Create `src/context/UIContext.jsx` — sidebar open/close state, global loading state, `useUI` custom hook
-- [ ] T015 Create `src/components/common/Button/Button.jsx` + PropTypes: label (required), onClick, variant (primary|secondary|danger), isLoading, disabled, type
-- [ ] T016 [P] Create `src/components/common/Input/Input.jsx` + PropTypes: name, label, value, onChange, onBlur, error, type, placeholder, disabled
-- [ ] T017 [P] Create `src/components/common/Badge/Badge.jsx` + PropTypes: label (required), variant (success|warning|error|info|neutral)
-- [ ] T018 [P] Create `src/components/common/Modal/Modal.jsx` + PropTypes: isOpen (required), onClose (required), title, children (required), size
-- [ ] T019 [P] Create `src/components/common/Spinner/Spinner.jsx` + PropTypes: size (sm|md|lg), label
-- [ ] T020 [P] Create `src/components/common/Toast/Toast.jsx` and `ToastContainer.jsx` — renders `NotificationContext` queue; auto-dismisses after `TOAST_DURATION_MS`
-- [ ] T021 [P] Create `src/components/common/Placeholder/Placeholder.jsx` — card-shaped grey box with card icon; used when `imageUrl` is null. PropTypes: size (sm|md|lg)
-- [ ] T022 Create `src/hooks/useForm.js` — form state `{ values, errors, touched, isSubmitting }`, `handleChange`, `handleBlur`, `handleSubmit`, `setFieldError`, `reset`
-- [ ] T023 Create `src/hooks/useDebounce.js` — debounce hook with configurable delay (default 400ms)
-- [ ] T024 Create `src/components/layout/MainLayout/MainLayout.jsx` — renders Header, Sidebar, main content area, Footer, and ToastContainer. PropTypes: children (required)
-- [ ] T025 [P] Create `src/components/layout/Header/Header.jsx` — logo, nav links, user avatar/username via props, logout button via `onLogout` prop. PropTypes: user, onLogout. (Note: T029b in Phase 3 wires `useAuth()` into the Header caller; Header itself stays prop-driven to avoid Phase 2 dependency on Phase 3 context)
-- [ ] T026 [P] Create `src/components/layout/Sidebar/Sidebar.jsx` — navigation links (Dashboard, Inventory, Catalog, Trades, Profile); active state per route
-- [ ] T027 [P] Create `src/components/layout/Footer/Footer.jsx` — copyright line, minimal links
-- [ ] T028 Create `src/App.jsx` with `createBrowserRouter` and public routes only (`/login`, `/register`, `/reset-password`, catch-all redirect to `/login`); protected routes are stubs that render null until T028b in Phase 3
+- [X] T011 Create `src/services/api.js` — Axios instance with `baseURL`, `timeout: 15000`, `Content-Type: application/json`, `withCredentials: true` (no interceptors yet — added in US1)
+- [X] T012 [P] Create `src/services/storageService.js` — module-level `_accessToken` variable with `setTokens`, `getAccessToken`, `clearTokens` exports
+- [X] T013 [P] Create `src/context/NotificationContext.jsx` — toast queue state, `addToast(type, message)`, `removeToast(id)`, custom `useNotification` hook
+- [X] T014 [P] Create `src/context/UIContext.jsx` — sidebar open/close state, global loading state, `useUI` custom hook
+- [X] T015 Create `src/components/common/Button/Button.jsx` + PropTypes: label (required), onClick, variant (primary|secondary|danger), isLoading, disabled, type
+- [X] T016 [P] Create `src/components/common/Input/Input.jsx` + PropTypes: name, label, value, onChange, onBlur, error, type, placeholder, disabled
+- [X] T017 [P] Create `src/components/common/Badge/Badge.jsx` + PropTypes: label (required), variant (success|warning|error|info|neutral)
+- [X] T018 [P] Create `src/components/common/Modal/Modal.jsx` + PropTypes: isOpen (required), onClose (required), title, children (required), size
+- [X] T019 [P] Create `src/components/common/Spinner/Spinner.jsx` + PropTypes: size (sm|md|lg), label
+- [X] T020 [P] Create `src/components/common/Toast/Toast.jsx` and `ToastContainer.jsx` — renders `NotificationContext` queue; auto-dismisses after `TOAST_DURATION_MS`
+- [X] T021 [P] Create `src/components/common/Placeholder/Placeholder.jsx` — card-shaped grey box with card icon; used when `imageUrl` is null. PropTypes: size (sm|md|lg)
+- [X] T022 Create `src/hooks/useForm.js` — form state `{ values, errors, touched, isSubmitting }`, `handleChange`, `handleBlur`, `handleSubmit`, `setFieldError`, `reset`
+- [X] T023 Create `src/hooks/useDebounce.js` — debounce hook with configurable delay (default 400ms)
+- [X] T024 Create `src/components/layout/MainLayout/MainLayout.jsx` — renders Header, Sidebar, main content area, Footer, and ToastContainer. PropTypes: children (required)
+- [X] T025 [P] Create `src/components/layout/Header/Header.jsx` — logo, nav links, user avatar/username via props, logout button via `onLogout` prop. PropTypes: user, onLogout. (Note: T029b in Phase 3 wires `useAuth()` into the Header caller; Header itself stays prop-driven to avoid Phase 2 dependency on Phase 3 context)
+- [X] T026 [P] Create `src/components/layout/Sidebar/Sidebar.jsx` — navigation links (Dashboard, Inventory, Catalog, Trades, Profile); active state per route
+- [X] T027 [P] Create `src/components/layout/Footer/Footer.jsx` — copyright line, minimal links
+- [X] T028 Create `src/App.jsx` with `createBrowserRouter` and public routes only (`/login`, `/register`, `/reset-password`, catch-all redirect to `/login`); protected routes are stubs that render null until T028b in Phase 3
 
 **Checkpoint**: Foundation ready — all user story phases can begin.
 
@@ -72,17 +72,17 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US1
 
-- [ ] T029 [US1] Create `src/context/AuthContext.jsx` — state `{ user, isAuthenticated, loading }`, methods `login`, `logout`, `updateUser`; on mount calls `authService.refresh()` for silent restore; custom `useAuth` hook exported
-- [ ] T030 [P] [US1] Create `src/services/authService.js` with `login(email, password)` → POST `/auth/login`, `register(email, username, password)` → POST `/auth/register`, `logout()` → POST `/auth/logout`, `refresh()` → POST `/auth/refresh`, `changePassword(currentPassword, newPassword)` → POST `/auth/password/change`
-- [ ] T031 [US1] Add Axios request interceptor to `src/services/api.js` — attaches `Authorization: Bearer {token}` from `storageService.getAccessToken()`
-- [ ] T032 [US1] Add Axios response interceptor to `src/services/api.js` — on 401: sets `_retry` flag, calls `authService.refresh()`, stores new token, retries original request; on refresh failure: calls `AuthContext.logout()` and redirects to `/login`
-- [ ] T033 [P] [US1] Create `src/components/forms/LoginForm/LoginForm.jsx` — email + password fields using `useForm`; inline validation via `validators.js`; submit calls `useAuth().login`; PropTypes: onSuccess
-- [ ] T034 [P] [US1] Create `src/pages/LoginPage/LoginPage.jsx` — renders `LoginForm`; redirects to `/dashboard` on success; redirects to `/dashboard` if already authenticated
-- [ ] T035 [P] [US1] Create `src/components/forms/RegisterForm/RegisterForm.jsx` — email, username, password, confirm-password fields; validates all via `validators.js`; on submit calls `authService.register` then `authService.login` and updates `AuthContext`
-- [ ] T036 [P] [US1] Create `src/pages/RegisterPage/RegisterPage.jsx` — renders `RegisterForm`; redirects to `/dashboard` on success
-- [ ] T037 [US1] Create `src/components/common/PrivateRoute/PrivateRoute.jsx` — reads `useAuth().isAuthenticated`; shows `Spinner` during `loading`; redirects to `/login` if not authenticated
-- [ ] T038 [P] [US1] Create `src/components/common/AdminRoute/AdminRoute.jsx` — extends `PrivateRoute`; additionally checks `user.role === 'admin'`; shows Forbidden message if non-admin
-- [ ] T028b [US1] Update `src/App.jsx` — add all protected routes wrapped in `PrivateRoute` and admin routes wrapped in `AdminRoute` (depends on T037, T038); replaces stub routes from T028
+- [X] T029 [US1] Create `src/context/AuthContext.jsx` — state `{ user, isAuthenticated, loading }`, methods `login`, `logout`, `updateUser`; on mount calls `authService.refresh()` for silent restore; custom `useAuth` hook exported
+- [X] T030 [P] [US1] Create `src/services/authService.js` with `login(email, password)` → POST `/auth/login`, `register(email, username, password)` → POST `/auth/register`, `logout()` → POST `/auth/logout`, `refresh()` → POST `/auth/refresh`, `changePassword(currentPassword, newPassword)` → POST `/auth/password/change`
+- [X] T031 [US1] Add Axios request interceptor to `src/services/api.js` — attaches `Authorization: Bearer {token}` from `storageService.getAccessToken()`
+- [X] T032 [US1] Add Axios response interceptor to `src/services/api.js` — on 401: sets `_retry` flag, calls `authService.refresh()`, stores new token, retries original request; on refresh failure: calls `AuthContext.logout()` and redirects to `/login`
+- [X] T033 [P] [US1] Create `src/components/forms/LoginForm/LoginForm.jsx` — email + password fields using `useForm`; inline validation via `validators.js`; submit calls `useAuth().login`; PropTypes: onSuccess
+- [X] T034 [P] [US1] Create `src/pages/LoginPage/LoginPage.jsx` — renders `LoginForm`; redirects to `/dashboard` on success; redirects to `/dashboard` if already authenticated
+- [X] T035 [P] [US1] Create `src/components/forms/RegisterForm/RegisterForm.jsx` — email, username, password, confirm-password fields; validates all via `validators.js`; on submit calls `authService.register` then `authService.login` and updates `AuthContext`
+- [X] T036 [P] [US1] Create `src/pages/RegisterPage/RegisterPage.jsx` — renders `RegisterForm`; redirects to `/dashboard` on success
+- [X] T037 [US1] Create `src/components/common/PrivateRoute/PrivateRoute.jsx` — reads `useAuth().isAuthenticated`; shows `Spinner` during `loading`; redirects to `/login` if not authenticated
+- [X] T038 [P] [US1] Create `src/components/common/AdminRoute/AdminRoute.jsx` — extends `PrivateRoute`; additionally checks `user.role === 'admin'`; shows Forbidden message if non-admin
+- [X] T028b [US1] Update `src/App.jsx` — add all protected routes wrapped in `PrivateRoute` and admin routes wrapped in `AdminRoute` (depends on T037, T038); replaces stub routes from T028
 
 **Checkpoint**: User can register, login, logout, and session auto-restores on refresh.
 
@@ -96,8 +96,8 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US2
 
-- [ ] T039 [US2] Add `requestPasswordReset(email)` → POST `/auth/password/reset` and `confirmPasswordReset(token, newPassword)` → POST `/auth/password/reset/confirm` to `src/services/authService.js`
-- [ ] T040 [US2] Create `src/pages/ResetPasswordPage/ResetPasswordPage.jsx` — manages internal state `{ mode: 'request' | 'confirm' }`; in `request` mode renders email field; in `confirm` mode renders token + new-password + confirm-password fields; on confirm success redirects to `/login`
+- [X] T039 [US2] Add `requestPasswordReset(email)` → POST `/auth/password/reset` and `confirmPasswordReset(token, newPassword)` → POST `/auth/password/reset/confirm` to `src/services/authService.js`
+- [X] T040 [US2] Create `src/pages/ResetPasswordPage/ResetPasswordPage.jsx` — manages internal state `{ mode: 'request' | 'confirm' }`; in `request` mode renders email field; in `confirm` mode renders token + new-password + confirm-password fields; on confirm success redirects to `/login`
 
 **Checkpoint**: Password reset flow complete end-to-end.
 
@@ -111,10 +111,10 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US3
 
-- [ ] T041 [US3] Create `src/services/cardService.js` with `createCard(formData)` → POST `/cards` (multipart/form-data)
-- [ ] T042 [US3] Create `src/hooks/useCardForm.js` — form state for card fields (name, series, number, description, rarity, condition, image); validates all via `validators.js`; supports `mode: 'create' | 'edit'` via `initialValues` prop; `submit` calls `cardService.createCard` or `cardService.updateCard`
-- [ ] T043 [US3] Create `src/components/forms/CardForm/CardForm.jsx` — renders all card fields as `Input` + `select` elements; image upload with preview; uses `useCardForm`; displays inline validation errors; PropTypes: initialValues, onSuccess, mode
-- [ ] T044 [US3] Create `src/pages/CreateCardPage/CreateCardPage.jsx` — renders `CardForm` in create mode; on success redirects to `/inventory` with success toast
+- [X] T041 [US3] Create `src/services/cardService.js` with `createCard(formData)` → POST `/cards` (multipart/form-data)
+- [X] T042 [US3] Create `src/hooks/useCardForm.js` — form state for card fields (name, series, number, description, rarity, condition, image); validates all via `validators.js`; supports `mode: 'create' | 'edit'` via `initialValues` prop; `submit` calls `cardService.createCard` or `cardService.updateCard`
+- [X] T043 [US3] Create `src/components/forms/CardForm/CardForm.jsx` — renders all card fields as `Input` + `select` elements; image upload with preview; uses `useCardForm`; displays inline validation errors; PropTypes: initialValues, onSuccess, mode
+- [X] T044 [US3] Create `src/pages/CreateCardPage/CreateCardPage.jsx` — renders `CardForm` in create mode; on success redirects to `/inventory` with success toast
 
 **Checkpoint**: Cards can be created and appear in inventory.
 
@@ -128,11 +128,11 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US4
 
-- [ ] T045 [US4] Add `getUserInventory(userId, params)` → GET `/users/{userId}/inventory` (page, size, search, rarity, condition) to `src/services/cardService.js`
-- [ ] T046 [US4] Create `src/hooks/useInventory.js` — state `{ cards, loading, error, pagination, filters }`; calls `cardService.getUserInventory` with debounced search; updates on filter change
-- [ ] T047 [P] [US4] Create `src/components/features/cards/CardGrid/CardGrid.jsx` — responsive CSS Grid; renders array of `CardCard`; shows `Spinner` while loading; shows empty state when cards=[]. PropTypes: cards (required), loading, emptyMessage
-- [ ] T048 [US4] Create `src/components/features/cards/CardCard/CardCard.jsx` — shows `imageUrl` or `Placeholder`, name, `Badge` for rarity, condition text, owner username (when `showOwner=true`), "Propose Trade" button (when `isOwn=false`), Edit/Delete buttons (when `isOwn=true`). PropTypes: card (required), isOwn, showOwner, onEdit, onDelete, onProposeTrade
-- [ ] T049 [US4] Create `src/pages/InventoryPage/InventoryPage.jsx` — uses `useInventory` with `userId` from `useAuth`; renders search `Input`, rarity filter `select`, condition filter `select`, `CardGrid`, pagination controls
+- [X] T045 [US4] Add `getUserInventory(userId, params)` → GET `/users/{userId}/inventory` (page, size, search, rarity, condition) to `src/services/cardService.js`
+- [X] T046 [US4] Create `src/hooks/useInventory.js` — state `{ cards, loading, error, pagination, filters }`; calls `cardService.getUserInventory` with debounced search; updates on filter change
+- [X] T047 [P] [US4] Create `src/components/features/cards/CardGrid/CardGrid.jsx` — responsive CSS Grid; renders array of `CardCard`; shows `Spinner` while loading; shows empty state when cards=[]. PropTypes: cards (required), loading, emptyMessage
+- [X] T048 [US4] Create `src/components/features/cards/CardCard/CardCard.jsx` — shows `imageUrl` or `Placeholder`, name, `Badge` for rarity, condition text, owner username (when `showOwner=true`), "Propose Trade" button (when `isOwn=false`), Edit/Delete buttons (when `isOwn=true`). PropTypes: card (required), isOwn, showOwner, onEdit, onDelete, onProposeTrade
+- [X] T049 [US4] Create `src/pages/InventoryPage/InventoryPage.jsx` — uses `useInventory` with `userId` from `useAuth`; renders search `Input`, rarity filter `select`, condition filter `select`, `CardGrid`, pagination controls
 
 **Checkpoint**: Inventory fully functional with search, filter, pagination.
 
@@ -146,9 +146,9 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US5
 
-- [ ] T050 [US5] Add `listCards(params)` → GET `/cards` (page, size, search, rarity, condition) to `src/services/cardService.js`
-- [ ] T051 [US5] Create `src/hooks/useCatalog.js` — state `{ cards, loading, error, pagination, filters }`; calls `cardService.listCards` with debounced search
-- [ ] T052 [US5] Create `src/pages/CatalogPage/CatalogPage.jsx` — uses `useCatalog`; renders search, filters, `CardGrid` with `showOwner=true`; "Propose Trade" button on non-own cards navigates to `/trades/create?targetUserId={userId}&cardId={cardId}`
+- [X] T050 [US5] Add `listCards(params)` → GET `/cards` (page, size, search, rarity, condition) to `src/services/cardService.js`
+- [X] T051 [US5] Create `src/hooks/useCatalog.js` — state `{ cards, loading, error, pagination, filters }`; calls `cardService.listCards` with debounced search
+- [X] T052 [US5] Create `src/pages/CatalogPage/CatalogPage.jsx` — uses `useCatalog`; renders search, filters, `CardGrid` with `showOwner=true`; "Propose Trade" button on non-own cards navigates to `/trades/create?targetUserId={userId}&cardId={cardId}`
 
 **Checkpoint**: Catalog shows all-platform cards; trade initiation works from catalog.
 
@@ -162,12 +162,12 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US6
 
-- [ ] T053 [US6] Add `getCard(cardId)` → GET `/cards/{cardId}`, `updateCard(cardId, formData)` → PUT `/cards/{cardId}` (multipart), `deleteCard(cardId)` → DELETE `/cards/{cardId}` to `src/services/cardService.js`
-- [ ] T054 [P] [US6] Create `src/hooks/useCardDetail.js` — state `{ card, loading, error }`; calls `cardService.getCard(cardId)`
-- [ ] T055 [P] [US6] Create `src/hooks/useDeleteCard.js` — state `{ loading, error }`; method `deleteCard(cardId)` calls `cardService.deleteCard`; on success calls `addToast` and navigates to `/inventory`
-- [ ] T056 [US6] Create `src/components/features/cards/CardDetail/CardDetail.jsx` — large image or `Placeholder`, all card fields, trade history list, owner info with link to `/users/{userId}`, conditional Edit/Delete (own) or "Propose Trade" (other) buttons. PropTypes: card (required), isOwn (required)
-- [ ] T057 [US6] Create `src/pages/CardDetailPage/CardDetailPage.jsx` — uses `useCardDetail` with `cardId` from URL params; Delete button opens `Modal` confirmation before calling `useDeleteCard`
-- [ ] T058 [US6] Create `src/pages/EditCardPage/EditCardPage.jsx` — calls `cardService.getCard` on mount; renders `CardForm` in edit mode with `initialValues`; on success redirects to `/cards/{cardId}`
+- [X] T053 [US6] Add `getCard(cardId)` → GET `/cards/{cardId}`, `updateCard(cardId, formData)` → PUT `/cards/{cardId}` (multipart), `deleteCard(cardId)` → DELETE `/cards/{cardId}` to `src/services/cardService.js`
+- [X] T054 [P] [US6] Create `src/hooks/useCardDetail.js` — state `{ card, loading, error }`; calls `cardService.getCard(cardId)`
+- [X] T055 [P] [US6] Create `src/hooks/useDeleteCard.js` — state `{ loading, error }`; method `deleteCard(cardId)` calls `cardService.deleteCard`; on success calls `addToast` and navigates to `/inventory`
+- [X] T056 [US6] Create `src/components/features/cards/CardDetail/CardDetail.jsx` — large image or `Placeholder`, all card fields, trade history list, owner info with link to `/users/{userId}`, conditional Edit/Delete (own) or "Propose Trade" (other) buttons. PropTypes: card (required), isOwn (required)
+- [X] T057 [US6] Create `src/pages/CardDetailPage/CardDetailPage.jsx` — uses `useCardDetail` with `cardId` from URL params; Delete button opens `Modal` confirmation before calling `useDeleteCard`
+- [X] T058 [US6] Create `src/pages/EditCardPage/EditCardPage.jsx` — calls `cardService.getCard` on mount; renders `CardForm` in edit mode with `initialValues`; on success redirects to `/cards/{cardId}`
 
 **Checkpoint**: Full card lifecycle (view/edit/delete) functional.
 
@@ -181,15 +181,15 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US7
 
-- [ ] T059 [US7] Create `src/services/tradeService.js` with `listTrades(params)` → GET `/trades`, `createTrade(body)` → POST `/trades`, `getTrade(tradeId)` → GET `/trades/{tradeId}`, `acceptTrade(tradeId)` → PUT `/trades/{tradeId}/accept`, `rejectTrade(tradeId)` → PUT `/trades/{tradeId}/reject`
-- [ ] T060 [P] [US7] Create `src/hooks/useTradesList.js` — state `{ trades, loading, error, pagination, activeTab }`; calls `tradeService.listTrades({ status: activeTab })`
-- [ ] T061 [P] [US7] Create `src/hooks/useTradeAction.js` — state `{ loading, error }`; methods `accept(tradeId)` and `reject(tradeId)` only (cancel added in T069 once cancelTrade service method exists); calls respective `tradeService` methods; on success calls `addToast`
-- [ ] T062 [US7] Create `src/hooks/useTradeBuilder.js` — state `{ step (1-3), selectedOwnCards[], selectedTargetCards[], targetUserId, loading }`; enforces MAX_TRADE_CARDS_PER_SIDE=3; reads `targetUserId` + `cardId` from query params for pre-fill; `submit` calls `tradeService.createTrade`
-- [ ] T063 [P] [US7] Create `src/components/features/trades/TradeCard/TradeCard.jsx` — summary card: counterpart username+avatar, offered/requested card counts, status `Badge`, action buttons (Accept/Reject for recipient when pending; Cancel for initiator when pending). PropTypes: trade (required), currentUserId (required), onAccept, onReject, onCancel
-- [ ] T064 [P] [US7] Create `src/components/features/trades/TradeList/TradeList.jsx` — tab bar (Pending/Completed/Rejected/Cancelled); renders list of `TradeCard` for active tab; empty state per tab. PropTypes: trades (required), activeTab (required), onTabChange (required), currentUserId (required), loading, onAccept, onReject, onCancel
-- [ ] T065 [US7] Create `src/pages/TradesPage/TradesPage.jsx` — uses `useTradesList` and `useTradeAction`; passes handlers to `TradeList`; Accept/Reject open `Modal` confirmation before calling action
-- [ ] T066 [US7] Create `src/components/features/trades/TradeBuilder/TradeBuilder.jsx` — 3-step stepper: step 1 multi-select own cards (calls `cardService.getUserInventory` for authenticated user); step 2 multi-select target cards (calls `cardService.getUserInventory` for `targetUserId`); step 3 review summary + confirm. Enforces 3-card max per side with inline error. PropTypes: onSuccess
-- [ ] T067 [US7] Create `src/pages/CreateTradePage/CreateTradePage.jsx` — renders `TradeBuilder`; reads `targetUserId` + `cardId` query params; on success redirects to `/trades` with toast
+- [X] T059 [US7] Create `src/services/tradeService.js` with `listTrades(params)` → GET `/trades`, `createTrade(body)` → POST `/trades`, `getTrade(tradeId)` → GET `/trades/{tradeId}`, `acceptTrade(tradeId)` → PUT `/trades/{tradeId}/accept`, `rejectTrade(tradeId)` → PUT `/trades/{tradeId}/reject`
+- [X] T060 [P] [US7] Create `src/hooks/useTradesList.js` — state `{ trades, loading, error, pagination, activeTab }`; calls `tradeService.listTrades({ status: activeTab })`
+- [X] T061 [P] [US7] Create `src/hooks/useTradeAction.js` — state `{ loading, error }`; methods `accept(tradeId)` and `reject(tradeId)` only (cancel added in T069 once cancelTrade service method exists); calls respective `tradeService` methods; on success calls `addToast`
+- [X] T062 [US7] Create `src/hooks/useTradeBuilder.js` — state `{ step (1-3), selectedOwnCards[], selectedTargetCards[], targetUserId, loading }`; enforces MAX_TRADE_CARDS_PER_SIDE=3; reads `targetUserId` + `cardId` from query params for pre-fill; `submit` calls `tradeService.createTrade`
+- [X] T063 [P] [US7] Create `src/components/features/trades/TradeCard/TradeCard.jsx` — summary card: counterpart username+avatar, offered/requested card counts, status `Badge`, action buttons (Accept/Reject for recipient when pending; Cancel for initiator when pending). PropTypes: trade (required), currentUserId (required), onAccept, onReject, onCancel
+- [X] T064 [P] [US7] Create `src/components/features/trades/TradeList/TradeList.jsx` — tab bar (Pending/Completed/Rejected/Cancelled); renders list of `TradeCard` for active tab; empty state per tab. PropTypes: trades (required), activeTab (required), onTabChange (required), currentUserId (required), loading, onAccept, onReject, onCancel
+- [X] T065 [US7] Create `src/pages/TradesPage/TradesPage.jsx` — uses `useTradesList` and `useTradeAction`; passes handlers to `TradeList`; Accept/Reject open `Modal` confirmation before calling action
+- [X] T066 [US7] Create `src/components/features/trades/TradeBuilder/TradeBuilder.jsx` — 3-step stepper: step 1 multi-select own cards (calls `cardService.getUserInventory` for authenticated user); step 2 multi-select target cards (calls `cardService.getUserInventory` for `targetUserId`); step 3 review summary + confirm. Enforces 3-card max per side with inline error. PropTypes: onSuccess
+- [X] T067 [US7] Create `src/pages/CreateTradePage/CreateTradePage.jsx` — renders `TradeBuilder`; reads `targetUserId` + `cardId` query params; on success redirects to `/trades` with toast
 
 **Checkpoint**: Complete trade propose → accept/reject lifecycle functional.
 
@@ -203,10 +203,10 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US8
 
-- [ ] T068 [US8] Create `src/hooks/useTradeDetail.js` — state `{ trade, loading, error }`; calls `tradeService.getTrade(tradeId)`
-- [ ] T069 [US8] Add `cancelTrade(tradeId)` → DELETE `/trades/{tradeId}` to `src/services/tradeService.js`; add `cancel(tradeId)` method to `src/hooks/useTradeAction.js` (first available after cancelTrade service exists)
-- [ ] T070 [US8] Create `src/components/features/trades/TradeDetail/TradeDetail.jsx` — two-column layout (offered cards | requested cards), counterpart info with link to `/users/{userId}`, status `Badge`, timeline list, action buttons conditional on status + role. PropTypes: trade (required), currentUserId (required), onAccept, onReject, onCancel, readonly (for admin view)
-- [ ] T071 [US8] Create `src/pages/TradeDetailPage/TradeDetailPage.jsx` — uses `useTradeDetail` with `tradeId` from URL params; uses `useTradeAction`; Cancel button only visible when `trade.status === 'pending' && trade.initiatorId === currentUser.id`; Cancel opens `Modal` confirmation; on cancel success redirects to `/trades`
+- [X] T068 [US8] Create `src/hooks/useTradeDetail.js` — state `{ trade, loading, error }`; calls `tradeService.getTrade(tradeId)`
+- [X] T069 [US8] Add `cancelTrade(tradeId)` → DELETE `/trades/{tradeId}` to `src/services/tradeService.js`; add `cancel(tradeId)` method to `src/hooks/useTradeAction.js` (first available after cancelTrade service exists)
+- [X] T070 [US8] Create `src/components/features/trades/TradeDetail/TradeDetail.jsx` — two-column layout (offered cards | requested cards), counterpart info with link to `/users/{userId}`, status `Badge`, timeline list, action buttons conditional on status + role. PropTypes: trade (required), currentUserId (required), onAccept, onReject, onCancel, readonly (for admin view)
+- [X] T071 [US8] Create `src/pages/TradeDetailPage/TradeDetailPage.jsx` — uses `useTradeDetail` with `tradeId` from URL params; uses `useTradeAction`; Cancel button only visible when `trade.status === 'pending' && trade.initiatorId === currentUser.id`; Cancel opens `Modal` confirmation; on cancel success redirects to `/trades`
 
 **Checkpoint**: Trade detail and cancel fully functional.
 
@@ -220,11 +220,11 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US9
 
-- [ ] T071b [US9] Create `src/services/userService.js` stub with `getUserProfile(userId)` → GET `/users/{userId}` and `getActivityFeed(userId)` → GET `/users/{userId}/activity`; this stub is expanded with `updateUserProfile` in T076 (Phase 12)
-- [ ] T072 [US9] Create `src/hooks/useDashboard.js` — calls in parallel: `userService.getUserProfile(userId)` for stats, `tradeService.listTrades({ status: 'pending', size: 5 })` for pending count, `cardService.getUserInventory(userId, { size: 4 })` for recent cards, `userService.getActivityFeed(userId)` for last 10 activity events; aggregates state `{ stats, pendingTrades, recentCards, activities, loading, error }` (depends on T071b)
-- [ ] T073 [P] [US9] Create `src/components/features/dashboard/DashboardStats/DashboardStats.jsx` — 3 stat cards: Total Cards, Pending Trades, Completed Trades. PropTypes: stats (required), loading
-- [ ] T074 [P] [US9] Create `src/components/features/dashboard/QuickActions/QuickActions.jsx` — 3 buttons: "Add Card" → `/cards/create`, "Explore Catalog" → `/catalog`, "My Trades" → `/trades`. No props required.
-- [ ] T075 [US9] Create `src/pages/DashboardPage/DashboardPage.jsx` — uses `useDashboard`; renders `DashboardStats`, `QuickActions`, and activity feed list (icon + message + timestamp per event; empty state when no events)
+- [X] T071b [US9] Create `src/services/userService.js` stub with `getUserProfile(userId)` → GET `/users/{userId}` and `getActivityFeed(userId)` → GET `/users/{userId}/activity`; this stub is expanded with `updateUserProfile` in T076 (Phase 12)
+- [X] T072 [US9] Create `src/hooks/useDashboard.js` — calls in parallel: `userService.getUserProfile(userId)` for stats, `tradeService.listTrades({ status: 'pending', size: 5 })` for pending count, `cardService.getUserInventory(userId, { size: 4 })` for recent cards, `userService.getActivityFeed(userId)` for last 10 activity events; aggregates state `{ stats, pendingTrades, recentCards, activities, loading, error }` (depends on T071b)
+- [X] T073 [P] [US9] Create `src/components/features/dashboard/DashboardStats/DashboardStats.jsx` — 3 stat cards: Total Cards, Pending Trades, Completed Trades. PropTypes: stats (required), loading
+- [X] T074 [P] [US9] Create `src/components/features/dashboard/QuickActions/QuickActions.jsx` — 3 buttons: "Add Card" → `/cards/create`, "Explore Catalog" → `/catalog`, "My Trades" → `/trades`. No props required.
+- [X] T075 [US9] Create `src/pages/DashboardPage/DashboardPage.jsx` — uses `useDashboard`; renders `DashboardStats`, `QuickActions`, and activity feed list (icon + message + timestamp per event; empty state when no events)
 
 **Checkpoint**: Dashboard fully functional with live stats and activity feed.
 
@@ -238,14 +238,14 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US10
 
-- [ ] T076 [US10] Expand `src/services/userService.js` (stub created in T071b) — add `updateUserProfile(userId, formData)` → PUT `/users/{userId}` (multipart/form-data)
-- [ ] T077 [P] [US10] Create `src/hooks/useProfile.js` — state `{ profile, loading, error }`; calls `userService.getUserProfile(userId)`
-- [ ] T078 [P] [US10] Create `src/components/features/profile/ProfileCard/ProfileCard.jsx` — avatar (or placeholder), username, email (only when `showEmail=true`), bio, location. PropTypes: profile (required), showEmail, readonly
-- [ ] T079 [P] [US10] Create `src/components/features/profile/ProfileStats/ProfileStats.jsx` — total cards, completed trades, pending trades, rating. PropTypes: stats (required)
-- [ ] T080 [US10] Create `src/pages/ProfilePage/ProfilePage.jsx` — uses `useProfile` with `userId` from `useAuth`; renders `ProfileCard` (showEmail=true), `ProfileStats`; Edit Profile, Change Password, Logout buttons
-- [ ] T081 [US10] Create `src/pages/EditProfilePage/EditProfilePage.jsx` — form with avatar upload, bio (max 500), location fields; calls `userService.updateUserProfile`; on success calls `AuthContext.updateUser` and redirects to `/profile`
-- [ ] T082 [US10] Create `src/pages/ChangePasswordPage/ChangePasswordPage.jsx` — form: current password, new password, confirm new password; calls `authService.changePassword`; on success: toast + redirect to `/profile`
-- [ ] T083 [US10] Create `src/pages/PublicProfilePage/PublicProfilePage.jsx` — reads `userId` from URL params; uses `useProfile`; calls `cardService.getUserInventory(userId)` for their cards; renders `ProfileCard` (showEmail=false, readonly=true), `ProfileStats`, `CardGrid` of their cards; "Propose Trade" button (hidden if `userId === currentUser.id`)
+- [X] T076 [US10] Expand `src/services/userService.js` (stub created in T071b) — add `updateUserProfile(userId, formData)` → PUT `/users/{userId}` (multipart/form-data)
+- [X] T077 [P] [US10] Create `src/hooks/useProfile.js` — state `{ profile, loading, error }`; calls `userService.getUserProfile(userId)`
+- [X] T078 [P] [US10] Create `src/components/features/profile/ProfileCard/ProfileCard.jsx` — avatar (or placeholder), username, email (only when `showEmail=true`), bio, location. PropTypes: profile (required), showEmail, readonly
+- [X] T079 [P] [US10] Create `src/components/features/profile/ProfileStats/ProfileStats.jsx` — total cards, completed trades, pending trades, rating. PropTypes: stats (required)
+- [X] T080 [US10] Create `src/pages/ProfilePage/ProfilePage.jsx` — uses `useProfile` with `userId` from `useAuth`; renders `ProfileCard` (showEmail=true), `ProfileStats`; Edit Profile, Change Password, Logout buttons
+- [X] T081 [US10] Create `src/pages/EditProfilePage/EditProfilePage.jsx` — form with avatar upload, bio (max 500), location fields; calls `userService.updateUserProfile`; on success calls `AuthContext.updateUser` and redirects to `/profile`
+- [X] T082 [US10] Create `src/pages/ChangePasswordPage/ChangePasswordPage.jsx` — form: current password, new password, confirm new password; calls `authService.changePassword`; on success: toast + redirect to `/profile`
+- [X] T083 [US10] Create `src/pages/PublicProfilePage/PublicProfilePage.jsx` — reads `userId` from URL params; uses `useProfile`; calls `cardService.getUserInventory(userId)` for their cards; renders `ProfileCard` (showEmail=false, readonly=true), `ProfileStats`, `CardGrid` of their cards; "Propose Trade" button (hidden if `userId === currentUser.id`)
 
 **Checkpoint**: Full profile management and public profiles functional.
 
@@ -259,16 +259,16 @@ Tests are NOT included (not requested in spec).
 
 ### Implementation for US11
 
-- [ ] T084 [US11] Create `src/services/adminService.js` with `getStats(params)` → GET `/admin/stats`, `listUsers(params)` → GET `/admin/users`, `banUser(userId, body)` → PUT `/admin/users/{userId}/ban`, `listAllTrades(params)` → GET `/admin/trades`
-- [ ] T085 [P] [US11] Create `src/hooks/useAdminStats.js` — state `{ stats, loading, error }`; calls `adminService.getStats(params)`
-- [ ] T085b [P] [US11] Create `src/hooks/useUserManagement.js` — state `{ users, loading, error, pagination, searchQuery, statusFilter }`; calls `adminService.listUsers(params)` with debounced search; method `ban(userId, reason)` calls `adminService.banUser` and updates local list. (Constitution Principle I: hooks orchestrate logic)
-- [ ] T085c [P] [US11] Create `src/hooks/useTradeManagement.js` — state `{ trades, loading, error, pagination, searchQuery, statusFilter, dateRange }`; calls `adminService.listAllTrades(params)` with filters. (Constitution Principle I: hooks orchestrate logic)
-- [ ] T086 [P] [US11] Create `src/components/features/admin/AdminDashboard/AdminDashboard.jsx` — 5 KPI stat cards: Total Users, Total Cards, Total Trades, Active Today, Completed Today; trend indicators (↑/↓ based on `trendUsers`, `trendTrades`). PropTypes: stats (required), loading
-- [ ] T087 [US11] Create `src/components/features/admin/UserManagement/UserManagement.jsx` — uses `useUserManagement` hook; renders paginated table (username, email, status badge, role, joined date, total cards, completed trades); search input; status filter; "Ban" button opens `Modal` confirmation; on confirm calls `useUserManagement.ban`. PropTypes: UserManagement.propTypes = {} (no external props)
-- [ ] T088 [US11] Create `src/components/features/admin/TradeManagement/TradeManagement.jsx` — uses `useTradeManagement` hook; renders paginated table (trade ID, initiator, counterparty, status badge, card counts, date); search by username; filter by status + date range; clicking a trade opens `TradeDetail` in `Modal` with `readonly=true`. PropTypes: TradeManagement.propTypes = {} (no external props)
-- [ ] T088b [P] [US11] Add recharts to package.json (`npm install recharts`) before implementing StatsView
-- [ ] T089 [US11] Create `src/components/features/admin/StatsView/StatsView.jsx` — period selector (7d/30d/90d); bar chart (users by period), pie chart (cards by rarity), bar chart (trades by status), line chart (acceptance/rejection rates) using `recharts`; CSV export button generates Blob from stats data and triggers browser download. PropTypes: stats (required), period (required), onPeriodChange (required)
-- [ ] T090 [US11] Create `src/pages/AdminPage/AdminPage.jsx` — uses `AdminRoute` protection; tab navigation: Dashboard, Users, Trades, Statistics; renders respective feature components; fetches `adminService.getStats` on mount
+- [X] T084 [US11] Create `src/services/adminService.js` with `getStats(params)` → GET `/admin/stats`, `listUsers(params)` → GET `/admin/users`, `banUser(userId, body)` → PUT `/admin/users/{userId}/ban`, `listAllTrades(params)` → GET `/admin/trades`
+- [X] T085 [P] [US11] Create `src/hooks/useAdminStats.js` — state `{ stats, loading, error }`; calls `adminService.getStats(params)`
+- [X] T085b [P] [US11] Create `src/hooks/useUserManagement.js` — state `{ users, loading, error, pagination, searchQuery, statusFilter }`; calls `adminService.listUsers(params)` with debounced search; method `ban(userId, reason)` calls `adminService.banUser` and updates local list. (Constitution Principle I: hooks orchestrate logic)
+- [X] T085c [P] [US11] Create `src/hooks/useTradeManagement.js` — state `{ trades, loading, error, pagination, searchQuery, statusFilter, dateRange }`; calls `adminService.listAllTrades(params)` with filters. (Constitution Principle I: hooks orchestrate logic)
+- [X] T086 [P] [US11] Create `src/components/features/admin/AdminDashboard/AdminDashboard.jsx` — 5 KPI stat cards: Total Users, Total Cards, Total Trades, Active Today, Completed Today; trend indicators (↑/↓ based on `trendUsers`, `trendTrades`). PropTypes: stats (required), loading
+- [X] T087 [US11] Create `src/components/features/admin/UserManagement/UserManagement.jsx` — uses `useUserManagement` hook; renders paginated table (username, email, status badge, role, joined date, total cards, completed trades); search input; status filter; "Ban" button opens `Modal` confirmation; on confirm calls `useUserManagement.ban`. PropTypes: UserManagement.propTypes = {} (no external props)
+- [X] T088 [US11] Create `src/components/features/admin/TradeManagement/TradeManagement.jsx` — uses `useTradeManagement` hook; renders paginated table (trade ID, initiator, counterparty, status badge, card counts, date); search by username; filter by status + date range; clicking a trade opens `TradeDetail` in `Modal` with `readonly=true`. PropTypes: TradeManagement.propTypes = {} (no external props)
+- [X] T088b [P] [US11] Add recharts to package.json (`npm install recharts`) before implementing StatsView
+- [X] T089 [US11] Create `src/components/features/admin/StatsView/StatsView.jsx` — period selector (7d/30d/90d); bar chart (users by period), pie chart (cards by rarity), bar chart (trades by status), line chart (acceptance/rejection rates) using `recharts`; CSV export button generates Blob from stats data and triggers browser download. PropTypes: stats (required), period (required), onPeriodChange (required)
+- [X] T090 [US11] Create `src/pages/AdminPage/AdminPage.jsx` — uses `AdminRoute` protection; tab navigation: Dashboard, Users, Trades, Statistics; renders respective feature components; fetches `adminService.getStats` on mount
 
 **Checkpoint**: Admin panel fully functional.
 
@@ -278,11 +278,11 @@ Tests are NOT included (not requested in spec).
 
 **Purpose**: Improvements affecting multiple user stories.
 
-- [ ] T091 [P] Add `src/components/common/ErrorBoundary/ErrorBoundary.jsx` — React error boundary wrapping `MainLayout`; shows friendly fallback UI on unhandled errors
-- [ ] T092 [P] Add loading skeleton components for `CardGrid` and `TradeList` (avoid layout shift during data fetch)
-- [ ] T093 [P] Accessibility audit: verify all interactive elements have ARIA labels, keyboard navigation works, and `Modal` traps focus
-- [ ] T094 [P] Add `src/components/common/EmptyState/EmptyState.jsx` — reusable empty state with icon, message, and optional CTA button; replace all inline empty states
-- [ ] T095 Run `quickstart.md` validation checklist end-to-end and fix any failing items
+- [X] T091 [P] Add `src/components/common/ErrorBoundary/ErrorBoundary.jsx` — React error boundary wrapping `MainLayout`; shows friendly fallback UI on unhandled errors
+- [X] T092 [P] Add loading skeleton components for `CardGrid` and `TradeList` (avoid layout shift during data fetch)
+- [X] T093 [P] Accessibility audit: verify all interactive elements have ARIA labels, keyboard navigation works, and `Modal` traps focus
+- [X] T094 [P] Add `src/components/common/EmptyState/EmptyState.jsx` — reusable empty state with icon, message, and optional CTA button; replace all inline empty states
+- [X] T095 Run `quickstart.md` validation checklist end-to-end and fix any failing items
 
 ---
 

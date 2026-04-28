@@ -4,6 +4,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import { UIProvider } from './context/UIContext';
 import { AuthProvider } from './context/AuthContext';
 import './styles/globals.css';
+import ErrorBoundary from './components/common/ErrorBoundary/ErrorBoundary';
 
 // Route guards
 import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
@@ -72,13 +73,15 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <UIProvider>
-      <NotificationProvider>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
-      </NotificationProvider>
-    </UIProvider>
+    <ErrorBoundary>
+      <UIProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </NotificationProvider>
+      </UIProvider>
+    </ErrorBoundary>
   );
 }
 
