@@ -15,10 +15,10 @@ function useTradesList() {
     setLoading(true);
     setError(null);
     try {
-      const params = { page, size: DEFAULT_PAGE_SIZE, status: activeTab };
+      const params = { page: page - 1, size: DEFAULT_PAGE_SIZE, status: activeTab };
       const data = await tradeService.listTrades(params);
-      setTrades(data.trades || []);
-      setPagination(data.pagination || { page: 1, totalPages: 1, total: 0 });
+      setTrades(data.content || []);
+      setPagination({ page, totalPages: data.totalPages || 1, total: data.totalElements || 0 });
     } catch (err) {
       setError(parseApiError(err).message);
     } finally {

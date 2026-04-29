@@ -8,7 +8,6 @@ import CardGrid from '../../components/features/cards/CardGrid/CardGrid';
 import Input from '../../components/common/Input/Input';
 import Button from '../../components/common/Button/Button';
 import Modal from '../../components/common/Modal/Modal';
-import { CARD_RARITIES, CARD_CONDITIONS, RARITY_LABELS, CONDITION_LABELS } from '../../utils/constants';
 import cardService from '../../services/cardService';
 import { parseApiError } from '../../utils/errors';
 import styles from './InventoryPage.module.css';
@@ -18,7 +17,7 @@ function InventoryPage() {
   const { user, logout } = useAuth();
   const { addToast } = useNotification();
   const navigate = useNavigate();
-  const { cards, loading, error, pagination, filters, setFilter, setPage, refetch } = useInventory(user?.id);
+  const { cards, loading, error, pagination, setPage, refetch } = useInventory(user?.id);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
@@ -42,35 +41,11 @@ function InventoryPage() {
       <div className={styles.page}>
         <div className={styles.header}>
           <h1 className={styles.title}>My Inventory</h1>
-          <Button label="Add Card" onClick={() => navigate('/cards/create')} />
+          {user?.role === 'ADMIN' && (
+            <Button label="Add Card" onClick={() => navigate('/cards/create')} />
+          )}
         </div>
 
-        <div className={styles.filters}>
-          <Input
-            name="search"
-            placeholder="Search cards..."
-            value={filters.search}
-            onChange={e => setFilter('search', e.target.value)}
-          />
-          <select
-            className={styles.select}
-            value={filters.rarity}
-            onChange={e => setFilter('rarity', e.target.value)}
-            aria-label="Filter by rarity"
-          >
-            <option value="">All Rarities</option>
-            {CARD_RARITIES.map(r => <option key={r} value={r}>{RARITY_LABELS[r]}</option>)}
-          </select>
-          <select
-            className={styles.select}
-            value={filters.condition}
-            onChange={e => setFilter('condition', e.target.value)}
-            aria-label="Filter by condition"
-          >
-            <option value="">All Conditions</option>
-            {CARD_CONDITIONS.map(c => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
-          </select>
-        </div>
 
         {error && <p className={styles.error}>{error}</p>}
 

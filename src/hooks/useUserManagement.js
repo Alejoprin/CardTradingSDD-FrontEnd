@@ -21,21 +21,15 @@ function useUserManagement() {
     setLoading(true);
     setError(null);
     try {
-      const params = {
-        page,
-        size: DEFAULT_PAGE_SIZE,
-        ...(debouncedSearch ? { search: debouncedSearch } : {}),
-        ...(statusFilter ? { status: statusFilter } : {}),
-      };
-      const data = await adminService.listUsers(params);
-      setUsers(data.users || []);
-      setPagination(data.pagination || { page: 1, totalPages: 1, total: 0 });
+      const data = await adminService.listUsers({ page: page - 1, size: DEFAULT_PAGE_SIZE });
+      setUsers(data.content || []);
+      setPagination({ page, totalPages: data.totalPages || 1, total: data.totalElements || 0 });
     } catch (err) {
       setError(parseApiError(err).message);
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearch, statusFilter, page]);
+  }, [page]);
 
   useEffect(() => {
     fetchUsers();
@@ -43,9 +37,9 @@ function useUserManagement() {
 
   const ban = useCallback(async (userId, reason) => {
     try {
-      const result = await adminService.banUser(userId, { reason });
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, status: 'banned' } : u));
-      addToast('success', `User banned. ${result.cancelledTrades || 0} pending trade(s) cancelled.`);
+      const result = await adminService.banUser(userId, { banned: true, reason });
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, banned: true } : u));
+      addToast('success', 'User banned successfully.');
       return result;
     } catch (err) {
       const appErr = parseApiError(err);

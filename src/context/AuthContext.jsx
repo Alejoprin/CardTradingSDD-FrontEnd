@@ -1,7 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import authService from '../services/authService';
+import userService from '../services/userService';
 import { setTokens, clearTokens } from '../services/storageService';
 import { setLogoutCallback } from '../services/api';
+
+function decodeJwtPayload(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+  } catch {
+    return null;
+  }
+}
 
 const AuthContext = createContext(null);
 
@@ -16,7 +25,10 @@ export function AuthProvider({ children }) {
       try {
         const data = await authService.refresh();
         setTokens({ accessToken: data.accessToken });
-        setUser(data.user);
+        const payload = decodeJwtPayload(data.accessToken);
+        const userId = payload?.sub;
+        const profile = userId ? await userService.getUserProfile(userId) : null;
+        setUser(profile);
         setIsAuthenticated(true);
       } catch {
         // No valid refresh token — user must log in
@@ -33,7 +45,10 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     const data = await authService.login(email, password);
     setTokens({ accessToken: data.accessToken });
-    setUser(data.user);
+    const payload = decodeJwtPayload(data.accessToken);
+    const userId = payload?.sub;
+    const profile = userId ? await userService.getUserProfile(userId) : null;
+    setUser(profile);
     setIsAuthenticated(true);
     return data;
   }, []);

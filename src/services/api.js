@@ -5,9 +5,6 @@ import { getAccessToken, setTokens, clearTokens } from './storageService';
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 15000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
   withCredentials: true,
 });
 
@@ -18,12 +15,15 @@ export function setLogoutCallback(cb) {
   _logoutCallback = cb;
 }
 
-// T031 — Request interceptor: attach Bearer token
+// T031 — Request interceptor: attach Bearer token + set Content-Type for JSON requests
 api.interceptors.request.use(
   (config) => {
     const token = getAccessToken();
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    if (!(config.data instanceof FormData)) {
+      config.headers['Content-Type'] = 'application/json';
     }
     return config;
   },

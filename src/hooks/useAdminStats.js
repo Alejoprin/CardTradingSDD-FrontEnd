@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import adminService from '../services/adminService';
 import { parseApiError } from '../utils/errors';
 
-function useAdminStats(period = '7d') {
+function useAdminStats() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,14 +11,14 @@ function useAdminStats(period = '7d') {
     setLoading(true);
     setError(null);
     try {
-      const data = await adminService.getStats({ period });
+      const data = await adminService.getStats();
       setStats(data);
     } catch (err) {
       setError(parseApiError(err).message);
     } finally {
       setLoading(false);
     }
-  }, [period]);
+  }, []);
 
   useEffect(() => {
     fetchStats();

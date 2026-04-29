@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import useCardForm from '../../../hooks/useCardForm';
-import { CARD_RARITIES, CARD_CONDITIONS, RARITY_LABELS, CONDITION_LABELS } from '../../../utils/constants';
+import { CARD_RARITIES, CARD_TYPES, RARITY_LABELS, CARD_TYPE_LABELS } from '../../../utils/constants';
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import styles from './CardForm.module.css';
 
-function CardForm({ initialValues, onSuccess, mode }) {
+function CardForm({ initialValues, onSuccess, mode = 'create' }) {
   const { values, errors, touched, isSubmitting, submitError, handleChange, handleImageChange, handleBlur, submit } = useCardForm(initialValues, mode);
   const fileRef = useRef(null);
 
@@ -36,27 +36,31 @@ function CardForm({ initialValues, onSuccess, mode }) {
         placeholder="Charizard"
       />
 
-      <Input
-        name="series"
-        label="Series"
-        value={values.series}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={touched.series && errors.series}
-        placeholder="Base Set"
-        disabled={isEdit}
-      />
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="cardType">Card Type</label>
+        <select
+          id="cardType"
+          name="cardType"
+          value={values.cardType}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          className={`${styles.select} ${touched.cardType && errors.cardType ? styles.selectError : ''}`}
+        >
+          {CARD_TYPES.map(t => (
+            <option key={t} value={t}>{CARD_TYPE_LABELS[t] || t}</option>
+          ))}
+        </select>
+        {touched.cardType && errors.cardType && <span className={styles.error}>{errors.cardType}</span>}
+      </div>
 
       <Input
-        name="number"
-        label="Card Number"
-        type="number"
-        value={String(values.number)}
+        name="edition"
+        label="Edition"
+        value={values.edition}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={touched.number && errors.number}
-        placeholder="4"
-        disabled={isEdit}
+        error={touched.edition && errors.edition}
+        placeholder="e.g. First Edition, Unlimited..."
       />
 
       <Input
@@ -84,23 +88,6 @@ function CardForm({ initialValues, onSuccess, mode }) {
           ))}
         </select>
         {touched.rarity && errors.rarity && <span className={styles.error}>{errors.rarity}</span>}
-      </div>
-
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="condition">Condition</label>
-        <select
-          id="condition"
-          name="condition"
-          value={values.condition}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className={`${styles.select} ${touched.condition && errors.condition ? styles.selectError : ''}`}
-        >
-          {CARD_CONDITIONS.map(c => (
-            <option key={c} value={c}>{CONDITION_LABELS[c] || c}</option>
-          ))}
-        </select>
-        {touched.condition && errors.condition && <span className={styles.error}>{errors.condition}</span>}
       </div>
 
       <div className={styles.field}>
@@ -142,8 +129,5 @@ CardForm.propTypes = {
   mode: PropTypes.oneOf(['create', 'edit']),
 };
 
-CardForm.defaultProps = {
-  mode: 'create',
-};
 
 export default CardForm;

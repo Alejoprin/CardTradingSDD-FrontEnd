@@ -45,9 +45,9 @@ function useTradeBuilder(initialTargetUserId, initialCardId) {
     setError(null);
     try {
       const trade = await tradeService.createTrade({
-        offeredCardIds: selectedOwnCards.map(c => c.id),
-        requestedCardIds: selectedTargetCards.map(c => c.id),
-        counterpartyUserId: targetUserId,
+        receiverId: targetUserId,
+        offeredCards: selectedOwnCards.map(c => ({ cardId: c.id, quantity: 1 })),
+        requestedCards: selectedTargetCards.map(c => ({ cardId: c.id, quantity: 1 })),
       });
       addToast('success', 'Trade proposal sent!');
       if (onSuccess) onSuccess(trade);

@@ -17,7 +17,7 @@ function CardDetailPage() {
   const { loading: deleting, deleteCard } = useDeleteCard();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const isOwn = card?.userId === user?.id;
+  const isAdmin = user?.role === 'ADMIN';
 
   return (
     <MainLayout user={user} onLogout={logout}>
@@ -29,7 +29,7 @@ function CardDetailPage() {
         {card && (
           <CardDetail
             card={card}
-            isOwn={isOwn}
+            isOwn={isAdmin}
             onDelete={() => setShowDeleteModal(true)}
           />
         )}

@@ -1,4 +1,11 @@
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api/v1';
+export const BACKEND_URL = API_BASE_URL.replace(/\/api\/v\d+\/?$/, '');
+
+export function getImageUrl(path) {
+  if (!path) return null;
+  if (path.startsWith('http')) return path;
+  return `${BACKEND_URL}${path}`;
+}
 
 export const MAX_TRADE_CARDS_PER_SIDE = 3;
 
@@ -13,9 +20,9 @@ export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 export const MAX_BIO_LENGTH = 500;
 export const MAX_LOCATION_LENGTH = 100;
 
-export const CARD_RARITIES = ['common', 'rare', 'epic', 'legendary'];
+export const CARD_RARITIES = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY'];
 
-export const CARD_CONDITIONS = ['mint', 'near_mint', 'excellent', 'good', 'light_played', 'played', 'poor'];
+export const CARD_TYPES = ['MONSTER', 'SPELL', 'TRAP'];
 
 export const TRADE_STATUSES = ['pending', 'completed', 'rejected', 'cancelled'];
 
@@ -38,27 +45,25 @@ export const TRADE_STATUS_LABELS = {
 };
 
 export const RARITY_LABELS = {
-  common: 'Common',
-  rare: 'Rare',
-  epic: 'Epic',
-  legendary: 'Legendary',
+  COMMON: 'Common',
+  UNCOMMON: 'Uncommon',
+  RARE: 'Rare',
+  EPIC: 'Epic',
+  LEGENDARY: 'Legendary',
 };
 
-export const CONDITION_LABELS = {
-  mint: 'Mint',
-  near_mint: 'Near Mint',
-  excellent: 'Excellent',
-  good: 'Good',
-  light_played: 'Light Played',
-  played: 'Played',
-  poor: 'Poor',
+export const CARD_TYPE_LABELS = {
+  MONSTER: 'Monster',
+  SPELL: 'Spell',
+  TRAP: 'Trap',
 };
 
 export const RARITY_BADGE_VARIANTS = {
-  common: 'neutral',
-  rare: 'info',
-  epic: 'warning',
-  legendary: 'success',
+  COMMON: 'neutral',
+  UNCOMMON: 'info',
+  RARE: 'info',
+  EPIC: 'warning',
+  LEGENDARY: 'success',
 };
 
 export const TRADE_STATUS_BADGE_VARIANTS = {

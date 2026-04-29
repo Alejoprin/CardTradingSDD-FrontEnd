@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import Placeholder from '../../../common/Placeholder/Placeholder';
 import Badge from '../../../common/Badge/Badge';
 import Button from '../../../common/Button/Button';
-import { RARITY_LABELS, CONDITION_LABELS, RARITY_BADGE_VARIANTS } from '../../../../utils/constants';
+import { RARITY_LABELS, RARITY_BADGE_VARIANTS, getImageUrl } from '../../../../utils/constants';
 import styles from './CardCard.module.css';
 
-function CardCard({ card, isOwn, showOwner, onEdit, onDelete, onProposeTrade }) {
+function CardCard({ card, isOwn = false, showOwner = false, onEdit, onDelete, onProposeTrade }) {
   const navigate = useNavigate();
 
   function handleProposeTrade() {
@@ -29,7 +29,7 @@ function CardCard({ card, isOwn, showOwner, onEdit, onDelete, onProposeTrade }) 
         aria-label={`View details for ${card.name}`}
       >
         {card.imageUrl
-          ? <img src={card.imageUrl} alt={card.name} className={styles.image} />
+          ? <img src={getImageUrl(card.imageUrl)} alt={card.name} className={styles.image} />
           : <Placeholder size="md" />
         }
       </div>
@@ -41,7 +41,7 @@ function CardCard({ card, isOwn, showOwner, onEdit, onDelete, onProposeTrade }) 
             variant={RARITY_BADGE_VARIANTS[card.rarity] || 'neutral'}
           />
         </div>
-        <p className={styles.condition}>{CONDITION_LABELS[card.condition] || card.condition}</p>
+        {card.cardType && <p className={styles.condition}>{card.cardType}{card.edition ? ` · ${card.edition}` : ''}</p>}
         {showOwner && card.username && (
           <p className={styles.owner}>by {card.username}</p>
         )}
@@ -77,9 +77,5 @@ CardCard.propTypes = {
   onProposeTrade: PropTypes.func,
 };
 
-CardCard.defaultProps = {
-  isOwn: false,
-  showOwner: false,
-};
 
 export default CardCard;

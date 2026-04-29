@@ -3,9 +3,7 @@ import api from './api';
 const cardService = {
   // T041 — Create card
   async createCard(formData) {
-    const response = await api.post('/cards', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await api.post('/cards', formData);
     return response.data;
   },
 
@@ -29,9 +27,7 @@ const cardService = {
 
   // T053 — Update card
   async updateCard(cardId, formData) {
-    const response = await api.put(`/cards/${cardId}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await api.put(`/cards/${cardId}`, formData);
     return response.data;
   },
 

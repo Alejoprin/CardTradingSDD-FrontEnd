@@ -5,21 +5,18 @@ import { parseApiError } from '../utils/errors';
 
 const INITIAL_VALUES = {
   name: '',
-  series: '',
-  number: '',
+  cardType: 'MONSTER',
+  edition: '',
   description: '',
-  rarity: 'common',
-  condition: 'mint',
+  rarity: 'COMMON',
   image: null,
 };
 
 function validate(values) {
   return {
     name: validateRequired(values.name, 'Card name') || validateMaxLength(values.name, 100, 'Card name'),
-    series: validateRequired(values.series, 'Series'),
-    number: validateRequired(String(values.number || ''), 'Card number'),
+    cardType: validateRequired(values.cardType, 'Card type'),
     rarity: validateRequired(values.rarity, 'Rarity'),
-    condition: validateRequired(values.condition, 'Condition'),
     image: values.image instanceof File ? validateImageFile(values.image) : null,
   };
 }
@@ -57,23 +54,27 @@ function useCardForm(initialValues, mode = 'create') {
     const hasErrors = Object.values(validationErrors).some(Boolean);
     if (hasErrors) return;
 
-    const formData = new FormData();
+    const cardData = {};
     Object.entries(values).forEach(([key, val]) => {
-      if (key === 'image') {
-        if (val instanceof File) formData.append('image', val);
-      } else if (val !== null && val !== undefined) {
-        formData.append(key, String(val));
+      if (key !== 'image' && val !== null && val !== undefined && val !== '') {
+        cardData[key] = val;
       }
     });
+
+    const payload = new FormData();
+    payload.append('data', new Blob([JSON.stringify(cardData)], { type: 'application/json' }), 'data.json');
+    if (values.image instanceof File) {
+      payload.append('image', values.image);
+    }
 
     setIsSubmitting(true);
     setSubmitError(null);
     try {
       let result;
       if (mode === 'edit' && initialValues?.id) {
-        result = await cardService.updateCard(initialValues.id, formData);
+        result = await cardService.updateCard(initialValues.id, payload);
       } else {
-        result = await cardService.createCard(formData);
+        result = await cardService.createCard(payload);
       }
       if (onSuccess) onSuccess(result);
     } catch (err) {

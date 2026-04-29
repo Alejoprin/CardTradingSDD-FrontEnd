@@ -5,7 +5,7 @@ import MainLayout from '../../components/layout/MainLayout/MainLayout';
 import CardGrid from '../../components/features/cards/CardGrid/CardGrid';
 import Input from '../../components/common/Input/Input';
 import Button from '../../components/common/Button/Button';
-import { CARD_RARITIES, CARD_CONDITIONS, RARITY_LABELS, CONDITION_LABELS } from '../../utils/constants';
+import { CARD_RARITIES, RARITY_LABELS } from '../../utils/constants';
 import styles from './CatalogPage.module.css';
 
 function CatalogPage() {
@@ -38,15 +38,6 @@ function CatalogPage() {
           >
             <option value="">All Rarities</option>
             {CARD_RARITIES.map(r => <option key={r} value={r}>{RARITY_LABELS[r]}</option>)}
-          </select>
-          <select
-            className={styles.select}
-            value={filters.condition}
-            onChange={e => setFilter('condition', e.target.value)}
-            aria-label="Filter by condition"
-          >
-            <option value="">All Conditions</option>
-            {CARD_CONDITIONS.map(c => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
           </select>
         </div>
 

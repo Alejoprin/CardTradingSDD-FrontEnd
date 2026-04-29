@@ -17,17 +17,24 @@ function useDashboard(userId) {
     setLoading(true);
     setError(null);
     try {
-      const [profileData, tradesData, cardsData, activityData] = await Promise.all([
+      const [profileData, tradesData, cardsData] = await Promise.all([
         userService.getUserProfile(userId),
-        tradeService.listTrades({ status: 'pending', size: 5 }),
-        cardService.getUserInventory(userId, { size: 4 }),
-        userService.getActivityFeed(userId).catch(() => ({ activities: [] })),
+        tradeService.listTrades({ status: 'pending', size: 5, page: 0 }),
+        cardService.getUserInventory(userId, { size: 4, page: 0 }),
       ]);
 
-      setStats(profileData.stats || {});
-      setPendingTrades(tradesData.trades || []);
-      setRecentCards(cardsData.cards || []);
-      setActivities((activityData.activities || []).slice(0, 10));
+      setStats({
+        totalCards: cardsData.totalElements || 0,
+        pendingTrades: tradesData.totalElements || 0,
+        username: profileData.username,
+      });
+      setPendingTrades(tradesData.content || []);
+      setRecentCards((cardsData.content || []).map(item => ({
+        id: item.cardId,
+        name: item.cardName,
+        rarity: item.rarity,
+      })));
+      setActivities([]);
     } catch (err) {
       setError(parseApiError(err).message);
     } finally {

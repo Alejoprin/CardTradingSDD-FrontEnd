@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Placeholder from '../../../common/Placeholder/Placeholder';
 import Badge from '../../../common/Badge/Badge';
 import Button from '../../../common/Button/Button';
-import { RARITY_LABELS, CONDITION_LABELS, RARITY_BADGE_VARIANTS } from '../../../../utils/constants';
+import { RARITY_LABELS, RARITY_BADGE_VARIANTS, getImageUrl } from '../../../../utils/constants';
 import { formatDate } from '../../../../utils/formatters';
 import styles from './CardDetail.module.css';
 
@@ -15,7 +15,7 @@ function CardDetail({ card, isOwn, onDelete }) {
     <div className={styles.detail}>
       <div className={styles.imageSection}>
         {card.imageUrl
-          ? <img src={card.imageUrl} alt={card.name} className={styles.image} />
+          ? <img src={getImageUrl(card.imageUrl)} alt={card.name} className={styles.image} />
           : <Placeholder size="lg" />
         }
       </div>
@@ -31,14 +31,10 @@ function CardDetail({ card, isOwn, onDelete }) {
         </div>
 
         <dl className={styles.fields}>
-          <dt>Series</dt><dd>{card.series}</dd>
-          <dt>Number</dt><dd>#{card.number}</dd>
-          <dt>Condition</dt><dd>{CONDITION_LABELS[card.condition] || card.condition}</dd>
+          {card.cardType && <><dt>Type</dt><dd>{card.cardType}</dd></>}
+          {card.edition && <><dt>Edition</dt><dd>{card.edition}</dd></>}
           {card.description && <><dt>Description</dt><dd>{card.description}</dd></>}
           <dt>Added</dt><dd>{formatDate(card.createdAt)}</dd>
-          {card.username && (
-            <><dt>Owner</dt><dd><Link to={`/users/${card.userId}`}>{card.username}</Link></dd></>
-          )}
         </dl>
 
         <div className={styles.actions}>
