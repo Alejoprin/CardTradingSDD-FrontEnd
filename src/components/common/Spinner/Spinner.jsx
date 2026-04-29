@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Spinner.module.css';
 
-function Spinner({ size, label }) {
+function Spinner({ size = 'md', label }) {
   return (
     <span
       className={`${styles.spinner} ${styles[size] || styles.md}`}
@@ -17,8 +17,5 @@ Spinner.propTypes = {
   label: PropTypes.string,
 };
 
-Spinner.defaultProps = {
-  size: 'md',
-};
 
 export default Spinner;

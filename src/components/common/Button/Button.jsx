@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Spinner from '../Spinner/Spinner';
 import styles from './Button.module.css';
 
-function Button({ label, onClick, variant, isLoading, disabled, type, className }) {
+function Button({ label, onClick, variant = 'primary', isLoading = false, disabled = false, type = 'button', className }) {
   return (
     <button
       type={type}
@@ -28,11 +28,5 @@ Button.propTypes = {
   className: PropTypes.string,
 };
 
-Button.defaultProps = {
-  variant: 'primary',
-  isLoading: false,
-  disabled: false,
-  type: 'button',
-};
 
 export default Button;

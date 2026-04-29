@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Input.module.css';
 
-function Input({ name, label, value, onChange, onBlur, error, type, placeholder, disabled }) {
+function Input({ name, label, value = '', onChange, onBlur, error, type = 'text', placeholder, disabled = false }) {
   const inputId = `input-${name}`;
   return (
     <div className={styles.wrapper}>
@@ -45,10 +45,5 @@ Input.propTypes = {
   disabled: PropTypes.bool,
 };
 
-Input.defaultProps = {
-  type: 'text',
-  disabled: false,
-  value: '',
-};
 
 export default Input;
