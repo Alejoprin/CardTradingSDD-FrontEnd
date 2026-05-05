@@ -23,7 +23,7 @@ function useUserManagement() {
     try {
       const data = await adminService.listUsers({ page: page - 1, size: DEFAULT_PAGE_SIZE });
       setUsers(data.content || []);
-      setPagination({ page, totalPages: data.totalPages || 1, total: data.totalElements || 0 });
+      setPagination({ page, totalPages: data.page?.totalPages || 1, total: data.page?.totalElements || 0 });
     } catch (err) {
       setError(parseApiError(err).message);
     } finally {
@@ -38,7 +38,7 @@ function useUserManagement() {
   const ban = useCallback(async (userId, reason) => {
     try {
       const result = await adminService.banUser(userId, { banned: true, reason });
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, banned: true } : u));
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, isBanned: true } : u));
       addToast('success', 'User banned successfully.');
       return result;
     } catch (err) {

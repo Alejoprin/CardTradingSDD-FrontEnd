@@ -1,5 +1,13 @@
 .page {}
 
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xl);
+  gap: var(--spacing-md);
+}
+
 .title {
   font-size: var(--font-size-xxl);
   font-weight: var(--font-weight-bold);
@@ -48,4 +56,29 @@
 .pageInfo {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
+}
+
+.field {
+  margin-bottom: var(--spacing-md);
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.warning {
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  margin-top: var(--spacing-xs);
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  margin-top: var(--spacing-lg);
 }

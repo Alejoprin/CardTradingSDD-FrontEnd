@@ -8,7 +8,7 @@ Esta guia explica como construir y desplegar el frontend en distintos entornos.
 
 - Node.js >= 18 y npm >= 9 instalados en la maquina de build
 - Backend API disponible y corriendo antes de servir el frontend
-- Variable de entorno `REACT_APP_API_BASE_URL` configurada correctamente
+- Variable de entorno `VITE_API_BASE_URL` configurada correctamente
 
 ---
 
@@ -25,10 +25,10 @@ Antes de cualquier build, definir las variables de entorno. Crear el archivo cor
 Contenido minimo:
 
 ```env
-REACT_APP_API_BASE_URL=https://api.tudominio.com/api/v1
+VITE_API_BASE_URL=https://api.tudominio.com/api/v1
 ```
 
-> Todas las variables para React deben comenzar con `REACT_APP_`. Se embeben en el bundle en tiempo de build — no son secretas.
+> Todas las variables para Vite deben comenzar con `VITE_`. Se embeben en el bundle en tiempo de build — no son secretas.
 
 ---
 
@@ -48,8 +48,7 @@ El output se genera en la carpeta `build/`. Contiene archivos estaticos listos p
 build/
 ├── index.html
 ├── static/
-│   ├── js/       # Bundle JS minificado (~236 kB gzip)
-│   └── css/      # Estilos compilados (~8 kB gzip)
+│   └── assets/   # Bundle JS + CSS minificados con hash
 └── ...
 ```
 
@@ -86,7 +85,7 @@ server {
     }
 
     # Cache para assets estaticos
-    location /static/ {
+    location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
@@ -139,8 +138,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-ARG REACT_APP_API_BASE_URL
-ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
 # Etapa 2: servidor Nginx
@@ -163,7 +162,7 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-    location /static/ {
+    location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
@@ -175,7 +174,7 @@ Construir y correr:
 ```bash
 # Build de la imagen
 docker build \
-  --build-arg REACT_APP_API_BASE_URL=https://api.tudominio.com/api/v1 \
+  --build-arg VITE_API_BASE_URL=https://api.tudominio.com/api/v1 \
   -t cardtrading-frontend:latest .
 
 # Correr el contenedor
@@ -195,9 +194,9 @@ vercel --prod
 ```
 
 En el dashboard de Vercel, agregar la variable de entorno:
-- `REACT_APP_API_BASE_URL` = `https://api.tudominio.com/api/v1`
+- `VITE_API_BASE_URL` = `https://api.tudominio.com/api/v1`
 
-Vercel detecta automaticamente Create React App y configura el rewrite de rutas para SPA.
+Vercel detecta automaticamente Vite y configura el rewrite de rutas para SPA.
 
 ---
 
@@ -219,7 +218,7 @@ Crear `public/_redirects` (o `netlify.toml`) para el enrutamiento SPA:
 ```
 
 En el dashboard de Netlify, agregar la variable de entorno:
-- `REACT_APP_API_BASE_URL` = `https://api.tudominio.com/api/v1`
+- `VITE_API_BASE_URL` = `https://api.tudominio.com/api/v1`
 
 ---
 
@@ -281,7 +280,7 @@ El backend utiliza cookies `httpOnly` para el refresh token. Para que el navegad
 
 ## 6. Checklist de despliegue
 
-- [ ] `REACT_APP_API_BASE_URL` apunta al backend de produccion
+- [ ] `VITE_API_BASE_URL` apunta al backend de produccion
 - [ ] `npm run build` completa sin errores ni warnings criticos
 - [ ] Servidor configurado para redirigir todas las rutas a `index.html` (SPA routing)
 - [ ] Cache configurado: `index.html` sin cache, `/static/` con cache largo

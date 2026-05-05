@@ -7,16 +7,8 @@ import Button from '../../../common/Button/Button';
 import { RARITY_LABELS, RARITY_BADGE_VARIANTS, getImageUrl } from '../../../../utils/constants';
 import styles from './CardCard.module.css';
 
-function CardCard({ card, isOwn = false, showOwner = false, onEdit, onDelete, onProposeTrade }) {
+function CardCard({ card, showOwner = false, onEdit, onDelete, onProposeTrade, onAddToInventory }) {
   const navigate = useNavigate();
-
-  function handleProposeTrade() {
-    if (onProposeTrade) {
-      onProposeTrade(card);
-    } else {
-      navigate(`/trades/create?targetUserId=${card.userId}&cardId=${card.id}`);
-    }
-  }
 
   return (
     <div className={styles.card}>
@@ -41,20 +33,17 @@ function CardCard({ card, isOwn = false, showOwner = false, onEdit, onDelete, on
             variant={RARITY_BADGE_VARIANTS[card.rarity] || 'neutral'}
           />
         </div>
-        {card.cardType && <p className={styles.condition}>{card.cardType}{card.edition ? ` · ${card.edition}` : ''}</p>}
+        {card.setName && <p className={styles.condition}>{card.setName}{card.gameName ? ` · ${card.gameName}` : ''}</p>}
+        {card.condition && <p className={styles.condition}>{card.condition}</p>}
         {showOwner && card.username && (
           <p className={styles.owner}>by {card.username}</p>
         )}
       </div>
       <div className={styles.actions}>
-        {isOwn ? (
-          <>
-            {onEdit && <Button label="Edit" onClick={() => onEdit(card)} variant="secondary" />}
-            {onDelete && <Button label="Delete" onClick={() => onDelete(card)} variant="danger" />}
-          </>
-        ) : (
-          <Button label="Propose Trade" onClick={handleProposeTrade} variant="primary" />
-        )}
+        {onAddToInventory && <Button label="Add to Inventory" onClick={() => onAddToInventory(card)} />}
+        {onProposeTrade && <Button label="Propose Trade" onClick={() => onProposeTrade(card)} variant="primary" />}
+        {onEdit && <Button label="Edit" onClick={() => onEdit(card)} variant="secondary" />}
+        {onDelete && <Button label="Delete" onClick={() => onDelete(card)} variant="danger" />}
       </div>
     </div>
   );
@@ -65,17 +54,17 @@ CardCard.propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     rarity: PropTypes.string,
-    condition: PropTypes.string,
     imageUrl: PropTypes.string,
-    userId: PropTypes.string,
+    setName: PropTypes.string,
+    gameName: PropTypes.string,
+    condition: PropTypes.string,
     username: PropTypes.string,
   }).isRequired,
-  isOwn: PropTypes.bool,
   showOwner: PropTypes.bool,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
   onProposeTrade: PropTypes.func,
+  onAddToInventory: PropTypes.func,
 };
-
 
 export default CardCard;

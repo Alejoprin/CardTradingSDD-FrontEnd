@@ -13,7 +13,7 @@ function CreateTradePage() {
   const [searchParams] = useSearchParams();
 
   const targetUserId = searchParams.get('targetUserId') || '';
-  const cardId = searchParams.get('cardId') || '';
+  const cardId = searchParams.get('userCardId') || '';
 
   function handleSuccess() {
     addToast('success', 'Trade proposal sent!');

@@ -36,7 +36,7 @@ function TradeDetailPage() {
     }
   }
 
-  const isCancelable = trade?.status === 'pending' && trade?.initiatorId === user?.id;
+  const isCancelable = trade?.status === 'PENDING' && trade?.proposerId === user?.id;
 
   return (
     <MainLayout user={user} onLogout={logout}>

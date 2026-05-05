@@ -5,17 +5,17 @@ import Spinner from '../../../common/Spinner/Spinner';
 import styles from './TradeList.module.css';
 
 const TABS = [
-  { key: 'pending', label: 'Pending' },
-  { key: 'completed', label: 'Completed' },
-  { key: 'rejected', label: 'Rejected' },
-  { key: 'cancelled', label: 'Cancelled' },
+  { key: 'PENDING', label: 'Pending' },
+  { key: 'COMPLETED', label: 'Completed' },
+  { key: 'REJECTED', label: 'Rejected' },
+  { key: 'CANCELLED', label: 'Cancelled' },
 ];
 
 const EMPTY_MESSAGES = {
-  pending: 'No pending trades.',
-  completed: 'No completed trades yet.',
-  rejected: 'No rejected trades.',
-  cancelled: 'No cancelled trades.',
+  PENDING: 'No pending trades.',
+  COMPLETED: 'No completed trades yet.',
+  REJECTED: 'No rejected trades.',
+  CANCELLED: 'No cancelled trades.',
 };
 
 function TradeList({ trades, activeTab, onTabChange, currentUserId, loading, onAccept, onReject, onCancel }) {

@@ -18,14 +18,12 @@ function useInventory(userId) {
       const params = { page: filters.page - 1, size: DEFAULT_PAGE_SIZE };
       const data = await cardService.getUserInventory(userId, params);
       const items = (data.content || []).map(item => ({
-        id: item.cardId,
+        ...item,
+        id: item.userCardId,
         name: item.cardName,
-        rarity: item.rarity,
-        quantity: item.quantity,
-        acquiredAt: item.acquiredAt,
       }));
       setCards(items);
-      setPagination({ page: filters.page, totalPages: data.totalPages || 1, total: data.totalElements || 0 });
+      setPagination({ page: filters.page, totalPages: data.page?.totalPages || 1, total: data.page?.totalElements || 0 });
     } catch (err) {
       setError(parseApiError(err).message);
     } finally {

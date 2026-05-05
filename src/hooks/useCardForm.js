@@ -4,18 +4,19 @@ import { validateRequired, validateMaxLength, validateImageFile } from '../utils
 import { parseApiError } from '../utils/errors';
 
 const INITIAL_VALUES = {
+  setId: '',
   name: '',
-  cardType: 'MONSTER',
-  edition: '',
-  description: '',
+  cardNumber: '',
   rarity: 'COMMON',
+  attributes: '',
+  marketPrice: '',
   image: null,
 };
 
 function validate(values) {
   return {
+    setId: validateRequired(values.setId, 'Set ID'),
     name: validateRequired(values.name, 'Card name') || validateMaxLength(values.name, 100, 'Card name'),
-    cardType: validateRequired(values.cardType, 'Card type'),
     rarity: validateRequired(values.rarity, 'Rarity'),
     image: values.image instanceof File ? validateImageFile(values.image) : null,
   };
@@ -57,14 +58,17 @@ function useCardForm(initialValues, mode = 'create') {
     const cardData = {};
     Object.entries(values).forEach(([key, val]) => {
       if (key !== 'image' && val !== null && val !== undefined && val !== '') {
-        cardData[key] = val;
+        cardData[key] = key === 'marketPrice' ? parseFloat(val) : val;
       }
     });
 
-    const payload = new FormData();
-    payload.append('data', new Blob([JSON.stringify(cardData)], { type: 'application/json' }), 'data.json');
+    let payload;
     if (values.image instanceof File) {
+      payload = new FormData();
+      payload.append('data', new Blob([JSON.stringify(cardData)], { type: 'application/json' }), 'data.json');
       payload.append('image', values.image);
+    } else {
+      payload = cardData;
     }
 
     setIsSubmitting(true);

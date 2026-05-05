@@ -1,4 +1,4 @@
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api/v1';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
 export const BACKEND_URL = API_BASE_URL.replace(/\/api\/v\d+\/?$/, '');
 
 export function getImageUrl(path) {
@@ -20,11 +20,20 @@ export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 export const MAX_BIO_LENGTH = 500;
 export const MAX_LOCATION_LENGTH = 100;
 
-export const CARD_RARITIES = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY'];
+export const CARD_RARITIES = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY', 'SECRET'];
 
-export const CARD_TYPES = ['MONSTER', 'SPELL', 'TRAP'];
+export const CARD_CONDITIONS = ['MINT', 'NEAR_MINT', 'EXCELLENT', 'GOOD', 'PLAYED', 'POOR'];
 
-export const TRADE_STATUSES = ['pending', 'completed', 'rejected', 'cancelled'];
+export const CONDITION_LABELS = {
+  MINT: 'Mint',
+  NEAR_MINT: 'Near Mint',
+  EXCELLENT: 'Excellent',
+  GOOD: 'Good',
+  PLAYED: 'Played',
+  POOR: 'Poor',
+};
+
+export const TRADE_STATUSES = ['PENDING', 'ACCEPTED', 'COMPLETED', 'REJECTED', 'CANCELLED'];
 
 export const ACTIVITY_EVENT_TYPES = {
   CARD_CREATED: 'card_created',
@@ -38,10 +47,11 @@ export const ACTIVITY_EVENT_TYPES = {
 };
 
 export const TRADE_STATUS_LABELS = {
-  pending: 'Pending',
-  completed: 'Completed',
-  rejected: 'Rejected',
-  cancelled: 'Cancelled',
+  PENDING: 'Pending',
+  ACCEPTED: 'Accepted',
+  COMPLETED: 'Completed',
+  REJECTED: 'Rejected',
+  CANCELLED: 'Cancelled',
 };
 
 export const RARITY_LABELS = {
@@ -50,6 +60,7 @@ export const RARITY_LABELS = {
   RARE: 'Rare',
   EPIC: 'Epic',
   LEGENDARY: 'Legendary',
+  SECRET: 'Secret',
 };
 
 export const CARD_TYPE_LABELS = {
@@ -64,18 +75,20 @@ export const RARITY_BADGE_VARIANTS = {
   RARE: 'info',
   EPIC: 'warning',
   LEGENDARY: 'success',
+  SECRET: 'success',
 };
 
 export const TRADE_STATUS_BADGE_VARIANTS = {
-  pending: 'warning',
-  completed: 'success',
-  rejected: 'error',
-  cancelled: 'neutral',
+  PENDING: 'warning',
+  ACCEPTED: 'info',
+  COMPLETED: 'success',
+  REJECTED: 'error',
+  CANCELLED: 'neutral',
 };
 
 export const ADMIN_STATS_PERIODS = ['7d', '30d', '90d'];
 
 export const USER_ROLES = {
-  USER: 'user',
-  ADMIN: 'admin',
+  USER: 'USER',
+  ADMIN: 'ADMIN',
 };

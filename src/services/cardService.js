@@ -31,9 +31,24 @@ const cardService = {
     return response.data;
   },
 
-  // T053 — Delete card
+  // T053 — Delete card (catalog, ADMIN only)
   async deleteCard(cardId) {
     await api.delete(`/cards/${cardId}`);
+  },
+
+  // Inventory management
+  async addToInventory(userId, body) {
+    const response = await api.post(`/users/${userId}/inventory`, body);
+    return response.data;
+  },
+
+  async addCustomToInventory(userId, formData) {
+    const response = await api.post(`/users/${userId}/inventory/custom`, formData);
+    return response.data;
+  },
+
+  async removeFromInventory(userId, userCardId) {
+    await api.delete(`/users/${userId}/inventory/${userCardId}`);
   },
 };
 

@@ -4,7 +4,16 @@ import CardCard from '../CardCard/CardCard';
 import Spinner from '../../../common/Spinner/Spinner';
 import styles from './CardGrid.module.css';
 
-function CardGrid({ cards, loading, emptyMessage, isOwn, showOwner, onEdit, onDelete, onProposeTrade }) {
+function CardGrid({
+  cards,
+  loading = false,
+  emptyMessage,
+  showOwner = false,
+  onEdit,
+  onDelete,
+  onProposeTrade,
+  onAddToInventory,
+}) {
   if (loading) {
     return (
       <div className={styles.center}>
@@ -27,11 +36,11 @@ function CardGrid({ cards, loading, emptyMessage, isOwn, showOwner, onEdit, onDe
         <CardCard
           key={card.id}
           card={card}
-          isOwn={isOwn}
           showOwner={showOwner}
           onEdit={onEdit}
           onDelete={onDelete}
           onProposeTrade={onProposeTrade}
+          onAddToInventory={onAddToInventory}
         />
       ))}
     </div>
@@ -42,17 +51,11 @@ CardGrid.propTypes = {
   cards: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   emptyMessage: PropTypes.string,
-  isOwn: PropTypes.bool,
   showOwner: PropTypes.bool,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
   onProposeTrade: PropTypes.func,
-};
-
-CardGrid.defaultProps = {
-  loading: false,
-  isOwn: false,
-  showOwner: false,
+  onAddToInventory: PropTypes.func,
 };
 
 export default CardGrid;

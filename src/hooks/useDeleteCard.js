@@ -16,7 +16,7 @@ function useDeleteCard() {
     try {
       await cardService.deleteCard(cardId);
       addToast('success', `"${cardName || 'Card'}" deleted successfully`);
-      navigate('/inventory', { replace: true });
+      navigate('/catalog', { replace: true });
     } catch (err) {
       const appErr = parseApiError(err);
       setError(appErr.message);

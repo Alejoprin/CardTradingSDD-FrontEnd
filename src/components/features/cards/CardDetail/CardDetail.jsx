@@ -31,23 +31,19 @@ function CardDetail({ card, isOwn, onDelete }) {
         </div>
 
         <dl className={styles.fields}>
-          {card.cardType && <><dt>Type</dt><dd>{card.cardType}</dd></>}
-          {card.edition && <><dt>Edition</dt><dd>{card.edition}</dd></>}
-          {card.description && <><dt>Description</dt><dd>{card.description}</dd></>}
+          {card.gameName && <><dt>Game</dt><dd>{card.gameName}</dd></>}
+          {card.setName && <><dt>Set</dt><dd>{card.setName}</dd></>}
+          {card.cardNumber && <><dt>Number</dt><dd>{card.cardNumber}</dd></>}
+          {card.marketPrice != null && <><dt>Market Price</dt><dd>${card.marketPrice.toFixed(2)}</dd></>}
           <dt>Added</dt><dd>{formatDate(card.createdAt)}</dd>
         </dl>
 
         <div className={styles.actions}>
-          {isOwn ? (
+          {isOwn && (
             <>
               <Button label="Edit" onClick={() => navigate(`/cards/${card.id}/edit`)} variant="secondary" />
               <Button label="Delete" onClick={onDelete} variant="danger" />
             </>
-          ) : (
-            <Button
-              label="Propose Trade"
-              onClick={() => navigate(`/trades/create?targetUserId=${card.userId}&cardId=${card.id}`)}
-            />
           )}
         </div>
 
@@ -73,16 +69,13 @@ CardDetail.propTypes = {
   card: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    series: PropTypes.string,
-    number: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     rarity: PropTypes.string,
-    condition: PropTypes.string,
-    description: PropTypes.string,
+    gameName: PropTypes.string,
+    setName: PropTypes.string,
+    cardNumber: PropTypes.string,
+    marketPrice: PropTypes.number,
     imageUrl: PropTypes.string,
-    userId: PropTypes.string,
-    username: PropTypes.string,
     createdAt: PropTypes.string,
-    tradeHistory: PropTypes.array,
   }).isRequired,
   isOwn: PropTypes.bool.isRequired,
   onDelete: PropTypes.func,

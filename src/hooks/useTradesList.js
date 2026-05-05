@@ -8,7 +8,7 @@ function useTradesList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
-  const [activeTab, setActiveTab] = useState('pending');
+  const [activeTab, setActiveTab] = useState('PENDING');
   const [page, setPage] = useState(1);
 
   const fetchTrades = useCallback(async () => {
@@ -18,7 +18,7 @@ function useTradesList() {
       const params = { page: page - 1, size: DEFAULT_PAGE_SIZE, status: activeTab };
       const data = await tradeService.listTrades(params);
       setTrades(data.content || []);
-      setPagination({ page, totalPages: data.totalPages || 1, total: data.totalElements || 0 });
+      setPagination({ page, totalPages: data.page?.totalPages || 1, total: data.page?.totalElements || 0 });
     } catch (err) {
       setError(parseApiError(err).message);
     } finally {

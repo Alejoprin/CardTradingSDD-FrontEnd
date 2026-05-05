@@ -19,20 +19,20 @@ function useDashboard(userId) {
     try {
       const [profileData, tradesData, cardsData] = await Promise.all([
         userService.getUserProfile(userId),
-        tradeService.listTrades({ status: 'pending', size: 5, page: 0 }),
+        tradeService.listTrades({ status: 'PENDING', size: 5, page: 0 }),
         cardService.getUserInventory(userId, { size: 4, page: 0 }),
       ]);
 
       setStats({
-        totalCards: cardsData.totalElements || 0,
-        pendingTrades: tradesData.totalElements || 0,
+        totalCards: cardsData.page?.totalElements || 0,
+        pendingTrades: tradesData.page?.totalElements || 0,
         username: profileData.username,
       });
       setPendingTrades(tradesData.content || []);
       setRecentCards((cardsData.content || []).map(item => ({
-        id: item.cardId,
+        ...item,
+        id: item.userCardId,
         name: item.cardName,
-        rarity: item.rarity,
       })));
       setActivities([]);
     } catch (err) {

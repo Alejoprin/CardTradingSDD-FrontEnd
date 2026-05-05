@@ -62,6 +62,8 @@ const router = createBrowserRouter([
     element: <AdminRoute />,
     children: [
       { path: '/admin', element: <AdminPage /> },
+      { path: '/cards/create', element: <CreateCardPage /> },
+      { path: '/cards/:cardId/edit', element: <EditCardPage /> },
     ],
   },
 

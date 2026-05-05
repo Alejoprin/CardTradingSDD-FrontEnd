@@ -20,10 +20,14 @@ function CardMini({ card }) {
   );
 }
 
-function TradeDetail({ trade, currentUserId, onAccept, onReject, onCancel, readonly }) {
-  const isInitiator = trade.initiatorId === currentUserId;
-  const isRecipient = trade.counterpartyId === currentUserId;
-  const isPending = trade.status === 'pending';
+function TradeDetail({ trade, currentUserId, onAccept, onReject, onCancel, readonly = false }) {
+  const isProposer = trade.proposerId === currentUserId;
+  const isReceiver = trade.receiverId === currentUserId;
+  const isPending = trade.status === 'PENDING';
+
+  // Split items by who they come from
+  const offeredCards = (trade.items || []).filter(i => i.fromUserId === trade.proposerId);
+  const requestedCards = (trade.items || []).filter(i => i.fromUserId === trade.receiverId);
 
   return (
     <div className={styles.detail}>
@@ -40,31 +44,31 @@ function TradeDetail({ trade, currentUserId, onAccept, onReject, onCancel, reado
 
       <div className={styles.parties}>
         <div className={styles.party}>
-          <h3>Initiator</h3>
-          <Link to={`/users/${trade.initiatorId}`}>{trade.initiatorUsername}</Link>
+          <h3>Proposer</h3>
+          <Link to={`/users/${trade.proposerId}`}>{trade.proposerUsername}</Link>
         </div>
         <span className={styles.arrow}>⇄</span>
         <div className={styles.party}>
-          <h3>Counterparty</h3>
-          <Link to={`/users/${trade.counterpartyId}`}>{trade.counterpartyUsername}</Link>
+          <h3>Receiver</h3>
+          <Link to={`/users/${trade.receiverId}`}>{trade.receiverUsername}</Link>
         </div>
       </div>
 
       <div className={styles.columns}>
         <div className={styles.col}>
           <h2 className={styles.colTitle}>
-            {isInitiator ? 'You offer' : `${trade.initiatorUsername} offers`}
+            {isProposer ? 'You offer' : `${trade.proposerUsername} offers`}
           </h2>
           <div className={styles.cardsList}>
-            {(trade.offeredCards || []).map(card => <CardMini key={card.id} card={card} />)}
+            {offeredCards.map(card => <CardMini key={card.userCardId} card={{ ...card, name: card.cardName }} />)}
           </div>
         </div>
         <div className={styles.col}>
           <h2 className={styles.colTitle}>
-            {isRecipient ? 'You receive' : `${trade.counterpartyUsername} offers`}
+            {isReceiver ? 'You offer' : `${trade.receiverUsername} offers`}
           </h2>
           <div className={styles.cardsList}>
-            {(trade.requestedCards || []).map(card => <CardMini key={card.id} card={card} />)}
+            {requestedCards.map(card => <CardMini key={card.userCardId} card={{ ...card, name: card.cardName }} />)}
           </div>
         </div>
       </div>
@@ -83,9 +87,9 @@ function TradeDetail({ trade, currentUserId, onAccept, onReject, onCancel, reado
 
       {!readonly && isPending && (
         <div className={styles.actions}>
-          {isRecipient && onAccept && <Button label="Accept Trade" onClick={() => onAccept(trade)} />}
-          {isRecipient && onReject && <Button label="Reject Trade" onClick={() => onReject(trade)} variant="secondary" />}
-          {isInitiator && onCancel && <Button label="Cancel Trade" onClick={() => onCancel(trade)} variant="ghost" />}
+          {isReceiver && onAccept && <Button label="Accept Trade" onClick={() => onAccept(trade)} />}
+          {isReceiver && onReject && <Button label="Reject Trade" onClick={() => onReject(trade)} variant="secondary" />}
+          {isProposer && onCancel && <Button label="Cancel Trade" onClick={() => onCancel(trade)} variant="ghost" />}
         </div>
       )}
     </div>
@@ -96,13 +100,11 @@ TradeDetail.propTypes = {
   trade: PropTypes.shape({
     id: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
-    initiatorId: PropTypes.string,
-    counterpartyId: PropTypes.string,
-    initiatorUsername: PropTypes.string,
-    counterpartyUsername: PropTypes.string,
-    offeredCards: PropTypes.array,
-    requestedCards: PropTypes.array,
-    events: PropTypes.array,
+    proposerId: PropTypes.string,
+    receiverId: PropTypes.string,
+    proposerUsername: PropTypes.string,
+    receiverUsername: PropTypes.string,
+    items: PropTypes.array,
     createdAt: PropTypes.string,
   }).isRequired,
   currentUserId: PropTypes.string.isRequired,
@@ -110,10 +112,6 @@ TradeDetail.propTypes = {
   onReject: PropTypes.func,
   onCancel: PropTypes.func,
   readonly: PropTypes.bool,
-};
-
-TradeDetail.defaultProps = {
-  readonly: false,
 };
 
 export default TradeDetail;

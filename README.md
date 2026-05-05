@@ -53,7 +53,7 @@ Aplicación web de intercambio de cartas coleccionables. Permite a los usuarios 
 | Graficos | recharts |
 | Validacion de props | PropTypes |
 | Estilos | CSS Modules + CSS Custom Properties |
-| Build tool | react-scripts (CRA) |
+| Build tool | Vite 6 |
 
 ---
 
@@ -91,7 +91,7 @@ src/
 Crear un archivo `.env.local` en la raiz del proyecto:
 
 ```env
-REACT_APP_API_BASE_URL=http://localhost:8080/api/v1
+VITE_API_BASE_URL=http://localhost:8080/api/v1
 ```
 
 > El archivo `.env.example` incluido en el repositorio sirve como referencia.
@@ -105,13 +105,13 @@ REACT_APP_API_BASE_URL=http://localhost:8080/api/v1
 npm install
 
 # Servidor de desarrollo (http://localhost:3000)
-npm start
+npm run dev
 
 # Build de produccion
 npm run build
 
-# Ejecutar tests
-npm test
+# Vista previa del build
+npm run preview
 ```
 
 ---
@@ -143,7 +143,7 @@ El sistema de diseño usa una paleta monocromatica definida en `src/styles/color
 
 | Variable | Descripcion | Ejemplo |
 |----------|-------------|---------|
-| `REACT_APP_API_BASE_URL` | URL base de la API REST | `http://localhost:8080/api/v1` |
+| `VITE_API_BASE_URL` | URL base de la API REST | `http://localhost:8080/api/v1` |
 
 ---
 

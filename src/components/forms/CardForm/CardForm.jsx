@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import useCardForm from '../../../hooks/useCardForm';
-import { CARD_RARITIES, CARD_TYPES, RARITY_LABELS, CARD_TYPE_LABELS } from '../../../utils/constants';
+import { CARD_RARITIES, RARITY_LABELS } from '../../../utils/constants';
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import styles from './CardForm.module.css';
@@ -27,6 +27,16 @@ function CardForm({ initialValues, onSuccess, mode = 'create' }) {
       {submitError && <p className={styles.submitError}>{submitError}</p>}
 
       <Input
+        name="setId"
+        label="Set ID"
+        value={values.setId}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={touched.setId && errors.setId}
+        placeholder="UUID of the card set"
+      />
+
+      <Input
         name="name"
         label="Card Name"
         value={values.name}
@@ -36,41 +46,35 @@ function CardForm({ initialValues, onSuccess, mode = 'create' }) {
         placeholder="Charizard"
       />
 
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="cardType">Card Type</label>
-        <select
-          id="cardType"
-          name="cardType"
-          value={values.cardType}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className={`${styles.select} ${touched.cardType && errors.cardType ? styles.selectError : ''}`}
-        >
-          {CARD_TYPES.map(t => (
-            <option key={t} value={t}>{CARD_TYPE_LABELS[t] || t}</option>
-          ))}
-        </select>
-        {touched.cardType && errors.cardType && <span className={styles.error}>{errors.cardType}</span>}
-      </div>
-
       <Input
-        name="edition"
-        label="Edition"
-        value={values.edition}
+        name="cardNumber"
+        label="Card Number"
+        value={values.cardNumber}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={touched.edition && errors.edition}
-        placeholder="e.g. First Edition, Unlimited..."
+        error={touched.cardNumber && errors.cardNumber}
+        placeholder="e.g. 004/102"
       />
 
       <Input
-        name="description"
-        label="Description"
-        value={values.description}
+        name="marketPrice"
+        label="Market Price (USD)"
+        type="number"
+        value={values.marketPrice}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={touched.description && errors.description}
-        placeholder="Optional description..."
+        error={touched.marketPrice && errors.marketPrice}
+        placeholder="e.g. 9.99"
+      />
+
+      <Input
+        name="attributes"
+        label="Attributes (JSON)"
+        value={values.attributes}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={touched.attributes && errors.attributes}
+        placeholder='{"hp": 120, "type": "Fire"}'
       />
 
       <div className={styles.field}>

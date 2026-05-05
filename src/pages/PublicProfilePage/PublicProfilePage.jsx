@@ -45,8 +45,8 @@ function PublicProfilePage() {
                 cards={cards}
                 loading={cardsLoading}
                 showOwner={false}
-                isOwn={false}
                 emptyMessage={`${profile.username} has no cards yet.`}
+                onProposeTrade={!isOwnProfile ? card => navigate(`/trades/create?targetUserId=${userId}&userCardId=${card.id}`) : undefined}
               />
             </div>
           </>

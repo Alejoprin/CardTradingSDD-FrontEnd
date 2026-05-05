@@ -8,15 +8,21 @@ import { formatRelativeTime } from '../../../../utils/formatters';
 import styles from './TradeCard.module.css';
 
 function TradeCard({ trade, currentUserId, onAccept, onReject, onCancel }) {
-  const isInitiator = trade.initiatorId === currentUserId;
-  const isRecipient = trade.counterpartyId === currentUserId;
-  const counterpartUsername = isInitiator ? trade.counterpartyUsername : trade.initiatorUsername;
+  const isProposer = trade.proposerId === currentUserId;
+  const isReceiver = trade.receiverId === currentUserId;
+  const counterpartUsername = isProposer ? trade.receiverUsername : trade.proposerUsername;
+  const counterpartId = isProposer ? trade.receiverId : trade.proposerId;
+
+  const offeredCount = (trade.items || []).filter(i => i.fromUserId === trade.proposerId).length;
+  const requestedCount = (trade.items || []).filter(i => i.fromUserId === trade.receiverId).length;
+
+  const isPending = trade.status === 'PENDING';
 
   return (
     <div className={styles.card}>
       <div className={styles.header}>
         <span className={styles.counterpart}>
-          Trade with <Link to={`/users/${isInitiator ? trade.counterpartyId : trade.initiatorId}`}>{counterpartUsername}</Link>
+          Trade with <Link to={`/users/${counterpartId}`}>{counterpartUsername}</Link>
         </span>
         <Badge
           label={TRADE_STATUS_LABELS[trade.status] || trade.status}
@@ -25,23 +31,23 @@ function TradeCard({ trade, currentUserId, onAccept, onReject, onCancel }) {
       </div>
       <div className={styles.summary}>
         <span className={styles.summaryItem}>
-          You offer: <strong>{trade.offeredCards?.length ?? 0} card{trade.offeredCards?.length !== 1 ? 's' : ''}</strong>
+          You offer: <strong>{offeredCount} card{offeredCount !== 1 ? 's' : ''}</strong>
         </span>
         <span className={styles.arrow}>⇄</span>
         <span className={styles.summaryItem}>
-          You receive: <strong>{trade.requestedCards?.length ?? 0} card{trade.requestedCards?.length !== 1 ? 's' : ''}</strong>
+          You receive: <strong>{requestedCount} card{requestedCount !== 1 ? 's' : ''}</strong>
         </span>
       </div>
       <div className={styles.footer}>
         <span className={styles.time}>{formatRelativeTime(trade.createdAt)}</span>
         <div className={styles.actions}>
-          {trade.status === 'pending' && isRecipient && onAccept && (
+          {isPending && isReceiver && onAccept && (
             <Button label="Accept" onClick={() => onAccept(trade)} variant="primary" />
           )}
-          {trade.status === 'pending' && isRecipient && onReject && (
+          {isPending && isReceiver && onReject && (
             <Button label="Reject" onClick={() => onReject(trade)} variant="secondary" />
           )}
-          {trade.status === 'pending' && isInitiator && onCancel && (
+          {isPending && isProposer && onCancel && (
             <Button label="Cancel" onClick={() => onCancel(trade)} variant="ghost" />
           )}
           <Link to={`/trades/${trade.id}`} className={styles.detailLink}>View Details</Link>
@@ -55,12 +61,11 @@ TradeCard.propTypes = {
   trade: PropTypes.shape({
     id: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
-    initiatorId: PropTypes.string,
-    counterpartyId: PropTypes.string,
-    initiatorUsername: PropTypes.string,
-    counterpartyUsername: PropTypes.string,
-    offeredCards: PropTypes.array,
-    requestedCards: PropTypes.array,
+    proposerId: PropTypes.string,
+    receiverId: PropTypes.string,
+    proposerUsername: PropTypes.string,
+    receiverUsername: PropTypes.string,
+    items: PropTypes.array,
     createdAt: PropTypes.string,
   }).isRequired,
   currentUserId: PropTypes.string.isRequired,

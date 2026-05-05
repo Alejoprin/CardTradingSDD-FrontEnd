@@ -1,27 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useNotification } from '../../context/NotificationContext';
 import useCatalog from '../../hooks/useCatalog';
+import useDeleteCard from '../../hooks/useDeleteCard';
 import MainLayout from '../../components/layout/MainLayout/MainLayout';
 import CardGrid from '../../components/features/cards/CardGrid/CardGrid';
+import Modal from '../../components/common/Modal/Modal';
 import Input from '../../components/common/Input/Input';
 import Button from '../../components/common/Button/Button';
-import { CARD_RARITIES, RARITY_LABELS } from '../../utils/constants';
+import { CARD_RARITIES, RARITY_LABELS, CARD_CONDITIONS, CONDITION_LABELS } from '../../utils/constants';
+import cardService from '../../services/cardService';
+import { parseApiError } from '../../utils/errors';
 import styles from './CatalogPage.module.css';
+
+const EMPTY_ADD_FORM = { condition: 'NEAR_MINT', quantity: 1 };
 
 function CatalogPage() {
   const { user, logout } = useAuth();
+  const { addToast } = useNotification();
+  const navigate = useNavigate();
+  const isAdmin = user?.role === 'ADMIN';
   const { cards, loading, error, pagination, filters, setFilter, setPage } = useCatalog();
+  const { deleteCard, loading: deleteLoading } = useDeleteCard();
 
-  const cardsWithOwnership = cards.map(card => ({
-    ...card,
-    _isOwn: card.userId === user?.id,
-  }));
+  const [addTarget, setAddTarget] = useState(null);
+  const [addForm, setAddForm] = useState(EMPTY_ADD_FORM);
+  const [addLoading, setAddLoading] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+
+  async function handleAddToInventory(e) {
+    e.preventDefault();
+    setAddLoading(true);
+    try {
+      await cardService.addToInventory(user.id, {
+        cardId: addTarget.id,
+        condition: addForm.condition,
+        quantity: Number(addForm.quantity),
+      });
+      addToast('success', `"${addTarget.name}" added to your inventory!`);
+      setAddTarget(null);
+      setAddForm(EMPTY_ADD_FORM);
+    } catch (err) {
+      addToast('error', parseApiError(err).message);
+    } finally {
+      setAddLoading(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    await deleteCard(deleteTarget.id, deleteTarget.name);
+    setDeleteTarget(null);
+  }
 
   return (
     <MainLayout user={user} onLogout={logout}>
       <div className={styles.page}>
-        <h1 className={styles.title}>Card Catalog</h1>
-        <p className={styles.subtitle}>Discover cards from all collectors</p>
+        <div className={styles.header}>
+          <div>
+            <h1 className={styles.title}>Card Catalog</h1>
+            <p className={styles.subtitle}>Browse all available cards</p>
+          </div>
+          {isAdmin && (
+            <Button label="Add Catalog Card" onClick={() => navigate('/cards/create')} />
+          )}
+        </div>
 
         <div className={styles.filters}>
           <Input
@@ -44,10 +88,12 @@ function CatalogPage() {
         {error && <p className={styles.error}>{error}</p>}
 
         <CardGrid
-          cards={cardsWithOwnership}
+          cards={cards}
           loading={loading}
-          showOwner={true}
           emptyMessage="No cards found matching your search."
+          onAddToInventory={card => setAddTarget(card)}
+          onEdit={isAdmin ? card => navigate(`/cards/${card.id}/edit`) : undefined}
+          onDelete={isAdmin ? card => setDeleteTarget(card) : undefined}
         />
 
         {pagination.totalPages > 1 && (
@@ -58,6 +104,44 @@ function CatalogPage() {
           </div>
         )}
       </div>
+
+      {/* Add to inventory modal */}
+      <Modal isOpen={!!addTarget} onClose={() => setAddTarget(null)} title={`Add "${addTarget?.name}" to Inventory`}>
+        <form onSubmit={handleAddToInventory}>
+          <div className={styles.field}>
+            <label className={styles.label}>Condition</label>
+            <select
+              className={styles.select}
+              value={addForm.condition}
+              onChange={e => setAddForm(f => ({ ...f, condition: e.target.value }))}
+            >
+              {CARD_CONDITIONS.map(c => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
+            </select>
+          </div>
+          <Input
+            name="quantity"
+            label="Quantity"
+            type="number"
+            value={addForm.quantity}
+            onChange={e => setAddForm(f => ({ ...f, quantity: e.target.value }))}
+            min={1}
+          />
+          <div className={styles.modalActions}>
+            <Button label="Cancel" type="button" onClick={() => setAddTarget(null)} variant="secondary" />
+            <Button label="Add to Inventory" type="submit" isLoading={addLoading} />
+          </div>
+        </form>
+      </Modal>
+
+      {/* Admin: delete catalog card */}
+      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Delete Catalog Card">
+        <p>Permanently delete <strong>{deleteTarget?.name}</strong> from the catalog?</p>
+        <p className={styles.warning}>This will also remove it from all user inventories.</p>
+        <div className={styles.modalActions}>
+          <Button label="Cancel" onClick={() => setDeleteTarget(null)} variant="secondary" />
+          <Button label="Delete" onClick={handleDelete} variant="danger" isLoading={deleteLoading} />
+        </div>
+      </Modal>
     </MainLayout>
   );
 }

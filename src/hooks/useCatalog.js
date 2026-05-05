@@ -9,7 +9,7 @@ function useCatalog() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
-  const [filters, setFilters] = useState({ search: '', rarity: '', cardType: '', edition: '', page: 1 });
+  const [filters, setFilters] = useState({ search: '', rarity: '', setId: '', page: 1 });
 
   const debouncedSearch = useDebounce(filters.search);
 
@@ -22,18 +22,17 @@ function useCatalog() {
         size: DEFAULT_PAGE_SIZE,
         ...(debouncedSearch ? { search: debouncedSearch } : {}),
         ...(filters.rarity ? { rarity: filters.rarity } : {}),
-        ...(filters.cardType ? { cardType: filters.cardType } : {}),
-        ...(filters.edition ? { edition: filters.edition } : {}),
+        ...(filters.setId ? { setId: filters.setId } : {}),
       };
       const data = await cardService.listCards(params);
       setCards(data.content || []);
-      setPagination({ page: filters.page, totalPages: data.totalPages || 1, total: data.totalElements || 0 });
+      setPagination({ page: filters.page, totalPages: data.page?.totalPages || 1, total: data.page?.totalElements || 0 });
     } catch (err) {
       setError(parseApiError(err).message);
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearch, filters.rarity, filters.cardType, filters.edition, filters.page]);
+  }, [debouncedSearch, filters.rarity, filters.setId, filters.page]);
 
   useEffect(() => {
     fetchCards();
