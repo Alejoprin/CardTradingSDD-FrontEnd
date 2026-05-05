@@ -11,6 +11,7 @@ import Input from '../../components/common/Input/Input';
 import cardService from '../../services/cardService';
 import { CARD_CONDITIONS, CONDITION_LABELS, CARD_RARITIES, RARITY_LABELS } from '../../utils/constants';
 import { parseApiError } from '../../utils/errors';
+import { validateImageFile } from '../../utils/validators';
 import styles from './InventoryPage.module.css';
 
 const EMPTY_CATALOG_FORM = { cardId: '', condition: 'NEAR_MINT', quantity: 1 };
@@ -221,7 +222,12 @@ function InventoryPage() {
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"
-              onChange={e => setCustomForm(f => ({ ...f, image: e.target.files[0] || null }))}
+              onChange={e => {
+                const file = e.target.files[0] || null;
+                const imgErr = file ? validateImageFile(file) : null;
+                if (imgErr) { addToast('error', imgErr); e.target.value = ''; return; }
+                setCustomForm(f => ({ ...f, image: file }));
+              }}
               className={styles.fileInput}
             />
           </div>

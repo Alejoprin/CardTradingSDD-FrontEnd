@@ -25,8 +25,8 @@ function CardPickerGrid({ cards, selectedIds, onToggle, loading }) {
           aria-pressed={selectedIds.includes(card.id)}
           aria-label={`${selectedIds.includes(card.id) ? 'Deselect' : 'Select'} ${card.name}`}
         >
-          {card.imageUrl
-            ? <img src={card.imageUrl} alt={card.name} className={styles.pickerImg} />
+          {(card.imageSmallUrl || card.imageUrl)
+            ? <img src={card.imageSmallUrl || card.imageUrl} alt={card.name} className={styles.pickerImg} />
             : <Placeholder size="sm" />
           }
           <span className={styles.pickerName}>{card.name}</span>

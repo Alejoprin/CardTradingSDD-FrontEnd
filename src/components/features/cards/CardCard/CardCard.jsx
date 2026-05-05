@@ -20,8 +20,8 @@ function CardCard({ card, showOwner = false, onEdit, onDelete, onProposeTrade, o
         onKeyDown={e => e.key === 'Enter' && navigate(`/cards/${card.id}`)}
         aria-label={`View details for ${card.name}`}
       >
-        {card.imageUrl
-          ? <img src={getImageUrl(card.imageUrl)} alt={card.name} className={styles.image} />
+        {(card.imageSmallUrl || card.imageUrl)
+          ? <img src={getImageUrl(card.imageSmallUrl || card.imageUrl)} alt={card.name} className={styles.image} />
           : <Placeholder size="md" />
         }
       </div>
@@ -55,6 +55,7 @@ CardCard.propTypes = {
     name: PropTypes.string.isRequired,
     rarity: PropTypes.string,
     imageUrl: PropTypes.string,
+    imageSmallUrl: PropTypes.string,
     setName: PropTypes.string,
     gameName: PropTypes.string,
     condition: PropTypes.string,
