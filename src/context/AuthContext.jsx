@@ -22,6 +22,15 @@ export function AuthProvider({ children }) {
   // Silent session restore on mount
   useEffect(() => {
     async function restoreSession() {
+      // <--- NUEVO: Verificamos si hay indicios de sesión previa
+      const hasSession = localStorage.getItem('has_session');
+
+      // Si no hay sesión, cortamos la ejecución, quitamos el loading y evitamos el refresh
+      if (!hasSession) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const data = await authService.refresh();
         setTokens({ accessToken: data.accessToken });
@@ -32,6 +41,7 @@ export function AuthProvider({ children }) {
         setIsAuthenticated(true);
       } catch {
         // No valid refresh token — user must log in
+        localStorage.removeItem('has_session'); // <--- NUEVO: Limpiamos la bandera si falla
         clearTokens();
         setUser(null);
         setIsAuthenticated(false);
@@ -44,6 +54,9 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (email, password) => {
     const data = await authService.login(email, password);
+
+    localStorage.setItem('has_session', 'true'); // <--- NUEVO: Guardamos la bandera de éxito
+
     setTokens({ accessToken: data.accessToken });
     const payload = decodeJwtPayload(data.accessToken);
     const userId = payload?.sub;
@@ -56,6 +69,7 @@ export function AuthProvider({ children }) {
   // Register logout callback with api interceptor so it can force logout on failed refresh
   useEffect(() => {
     setLogoutCallback(() => {
+      localStorage.removeItem('has_session'); // <--- NUEVO: Limpiamos la bandera
       clearTokens();
       setUser(null);
       setIsAuthenticated(false);
@@ -68,6 +82,7 @@ export function AuthProvider({ children }) {
     } catch {
       // Swallow logout errors — always clear local state
     } finally {
+      localStorage.removeItem('has_session'); // <--- NUEVO: Limpiamos la bandera al salir
       clearTokens();
       setUser(null);
       setIsAuthenticated(false);

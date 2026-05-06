@@ -34,8 +34,4 @@ DashboardStats.propTypes = {
   loading: PropTypes.bool,
 };
 
-DashboardStats.defaultProps = {
-  loading: false,
-};
-
 export default DashboardStats;
