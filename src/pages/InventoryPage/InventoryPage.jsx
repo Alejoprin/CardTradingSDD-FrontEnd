@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -9,13 +9,77 @@ import Button from '../../components/common/Button/Button';
 import Modal from '../../components/common/Modal/Modal';
 import Input from '../../components/common/Input/Input';
 import cardService from '../../services/cardService';
-import { CARD_CONDITIONS, CONDITION_LABELS, CARD_RARITIES, RARITY_LABELS } from '../../utils/constants';
+import api from '../../services/api';
+import {
+  CARD_CONDITIONS, CONDITION_LABELS, CARD_RARITIES,
+  RARITY_LABELS
+} from '../../utils/constants';
 import { parseApiError } from '../../utils/errors';
 import { validateImageFile } from '../../utils/validators';
 import styles from './InventoryPage.module.css';
 
-const EMPTY_CATALOG_FORM = { cardId: '', condition: 'NEAR_MINT', quantity: 1 };
-const EMPTY_CUSTOM_FORM = { name: '', rarity: 'COMMON', condition: 'NEAR_MINT', quantity: 1, image: null };
+const EMPTY_CATALOG_FORM = {
+  cardId: '', condition: 'NEAR_MINT', quantity: 1
+};
+const EMPTY_CUSTOM_FORM = {
+  name: '', rarity: 'COMMON', condition: 'NEAR_MINT', quantity: 1, image: null
+};
+
+// ── Reusable cascade dropdown component ──────────────────────────────────────
+function CascadeDropdown({ label, options, value, onSelect, disabled, loading, placeholder }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const selected = options.find(o => o.id === value);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className={styles.field} ref={ref}>
+      <label className={styles.label}>{label}</label>
+      <button
+        type="button"
+        className={`${styles.dropdownTrigger} ${open ? styles.dropdownTriggerOpen : ''} ${disabled ? styles.dropdownTriggerDisabled : ''}`}
+        onClick={() => !disabled && setOpen(o => !o)}
+        disabled={disabled || loading}
+      >
+        <span className={selected ? styles.dropdownSelected : styles.dropdownPlaceholder}>
+          {loading ? 'Loading…' : (selected?.name || placeholder)}
+        </span>
+        <svg
+          className={`${styles.chevron} ${open ? styles.chevronUp : ''}`}
+          viewBox="0 0 20 20" fill="currentColor" width="16" height="16"
+        >
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </button>
+      {open && options.length > 0 && (
+        <ul className={styles.dropdown}>
+          {options.map(opt => (
+            <li key={opt.id}>
+              <button
+                type="button"
+                className={`${styles.dropdownItem} ${value === opt.id ? styles.dropdownItemActive : ''}`}
+                onClick={() => { onSelect(opt); setOpen(false); }}
+              >
+                <span>{opt.name}</span>
+                {opt.code && <span className={styles.setCode}>{opt.code}</span>}
+                {opt.cardNumber && <span className={styles.setCode}>#{opt.cardNumber}</span>}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 function InventoryPage() {
   const { user, logout } = useAuth();
@@ -28,15 +92,87 @@ function InventoryPage() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  // Add catalog card to inventory
+  // Add catalog card — cascade state
   const [showCatalogModal, setShowCatalogModal] = useState(false);
   const [catalogForm, setCatalogForm] = useState(EMPTY_CATALOG_FORM);
   const [catalogLoading, setCatalogLoading] = useState(false);
 
-  // Add custom card to inventory
+  const [games, setGames] = useState([]);
+  const [gamesLoading, setGamesLoading] = useState(false);
+  const [selectedGame, setSelectedGame] = useState(null);
+
+  const [sets, setSets] = useState([]);
+  const [setsLoading, setSetsLoading] = useState(false);
+  const [selectedSet, setSelectedSet] = useState(null);
+
+  const [catalogCards, setCatalogCards] = useState([]);
+  const [catalogCardsLoading, setCatalogCardsLoading] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  // Add custom card
   const [showCustomModal, setShowCustomModal] = useState(false);
   const [customForm, setCustomForm] = useState(EMPTY_CUSTOM_FORM);
   const [customLoading, setCustomLoading] = useState(false);
+
+  // Load games when catalog modal opens
+  useEffect(() => {
+    if (!showCatalogModal) return;
+    setGamesLoading(true);
+    api.get('/cards/games')
+      .then(res => setGames(res.data))
+      .catch(() => addToast('error', 'Could not load games'))
+      .finally(() => setGamesLoading(false));
+  }, [showCatalogModal]);
+
+  function handleCloseCatalogModal() {
+    setShowCatalogModal(false);
+    setCatalogForm(EMPTY_CATALOG_FORM);
+    setSelectedGame(null);
+    setSelectedSet(null);
+    setSelectedCard(null);
+    setSets([]);
+    setCatalogCards([]);
+  }
+
+  async function handleSelectGame(game) {
+    setSelectedGame(game);
+    setSelectedSet(null);
+    setSelectedCard(null);
+    setCatalogForm(f => ({ ...f, cardId: '' }));
+    setCatalogCards([]);
+    setSetsLoading(true);
+    try {
+      const res = await api.get('/cards/sets', { params: { gameId: game.id } });
+      setSets(res.data);
+    } catch {
+      addToast('error', 'Could not load sets');
+    } finally {
+      setSetsLoading(false);
+    }
+  }
+
+  async function handleSelectSet(set) {
+    setSelectedSet(set);
+    setSelectedCard(null);
+    setCatalogForm(f => ({ ...f, cardId: '' }));
+    setCatalogCardsLoading(true);
+    try {
+      const res = await api.get(`/cards/set/${set.id}`, {
+        params: { page: 0, size: 100, sortBy: 'cardNumber' }
+      });
+      // API returns Page<CardDetailResponse>, extract content
+      setCatalogCards(res.data.content || res.data);
+    } catch {
+      addToast('error', 'Could not load cards for this set');
+    } finally {
+      setCatalogCardsLoading(false);
+    }
+  }
+
+  function handleSelectCard(card) {
+    setSelectedCard(card);
+    setCatalogForm(f => ({ ...f, cardId: card.id }));
+  }
 
   async function handleRemove() {
     if (!deleteTarget) return;
@@ -55,16 +191,19 @@ function InventoryPage() {
 
   async function handleAddFromCatalog(e) {
     e.preventDefault();
+    if (!catalogForm.cardId) {
+      addToast('error', 'Please select a card');
+      return;
+    }
     setCatalogLoading(true);
     try {
       await cardService.addToInventory(user.id, {
-        cardId: catalogForm.cardId.trim(),
+        cardId: catalogForm.cardId,
         condition: catalogForm.condition,
         quantity: Number(catalogForm.quantity),
       });
       addToast('success', 'Card added to your inventory!');
-      setShowCatalogModal(false);
-      setCatalogForm(EMPTY_CATALOG_FORM);
+      handleCloseCatalogModal();
       refetch();
     } catch (err) {
       addToast('error', parseApiError(err).message);
@@ -120,6 +259,7 @@ function InventoryPage() {
           cards={cards}
           loading={loading}
           emptyMessage="No cards in your inventory yet."
+          showQuantity
           onDelete={card => setDeleteTarget(card)}
         />
 
@@ -143,16 +283,41 @@ function InventoryPage() {
       </Modal>
 
       {/* Add from catalog */}
-      <Modal isOpen={showCatalogModal} onClose={() => setShowCatalogModal(false)} title="Add Card from Catalog">
+      <Modal isOpen={showCatalogModal} onClose={handleCloseCatalogModal} title="Add Card from Catalog">
         <form onSubmit={handleAddFromCatalog}>
-          <Input
-            name="cardId"
-            label="Card ID (from catalog)"
-            value={catalogForm.cardId}
-            onChange={e => setCatalogForm(f => ({ ...f, cardId: e.target.value }))}
-            placeholder="Paste the card UUID from the catalog"
-            required
+
+          {/* 1. Game */}
+          <CascadeDropdown
+            label="Game"
+            options={games}
+            value={selectedGame?.id}
+            onSelect={handleSelectGame}
+            loading={gamesLoading}
+            placeholder="Select a game"
           />
+
+          {/* 2. Set — enabled after game selected */}
+          <CascadeDropdown
+            label="Set / Collection"
+            options={sets}
+            value={selectedSet?.id}
+            onSelect={handleSelectSet}
+            disabled={!selectedGame}
+            loading={setsLoading}
+            placeholder={selectedGame ? 'Select a set' : 'Select a game first'}
+          />
+
+          {/* 3. Card — enabled after set selected */}
+          <CascadeDropdown
+            label="Card"
+            options={catalogCards}
+            value={selectedCard?.id}
+            onSelect={handleSelectCard}
+            disabled={!selectedSet}
+            loading={catalogCardsLoading}
+            placeholder={selectedSet ? 'Select a card' : 'Select a set first'}
+          />
+
           <div className={styles.field}>
             <label className={styles.label}>Condition</label>
             <select
@@ -163,6 +328,7 @@ function InventoryPage() {
               {CARD_CONDITIONS.map(c => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
             </select>
           </div>
+
           <Input
             name="quantity"
             label="Quantity"
@@ -171,9 +337,10 @@ function InventoryPage() {
             onChange={e => setCatalogForm(f => ({ ...f, quantity: e.target.value }))}
             min={1}
           />
+
           <div className={styles.modalActions}>
-            <Button label="Cancel" type="button" onClick={() => setShowCatalogModal(false)} variant="secondary" />
-            <Button label="Add to Inventory" type="submit" isLoading={catalogLoading} />
+            <Button label="Cancel" type="button" onClick={handleCloseCatalogModal} variant="secondary" />
+            <Button label="Add to Inventory" type="submit" isLoading={catalogLoading} disabled={!catalogForm.cardId} />
           </div>
         </form>
       </Modal>

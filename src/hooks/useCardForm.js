@@ -35,6 +35,13 @@ function useCardForm(initialValues, mode = 'create') {
     setValues(prev => ({ ...prev, [name]: value }));
   }, []);
 
+  // ← nuevo: actualiza cualquier campo programáticamente (sin evento DOM)
+  const setFieldValue = useCallback((name, value) => {
+    setValues(prev => ({ ...prev, [name]: value }));
+    setErrors(prev => ({ ...prev, [name]: validateRequired(value, name) }));
+    setTouched(prev => ({ ...prev, [name]: true }));
+  }, []);
+
   const handleImageChange = useCallback((file) => {
     setValues(prev => ({ ...prev, image: file }));
   }, []);
@@ -97,6 +104,7 @@ function useCardForm(initialValues, mode = 'create') {
     handleChange,
     handleImageChange,
     handleBlur,
+    setFieldValue, // ← exportado
     submit,
   };
 }
