@@ -8,13 +8,19 @@ import { useUI } from '../../../context/UIContext';
 import styles from './MainLayout.module.css';
 
 function MainLayout({ user, onLogout, children }) {
-  const { sidebarOpen } = useUI();
+  const { sidebarOpen, closeSidebar } = useUI();
 
   return (
     <div className={styles.root}>
       <Header user={user} onLogout={onLogout} />
       <div className={styles.body}>
         <Sidebar isOpen={sidebarOpen} />
+
+        {/* Overlay para cerrar sidebar en mobile al tocar fuera */}
+        {sidebarOpen && (
+          <div className={styles.overlay} onClick={closeSidebar} aria-hidden="true" />
+        )}
+
         <main className={styles.main}>
           {children}
         </main>
