@@ -25,7 +25,8 @@ function OAuth2CallbackPage() {
       try {
         await loginWithGoogle(accessToken);
         navigate('/dashboard', { replace: true });
-      } catch {
+      } catch (error) {
+        console.error('loginWithGoogle error:', error);
         navigate('/login', { replace: true });
       }
     }
