@@ -29,6 +29,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import EditProfilePage from './pages/EditProfilePage/EditProfilePage';
 import ChangePasswordPage from './pages/ChangePasswordPage/ChangePasswordPage';
 import PublicProfilePage from './pages/PublicProfilePage/PublicProfilePage';
+import OAuth2CallbackPage from './pages/OAuth2CallbackPage/OAuth2CallbackPage';
 
 // Admin pages
 import AdminPage from './pages/AdminPage/AdminPage';
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
   { path: '/register', element: <RegisterPage /> },
   { path: '/reset-password', element: <ResetPasswordPage /> },
+  { path: '/oauth2/callback', element: <OAuth2CallbackPage /> },
 
   // Protected routes
   {
@@ -69,7 +71,9 @@ const router = createBrowserRouter([
 
   { path: '/', element: <Navigate to="/dashboard" replace /> },
   { path: '*', element: <Navigate to="/login" replace /> },
-]);
+], {
+  basename: '/CardTradingSDD-FrontEnd'
+});
 
 function App() {
   return (
