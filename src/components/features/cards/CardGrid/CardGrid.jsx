@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import CardCard from '../CardCard/CardCard';
 import Spinner from '../../../common/Spinner/Spinner';
 import styles from './CardGrid.module.css';
-
 function CardGrid({
   cards,
   loading = false,
   emptyMessage,
   showOwner = false,
+  showQuantity = false,
   onEdit,
   onDelete,
   onProposeTrade,
@@ -29,7 +29,6 @@ function CardGrid({
       </div>
     );
   }
-
   return (
     <div className={styles.grid}>
       {cards.map(card => (
@@ -37,6 +36,7 @@ function CardGrid({
           key={card.id}
           card={card}
           showOwner={showOwner}
+          showQuantity={showQuantity}
           onEdit={onEdit}
           onDelete={onDelete}
           onProposeTrade={onProposeTrade}
@@ -46,16 +46,15 @@ function CardGrid({
     </div>
   );
 }
-
 CardGrid.propTypes = {
   cards: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   emptyMessage: PropTypes.string,
   showOwner: PropTypes.bool,
+  showQuantity: PropTypes.bool,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
   onProposeTrade: PropTypes.func,
   onAddToInventory: PropTypes.func,
 };
-
 export default CardGrid;
