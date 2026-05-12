@@ -11,12 +11,15 @@ function useInventory(userId) {
   const [filters, setFilters] = useState({ page: 1 });
 
   const fetchInventory = useCallback(async () => {
+    console.log('fetchInventory called, userId:', userId);
     if (!userId) return;
     setLoading(true);
     setError(null);
     try {
       const params = { page: filters.page - 1, size: DEFAULT_PAGE_SIZE };
       const data = await cardService.getUserInventory(userId, params);
+      console.log('inventory data:', data);        // ← añade esto
+      console.log('inventory content:', data.content); // ← y esto
       const items = (data.content || []).map(item => ({
         ...item,
         id: item.userCardId,

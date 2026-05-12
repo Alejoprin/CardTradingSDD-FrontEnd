@@ -42,3 +42,6 @@ $RECYCLE.BIN/
 *.lnk
 
 .env
+.DS_Store
+dist
+build

@@ -10,23 +10,23 @@ function decodeJwtPayload(token) {
     if (!token || typeof token !== 'string') {
       return null;
     }
-    
+
     // Verificar que tiene la estructura correcta (header.payload.signature)
     const parts = token.split('.');
     if (parts.length !== 3) {
       return null;
     }
-    
+
     // Decodificar el payload
     const payload = JSON.parse(
       atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'))
     );
-    
+
     // Opcional: Verificar expiración
     if (payload.exp && payload.exp * 1000 < Date.now()) {
       return null;
     }
-    
+
     return payload;
   } catch {
     return null;
@@ -53,34 +53,34 @@ export function AuthProvider({ children }) {
   // Restaurar sesión silenciosamente al montar
   useEffect(() => {
     let cancelled = false;
-    
+
     async function restoreSession() {
       const hasSession = localStorage.getItem('has_session');
-      
+
       // Si no hay sesión previa, evitar llamada al backend
       if (!hasSession) {
         setLoading(false);
         return;
       }
-      
+
       try {
         const data = await authService.refresh();
-        
+
         // Verificar si el componente sigue montado
         if (cancelled) return;
-        
+
         setTokens({ accessToken: data.accessToken });
-        
+
         const payload = decodeJwtPayload(data.accessToken);
         const userId = payload?.sub;
-        
+
         // Si no hay userId válido, lanzar error para forzar logout
         if (!userId) {
           throw new Error('Invalid token: missing user ID');
         }
-        
+
         const profile = await userService.getUserProfile(userId);
-        
+
         // Verificar de nuevo antes de actualizar estado
         if (!cancelled) {
           setUser(profile);
@@ -100,40 +100,57 @@ export function AuthProvider({ children }) {
         }
       }
     }
-    
+
     restoreSession();
-    
+
     // Cleanup: marcar como cancelado cuando el componente se desmonte
-    return () => { 
-      cancelled = true; 
+    return () => {
+      cancelled = true;
     };
   }, []);
 
   const login = useCallback(async (email, password) => {
     const data = await authService.login(email, password);
-    
+
     localStorage.setItem('has_session', 'true');
     setTokens({ accessToken: data.accessToken });
-    
+
     const payload = decodeJwtPayload(data.accessToken);
     const userId = payload?.sub;
-    
+
     // Validar que el token tenga userId
     if (!userId) {
       throw new Error('Invalid token: missing user ID');
     }
-    
+
     const profile = await userService.getUserProfile(userId);
-    
+
     // Validar que se obtuvo el perfil
     if (!profile) {
       throw new Error('Failed to fetch user profile');
     }
-    
+
     setUser(profile);
     setIsAuthenticated(true);
-    
+
     return data;
+  }, []);
+
+  const loginWithGoogle = useCallback(async (accessToken) => {
+    localStorage.setItem('has_session', 'true');
+    setTokens({ accessToken }); // igual que setTokens del login normal
+
+    const payload = decodeJwtPayload(accessToken);
+    const userId = payload?.sub;
+
+    if (!userId) throw new Error('Invalid token: missing user ID');
+
+    const profile = await userService.getUserProfile(userId);
+
+    if (!profile) throw new Error('Failed to fetch user profile');
+
+    setUser(profile);
+    setIsAuthenticated(true);
   }, []);
 
   const logout = useCallback(async () => {
@@ -155,7 +172,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, loading, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, loading, login, loginWithGoogle, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -60,6 +60,27 @@ function LoginForm({ onSuccess }) {
         isLoading={isSubmitting}
         disabled={isSubmitting}
       />
+      {/* Separador */}
+      <div className={styles.divider}>
+        <span>or</span>
+      </div>
+
+      {/* Botón Google */}
+      <button
+        type="button"
+        className={styles.googleButton}
+        onClick={() => {
+          window.location.href = `${import.meta.env.VITE_API_BASE_URL.replace('/api/v1', '')}/oauth2/authorization/google`;
+        }}
+      >
+        <img
+          src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+          alt="Google"
+          width={20}
+          height={20}
+        />
+        Continue with Google
+      </button>
     </form>
   );
 }
