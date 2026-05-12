@@ -55,7 +55,7 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
     if (!user?.id) return;
     setOwnLoading(true);
     cardService.getUserInventory(user.id, { size: 50 })
-      .then(data => setOwnCards(data.cards || []))
+      .then(data => setOwnCards((data.content || []).map(item => ({ ...item, id: item.userCardId, name: item.cardName }))))
       .catch(err => console.error(parseApiError(err).message))
       .finally(() => setOwnLoading(false));
   }, [user?.id]);
@@ -64,7 +64,7 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
     if (!targetUserId) return;
     setTargetLoading(true);
     cardService.getUserInventory(targetUserId, { size: 50 })
-      .then(data => setTargetCards(data.cards || []))
+      .then(data => setTargetCards((data.content || []).map(item => ({ ...item, id: item.userCardId, name: item.cardName }))))
       .catch(err => console.error(parseApiError(err).message))
       .finally(() => setTargetLoading(false));
   }, [targetUserId]);
