@@ -70,7 +70,8 @@ function LoginForm({ onSuccess }) {
         type="button"
         className={styles.googleButton}
         onClick={() => {
-          window.location.href = `${import.meta.env.VITE_API_BASE_URL.replace('/api/v1', '')}/oauth2/authorization/google`;
+          const base = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1').replace('/api/v1', '');
+          window.location.href = `${base}/oauth2/authorization/google`;
         }}
       >
         <img

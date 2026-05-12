@@ -72,7 +72,7 @@ const router = createBrowserRouter([
   { path: '/', element: <Navigate to="/dashboard" replace /> },
   { path: '*', element: <Navigate to="/login" replace /> },
 ], {
-  basename: '/CardTradingSDD-FrontEnd'
+  basename: import.meta.env.BASE_URL,
 });
 
 function App() {
