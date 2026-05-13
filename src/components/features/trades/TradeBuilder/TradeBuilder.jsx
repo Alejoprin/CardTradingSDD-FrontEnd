@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useAuth } from '../../../../context/AuthContext';
 import useTradeBuilder from '../../../../hooks/useTradeBuilder';
@@ -8,7 +8,6 @@ import { MAX_TRADE_CARDS_PER_SIDE } from '../../../../utils/constants';
 import Placeholder from '../../../common/Placeholder/Placeholder';
 import Button from '../../../common/Button/Button';
 import Spinner from '../../../common/Spinner/Spinner';
-import Input from '../../../common/Input/Input';
 import styles from './TradeBuilder.module.css';
 
 function CardPickerGrid({ cards, selectedIds, onToggle, loading }) {
@@ -37,6 +36,134 @@ function CardPickerGrid({ cards, selectedIds, onToggle, loading }) {
   );
 }
 
+// ── Card search autocomplete ──────────────────────────────────────────────────
+function CardSearchInput({ onSelectCard }) {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [open, setOpen] = useState(false);
+  const debounceRef = useRef(null);
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  function handleChange(e) {
+    const val = e.target.value;
+    setQuery(val);
+    clearTimeout(debounceRef.current);
+    if (!val.trim()) { setResults([]); setOpen(false); return; }
+    debounceRef.current = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const data = await cardService.searchCards(val);
+        setResults(data.content || []);
+        setOpen(true);
+      } catch {
+        setResults([]);
+      } finally {
+        setSearching(false);
+      }
+    }, 300);
+  }
+
+  function handleSelect(card) {
+    setQuery(card.name);
+    setOpen(false);
+    onSelectCard(card);
+  }
+
+  return (
+    <div className={styles.searchWrapper} ref={wrapperRef}>
+      <div className={styles.searchInputRow}>
+        <input
+          className={styles.searchInput}
+          type="text"
+          placeholder="Search a card by name..."
+          value={query}
+          onChange={handleChange}
+          autoComplete="off"
+        />
+        {searching && <Spinner size="sm" />}
+      </div>
+      {open && results.length > 0 && (
+        <ul className={styles.searchDropdown}>
+          {results.map(card => (
+            <li key={card.id}>
+              <button
+                type="button"
+                className={styles.searchItem}
+                onClick={() => handleSelect(card)}
+              >
+                {card.imageSmallUrl
+                  ? <img src={card.imageSmallUrl} alt={card.name} className={styles.searchThumb} />
+                  : <div className={styles.searchThumbPlaceholder}>🃏</div>
+                }
+                <div className={styles.searchItemInfo}>
+                  <span className={styles.searchItemName}>{card.name}</span>
+                  <span className={styles.searchItemMeta}>{card.gameName} · {card.setName}</span>
+                </div>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {open && !searching && results.length === 0 && (
+        <div className={styles.searchEmpty}>No cards found</div>
+      )}
+    </div>
+  );
+}
+
+// ── Owner list ────────────────────────────────────────────────────────────────
+function OwnerList({ cardId, onSelectOwner, selectedOwnerId }) {
+  const [owners, setOwners] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!cardId) return;
+    setLoading(true);
+    cardService.getCardOwners(cardId)
+      .then(setOwners)
+      .catch(() => setOwners([]))
+      .finally(() => setLoading(false));
+  }, [cardId]);
+
+  if (loading) return <div className={styles.center}><Spinner /></div>;
+  if (!owners.length) return <p className={styles.empty}>No users have this card available.</p>;
+
+  return (
+    <ul className={styles.ownerList}>
+      {owners.map(owner => (
+        <li key={owner.userId}>
+          <button
+            type="button"
+            className={`${styles.ownerItem} ${selectedOwnerId === owner.userId ? styles.ownerSelected : ''}`}
+            onClick={() => onSelectOwner(owner)}
+          >
+            <div className={styles.ownerAvatar}>
+              {owner.username?.charAt(0).toUpperCase()}
+            </div>
+            <div className={styles.ownerInfo}>
+              <span className={styles.ownerName}>{owner.username}</span>
+              <span className={styles.ownerMeta}>Qty: {owner.quantity} · {owner.condition.replace('_', ' ')}</span>
+            </div>
+            {selectedOwnerId === owner.userId && (
+              <span className={styles.ownerCheck}>✓</span>
+            )}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// ── Main TradeBuilder ─────────────────────────────────────────────────────────
 function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
   const { user } = useAuth();
   const {
@@ -49,7 +176,10 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
   const [targetCards, setTargetCards] = useState([]);
   const [ownLoading, setOwnLoading] = useState(false);
   const [targetLoading, setTargetLoading] = useState(false);
-  const [targetUserInput, setTargetUserInput] = useState(initialTargetUserId || '');
+
+  // Step 2 new state
+  const [selectedCatalogCard, setSelectedCatalogCard] = useState(null);
+  const [selectedOwner, setSelectedOwner] = useState(null);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -60,6 +190,7 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
       .finally(() => setOwnLoading(false));
   }, [user?.id]);
 
+  // Load target cards when owner is selected
   useEffect(() => {
     if (!targetUserId) return;
     setTargetLoading(true);
@@ -68,6 +199,11 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
       .catch(err => console.error(parseApiError(err).message))
       .finally(() => setTargetLoading(false));
   }, [targetUserId]);
+
+  function handleSelectOwner(owner) {
+    setSelectedOwner(owner);
+    setTargetUserId(owner.userId);
+  }
 
   const ownSelectedIds = selectedOwnCards.map(c => c.id);
   const targetSelectedIds = selectedTargetCards.map(c => c.id);
@@ -85,6 +221,7 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
 
       {error && <p className={styles.error}>{error}</p>}
 
+      {/* Step 1 — sin cambios */}
       {step === 1 && (
         <div>
           <h2 className={styles.stepTitle}>Step 1: Select your cards to offer</h2>
@@ -96,27 +233,51 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
         </div>
       )}
 
+      {/* Step 2 — nuevo flujo */}
       {step === 2 && (
         <div>
           <h2 className={styles.stepTitle}>Step 2: Select cards to request</h2>
-          {!initialTargetUserId && (
-            <div className={styles.userIdRow}>
-              <Input
-                name="targetUserId"
-                label="Target User ID"
-                value={targetUserInput}
-                onChange={e => setTargetUserInput(e.target.value)}
-                placeholder="Paste the user ID"
+
+          {/* 2a — buscar carta */}
+          <div className={styles.stepSection}>
+            <p className={styles.sectionLabel}>1. Search for a card</p>
+            <CardSearchInput onSelectCard={(card) => {
+              setSelectedCatalogCard(card);
+              setSelectedOwner(null);
+              setTargetUserId('');
+            }} />
+          </div>
+
+          {/* 2b — elegir owner */}
+          {selectedCatalogCard && (
+            <div className={styles.stepSection}>
+              <p className={styles.sectionLabel}>
+                2. Select a user who has <strong>{selectedCatalogCard.name}</strong>
+              </p>
+              <OwnerList
+                cardId={selectedCatalogCard.id}
+                onSelectOwner={handleSelectOwner}
+                selectedOwnerId={selectedOwner?.userId}
               />
-              <Button label="Load Cards" onClick={() => setTargetUserId(targetUserInput)} variant="secondary" />
             </div>
           )}
+
+          {/* 2c — elegir cartas del owner */}
           {targetUserId && (
-            <>
-              <p className={styles.hint}>Select up to {MAX_TRADE_CARDS_PER_SIDE} cards. Selected: {selectedTargetCards.length}/{MAX_TRADE_CARDS_PER_SIDE}</p>
-              <CardPickerGrid cards={targetCards} selectedIds={targetSelectedIds} onToggle={toggleTargetCard} loading={targetLoading} />
-            </>
+            <div className={styles.stepSection}>
+              <p className={styles.sectionLabel}>
+                3. Select cards from <strong>{selectedOwner?.username}</strong>'s inventory
+              </p>
+              <p className={styles.hint}>Selected: {selectedTargetCards.length}/{MAX_TRADE_CARDS_PER_SIDE}</p>
+              <CardPickerGrid
+                cards={targetCards}
+                selectedIds={targetSelectedIds}
+                onToggle={toggleTargetCard}
+                loading={targetLoading}
+              />
+            </div>
           )}
+
           <div className={styles.nav}>
             <Button label="Back" onClick={prevStep} variant="secondary" />
             <Button label="Review Trade" onClick={nextStep} disabled={!selectedTargetCards.length} />
@@ -124,6 +285,7 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
         </div>
       )}
 
+      {/* Step 3 — sin cambios */}
       {step === 3 && (
         <div>
           <h2 className={styles.stepTitle}>Step 3: Review and confirm</h2>

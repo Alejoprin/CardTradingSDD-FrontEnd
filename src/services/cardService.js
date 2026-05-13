@@ -50,6 +50,18 @@ const cardService = {
   async removeFromInventory(userId, userCardId) {
     await api.delete(`/users/${userId}/inventory/${userCardId}`);
   },
+
+  // Search cards by name (for trade builder autocomplete)
+  async searchCards(search, params = {}) {
+    const response = await api.get('/cards', { params: { search, size: 10, ...params } });
+    return response.data;
+  },
+
+  // Get users who own a specific card
+  async getCardOwners(cardId) {
+    const response = await api.get(`/cards/${cardId}/owners`);
+    return response.data;
+  },
 };
 
 export default cardService;
