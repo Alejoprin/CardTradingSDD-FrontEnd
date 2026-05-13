@@ -1,9 +1,11 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import useDashboard from '../../hooks/useDashboard';
+import useInventory from '../../hooks/useInventory';
 import MainLayout from '../../components/layout/MainLayout/MainLayout';
 import DashboardStats from '../../components/features/dashboard/DashboardStats/DashboardStats';
 import QuickActions from '../../components/features/dashboard/QuickActions/QuickActions';
+import InventoryPreview from '../../components/features/dashboard/InventoryPreview/InventoryPreview';
 import { ACTIVITY_EVENT_TYPES } from '../../utils/constants';
 import { formatRelativeTime } from '../../utils/formatters';
 import styles from './DashboardPage.module.css';
@@ -22,6 +24,7 @@ const ACTIVITY_LABELS = {
 function DashboardPage() {
   const { user, logout } = useAuth();
   const { stats, activities, loading, error } = useDashboard(user?.id);
+  const { cards: inventoryCards, loading: inventoryLoading } = useInventory(user?.id);
 
   return (
     <MainLayout user={user} onLogout={logout}>
@@ -37,6 +40,8 @@ function DashboardPage() {
 
         <div className={styles.lower}>
           <QuickActions />
+
+          <InventoryPreview cards={inventoryCards} loading={inventoryLoading} />
 
           <div className={styles.feed}>
             <h2 className={styles.feedTitle}>Recent Activity</h2>
