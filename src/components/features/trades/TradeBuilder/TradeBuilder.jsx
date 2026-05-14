@@ -147,7 +147,10 @@ function OwnerList({ cardId, onSelectOwner, selectedOwnerId }) {
             onClick={() => onSelectOwner(owner)}
           >
             <div className={styles.ownerAvatar}>
-              {owner.username?.charAt(0).toUpperCase()}
+              {owner.profileImageUrl
+                ? <img src={owner.profileImageUrl} alt={owner.username} className={styles.ownerAvatarImg} />
+                : owner.username?.charAt(0).toUpperCase()
+              }
             </div>
             <div className={styles.ownerInfo}>
               <span className={styles.ownerName}>{owner.username}</span>
