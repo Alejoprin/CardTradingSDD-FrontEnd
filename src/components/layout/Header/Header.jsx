@@ -35,8 +35,8 @@ function Header({ user, onLogout }) {
         <div className={styles.actions}>
           {user && (
             <Link to="/profile" className={styles.userInfo} aria-label="My profile">
-              {user.avatarUrl
-                ? <img src={user.avatarUrl} alt={user.username} className={styles.avatar} />
+              {(user.profileImageUrl || user.avatarUrl)
+                ? <img src={user.profileImageUrl || user.avatarUrl} alt={user.username} className={styles.avatar} />
                 : <span className={styles.avatarPlaceholder}>{user.username?.charAt(0).toUpperCase()}</span>
               }
               <span className={styles.username}>{user.username}</span>
@@ -54,6 +54,7 @@ function Header({ user, onLogout }) {
 Header.propTypes = {
   user: PropTypes.shape({
     username: PropTypes.string,
+    profileImageUrl: PropTypes.string,
     avatarUrl: PropTypes.string,
   }),
   onLogout: PropTypes.func,
