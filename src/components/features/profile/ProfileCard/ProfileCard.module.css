@@ -17,6 +17,41 @@
   flex-shrink: 0;
 }
 
+.avatarWrapper {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.avatarClickable {
+  cursor: pointer;
+}
+
+.avatarOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  font-size: 1.4rem;
+}
+
+.avatarClickable:hover .avatarOverlay {
+  opacity: 1;
+}
+
+.avatarOverlayLoading {
+  opacity: 1;
+}
+
+.fileInputHidden {
+  display: none;
+}
+
 .avatarImg {
   width: 96px;
   height: 96px;
