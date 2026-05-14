@@ -13,8 +13,13 @@
   color: var(--color-text-disabled);
 }
 
-.current { color: var(--color-accent-main); }
-.done { color: var(--color-success); }
+.current {
+  color: var(--color-accent-main);
+}
+
+.done {
+  color: var(--color-success);
+}
 
 .dotNum {
   width: 28px;
@@ -109,8 +114,16 @@
   justify-content: center;
 }
 
-.center { display: flex; justify-content: center; padding: var(--spacing-xl); }
-.empty { color: var(--color-text-secondary); text-align: center; }
+.center {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-xl);
+}
+
+.empty {
+  color: var(--color-text-secondary);
+  text-align: center;
+}
 
 .userIdRow {
   display: flex;
@@ -156,4 +169,191 @@
   font-size: var(--font-size-xxxl);
   color: var(--color-text-disabled);
   align-self: center;
+}
+
+/* Card search */
+.searchWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+}
+
+.searchInputRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-paper);
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: var(--color-accent-main);
+}
+
+.searchDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--color-bg-paper);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  max-height: 300px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 4px 0;
+  margin: 0;
+}
+
+.searchItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.searchItem:hover {
+  background: var(--color-neutral-100);
+}
+
+.searchThumb {
+  width: 36px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.searchThumbPlaceholder {
+  width: 36px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-neutral-100);
+  border-radius: 4px;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.searchItemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.searchItemName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.searchItemMeta {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.searchEmpty {
+  padding: 12px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+/* Owner list */
+.ownerList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 480px;
+}
+
+.ownerItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-paper);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s;
+}
+
+.ownerItem:hover {
+  border-color: var(--color-accent-main);
+}
+
+.ownerSelected {
+  border-color: var(--color-accent-main);
+  background: var(--color-accent-light);
+}
+
+.ownerAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-accent-main);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+  flex-shrink: 0;
+}
+
+.ownerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.ownerName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.ownerMeta {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.ownerCheck {
+  color: var(--color-accent-main);
+  font-weight: bold;
+}
+
+/* Step sections */
+.stepSection {
+  margin-bottom: 24px;
+}
+
+.sectionLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
 }
