@@ -22,7 +22,7 @@ const EMPTY_CATALOG_FORM = {
   cardId: '', condition: 'NEAR_MINT', quantity: 1
 };
 const EMPTY_CUSTOM_FORM = {
-  name: '', rarity: 'COMMON', condition: 'NEAR_MINT', quantity: 1, image: null
+  name: '', cardNumber: '', rarity: 'COMMON', condition: 'NEAR_MINT', quantity: 1, setId: '', image: null
 };
 
 // ── Reusable cascade dropdown component ──────────────────────────────────────
@@ -114,6 +114,13 @@ function InventoryPage() {
   const [customForm, setCustomForm] = useState(EMPTY_CUSTOM_FORM);
   const [customLoading, setCustomLoading] = useState(false);
 
+  const [customGames, setCustomGames] = useState([]);
+  const [customGamesLoading, setCustomGamesLoading] = useState(false);
+  const [customSelectedGame, setCustomSelectedGame] = useState(null);
+  const [customSets, setCustomSets] = useState([]);
+  const [customSetsLoading, setCustomSetsLoading] = useState(false);
+  const [customSelectedSet, setCustomSelectedSet] = useState(null);
+
   // Load games when catalog modal opens
   useEffect(() => {
     if (!showCatalogModal) return;
@@ -123,6 +130,16 @@ function InventoryPage() {
       .catch(() => addToast('error', 'Could not load games'))
       .finally(() => setGamesLoading(false));
   }, [showCatalogModal]);
+
+  // Load games when custom modal opens
+  useEffect(() => {
+    if (!showCustomModal) return;
+    setCustomGamesLoading(true);
+    api.get('/cards/games')
+      .then(res => setCustomGames(res.data))
+      .catch(() => addToast('error', 'Could not load games'))
+      .finally(() => setCustomGamesLoading(false));
+  }, [showCustomModal]);
 
   function handleCloseCatalogModal() {
     setShowCatalogModal(false);
@@ -212,6 +229,34 @@ function InventoryPage() {
     }
   }
 
+  async function handleCustomSelectGame(game) {
+    setCustomSelectedGame(game);
+    setCustomSelectedSet(null);
+    setCustomForm(f => ({ ...f, setId: '' }));
+    setCustomSetsLoading(true);
+    try {
+      const res = await api.get('/cards/sets', { params: { gameId: game.id } });
+      setCustomSets(res.data);
+    } catch {
+      addToast('error', 'Could not load sets');
+    } finally {
+      setCustomSetsLoading(false);
+    }
+  }
+
+  function handleCustomSelectSet(set) {
+    setCustomSelectedSet(set);
+    setCustomForm(f => ({ ...f, setId: set.id }));
+  }
+
+  function handleCloseCustomModal() {
+    setShowCustomModal(false);
+    setCustomForm(EMPTY_CUSTOM_FORM);
+    setCustomSelectedGame(null);
+    setCustomSelectedSet(null);
+    setCustomSets([]);
+  }
+
   async function handleAddCustom(e) {
     e.preventDefault();
     setCustomLoading(true);
@@ -222,6 +267,8 @@ function InventoryPage() {
         rarity: customForm.rarity,
         condition: customForm.condition,
         quantity: Number(customForm.quantity),
+        ...(customForm.cardNumber && { cardNumber: customForm.cardNumber }),
+        ...(customForm.setId && { setId: customForm.setId }),
       };
       formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }), 'data.json');
       if (customForm.image instanceof File) {
@@ -229,8 +276,7 @@ function InventoryPage() {
       }
       await cardService.addCustomToInventory(user.id, formData);
       addToast('success', 'Custom card added to your inventory!');
-      setShowCustomModal(false);
-      setCustomForm(EMPTY_CUSTOM_FORM);
+      handleCloseCustomModal();
       refetch();
     } catch (err) {
       addToast('error', parseApiError(err).message);
@@ -346,15 +392,41 @@ function InventoryPage() {
       </Modal>
 
       {/* Add custom card */}
-      <Modal isOpen={showCustomModal} onClose={() => setShowCustomModal(false)} title="Add Custom Card">
+      <Modal isOpen={showCustomModal} onClose={handleCloseCustomModal} title="Add Custom Card">
         <form onSubmit={handleAddCustom}>
+          <CascadeDropdown
+            label="Game (optional)"
+            options={customGames}
+            value={customSelectedGame?.id}
+            onSelect={handleCustomSelectGame}
+            loading={customGamesLoading}
+            placeholder="Select a game"
+          />
+
+          <CascadeDropdown
+            label="Set / Collection (optional)"
+            options={customSets}
+            value={customSelectedSet?.id}
+            onSelect={handleCustomSelectSet}
+            disabled={!customSelectedGame}
+            loading={customSetsLoading}
+            placeholder={customSelectedGame ? 'Select a set' : 'Select a game first'}
+          />
+
           <Input
             name="name"
             label="Card Name"
             value={customForm.name}
             onChange={e => setCustomForm(f => ({ ...f, name: e.target.value }))}
             placeholder="My custom card"
-            required
+          />
+
+          <Input
+            name="cardNumber"
+            label="Card Number (optional)"
+            value={customForm.cardNumber}
+            onChange={e => setCustomForm(f => ({ ...f, cardNumber: e.target.value }))}
+            placeholder="e.g. 4/102"
           />
           <div className={styles.field}>
             <label className={styles.label}>Rarity</label>
@@ -399,7 +471,7 @@ function InventoryPage() {
             />
           </div>
           <div className={styles.modalActions}>
-            <Button label="Cancel" type="button" onClick={() => setShowCustomModal(false)} variant="secondary" />
+            <Button label="Cancel" type="button" onClick={handleCloseCustomModal} variant="secondary" />
             <Button label="Add Custom Card" type="submit" isLoading={customLoading} />
           </div>
         </form>
