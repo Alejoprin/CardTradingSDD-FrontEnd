@@ -62,6 +62,11 @@ const cardService = {
     const response = await api.get(`/cards/${cardId}/owners`);
     return response.data;
   },
+
+  async updateCardQuantity(userId, userCardId, quantity) {
+    const response = await api.patch(`/users/${userId}/inventory/${userCardId}`, { quantity });
+    return response.data;
+  },
 };
 
 export default cardService;

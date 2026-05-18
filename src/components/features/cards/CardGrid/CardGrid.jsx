@@ -13,6 +13,7 @@ function CardGrid({
   onDelete,
   onProposeTrade,
   onAddToInventory,
+  onUpdateQuantity,
 }) {
   if (loading) {
     return (
@@ -41,6 +42,7 @@ function CardGrid({
           onDelete={onDelete}
           onProposeTrade={onProposeTrade}
           onAddToInventory={onAddToInventory}
+          onUpdateQuantity={onUpdateQuantity}
         />
       ))}
     </div>
@@ -56,5 +58,6 @@ CardGrid.propTypes = {
   onDelete: PropTypes.func,
   onProposeTrade: PropTypes.func,
   onAddToInventory: PropTypes.func,
+  onUpdateQuantity: PropTypes.func,
 };
 export default CardGrid;
