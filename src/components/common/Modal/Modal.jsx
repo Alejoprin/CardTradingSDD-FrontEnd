@@ -5,14 +5,18 @@ import styles from './Modal.module.css';
 function Modal({ isOpen, onClose, title, children, size }) {
   const dialogRef = useRef(null);
 
+  // Focus first focusable element only when modal opens
   useEffect(() => {
     if (!isOpen) return;
-
     const focusable = dialogRef.current?.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
     if (focusable?.length) focusable[0].focus();
+  }, [isOpen]);
 
+  // Escape key handler
+  useEffect(() => {
+    if (!isOpen) return;
     function handleKeyDown(e) {
       if (e.key === 'Escape') onClose();
     }
