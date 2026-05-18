@@ -11,21 +11,16 @@ import Input from '../../components/common/Input/Input';
 import cardService from '../../services/cardService';
 import api from '../../services/api';
 import {
-  CARD_CONDITIONS, CONDITION_LABELS, CARD_RARITIES,
-  RARITY_LABELS
+  CARD_CONDITIONS, CONDITION_LABELS, CARD_RARITIES, RARITY_LABELS
 } from '../../utils/constants';
 import { parseApiError } from '../../utils/errors';
 import { validateImageFile } from '../../utils/validators';
 import styles from './InventoryPage.module.css';
 
-const EMPTY_CATALOG_FORM = {
-  cardId: '', condition: 'NEAR_MINT', quantity: 1
-};
-const EMPTY_CUSTOM_FORM = {
-  name: '', rarity: 'COMMON', condition: 'NEAR_MINT', quantity: 1, image: null
-};
+const EMPTY_CATALOG_FORM = { cardId: '', condition: 'NEAR_MINT', quantity: 1 };
+const EMPTY_CUSTOM_FORM = { name: '', rarity: 'COMMON', condition: 'NEAR_MINT', quantity: 1, image: null };
 
-// ── Reusable cascade dropdown component ──────────────────────────────────────
+// ── Reusable cascade dropdown component ── (sin cambios)
 function CascadeDropdown({ label, options, value, onSelect, disabled, loading, placeholder }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -51,10 +46,7 @@ function CascadeDropdown({ label, options, value, onSelect, disabled, loading, p
         <span className={selected ? styles.dropdownSelected : styles.dropdownPlaceholder}>
           {loading ? 'Loading…' : (selected?.name || placeholder)}
         </span>
-        <svg
-          className={`${styles.chevron} ${open ? styles.chevronUp : ''}`}
-          viewBox="0 0 20 20" fill="currentColor" width="16" height="16"
-        >
+        <svg className={`${styles.chevron} ${open ? styles.chevronUp : ''}`} viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
           <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
         </svg>
       </button>
@@ -79,42 +71,60 @@ function CascadeDropdown({ label, options, value, onSelect, disabled, loading, p
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-
 function InventoryPage() {
   const { user, logout } = useAuth();
   const { addToast } = useNotification();
   const navigate = useNavigate();
-  const { cards, loading, error, pagination, setPage, refetch } = useInventory(user?.id);
+  const { cards, loading, error, pagination, filters, setFilter, setPage, refetch } = useInventory(user?.id); // ← añadido filters y setFilter
   const isAdmin = user?.role === 'ADMIN';
 
-  // Remove from inventory
+  // ── Filtros ──────────────────────────────────────────────────────────────
+  const [filterGames, setFilterGames] = useState([]);
+  const [filterSets, setFilterSets] = useState([]);
+  const [filterSetsLoading, setFilterSetsLoading] = useState(false);
+
+  // Cargar juegos al montar para los filtros
+  useEffect(() => {
+    api.get('/cards/games')
+      .then(res => setFilterGames(res.data))
+      .catch(() => { });
+  }, []);
+
+  // Cargar sets cuando cambia el game en filtros
+  useEffect(() => {
+    if (!filters.gameId) { setFilterSets([]); return; }
+    setFilterSetsLoading(true);
+    api.get('/cards/sets', { params: { gameId: filters.gameId } })
+      .then(res => setFilterSets(res.data))
+      .catch(() => setFilterSets([]))
+      .finally(() => setFilterSetsLoading(false));
+  }, [filters.gameId]);
+
+  function handleFilterGameChange(e) {
+    const gameId = e.target.value;
+    setFilter('gameId', gameId);
+    setFilter('setId', '');
+  }
+
+  // ── Modal: Add from catalog ───────────────────────────────────────────────
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-
-  // Add catalog card — cascade state
   const [showCatalogModal, setShowCatalogModal] = useState(false);
   const [catalogForm, setCatalogForm] = useState(EMPTY_CATALOG_FORM);
   const [catalogLoading, setCatalogLoading] = useState(false);
-
   const [games, setGames] = useState([]);
   const [gamesLoading, setGamesLoading] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
-
   const [sets, setSets] = useState([]);
   const [setsLoading, setSetsLoading] = useState(false);
   const [selectedSet, setSelectedSet] = useState(null);
-
   const [catalogCards, setCatalogCards] = useState([]);
   const [catalogCardsLoading, setCatalogCardsLoading] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
-
-  // Add custom card
   const [showCustomModal, setShowCustomModal] = useState(false);
   const [customForm, setCustomForm] = useState(EMPTY_CUSTOM_FORM);
   const [customLoading, setCustomLoading] = useState(false);
 
-  // Load games when catalog modal opens
   useEffect(() => {
     if (!showCatalogModal) return;
     setGamesLoading(true);
@@ -144,11 +154,8 @@ function InventoryPage() {
     try {
       const res = await api.get('/cards/sets', { params: { gameId: game.id } });
       setSets(res.data);
-    } catch {
-      addToast('error', 'Could not load sets');
-    } finally {
-      setSetsLoading(false);
-    }
+    } catch { addToast('error', 'Could not load sets'); }
+    finally { setSetsLoading(false); }
   }
 
   async function handleSelectSet(set) {
@@ -157,16 +164,10 @@ function InventoryPage() {
     setCatalogForm(f => ({ ...f, cardId: '' }));
     setCatalogCardsLoading(true);
     try {
-      const res = await api.get(`/cards/set/${set.id}`, {
-        params: { page: 0, size: 100, sortBy: 'cardNumber' }
-      });
-      // API returns Page<CardDetailResponse>, extract content
+      const res = await api.get(`/cards/set/${set.id}`, { params: { page: 0, size: 100, sortBy: 'cardNumber' } });
       setCatalogCards(res.data.content || res.data);
-    } catch {
-      addToast('error', 'Could not load cards for this set');
-    } finally {
-      setCatalogCardsLoading(false);
-    }
+    } catch { addToast('error', 'Could not load cards for this set'); }
+    finally { setCatalogCardsLoading(false); }
   }
 
   function handleSelectCard(card) {
@@ -184,17 +185,21 @@ function InventoryPage() {
       refetch();
     } catch (err) {
       addToast('error', parseApiError(err).message);
-    } finally {
-      setDeleteLoading(false);
+    } finally { setDeleteLoading(false); }
+  }
+
+  async function handleUpdateQuantity(card, newQty) {
+    try {
+      await cardService.updateCardQuantity(user.id, card.id, newQty);
+    } catch (err) {
+      addToast('error', parseApiError(err).message);
+      throw err;
     }
   }
 
   async function handleAddFromCatalog(e) {
     e.preventDefault();
-    if (!catalogForm.cardId) {
-      addToast('error', 'Please select a card');
-      return;
-    }
+    if (!catalogForm.cardId) { addToast('error', 'Please select a card'); return; }
     setCatalogLoading(true);
     try {
       await cardService.addToInventory(user.id, {
@@ -207,9 +212,7 @@ function InventoryPage() {
       refetch();
     } catch (err) {
       addToast('error', parseApiError(err).message);
-    } finally {
-      setCatalogLoading(false);
-    }
+    } finally { setCatalogLoading(false); }
   }
 
   async function handleAddCustom(e) {
@@ -217,16 +220,9 @@ function InventoryPage() {
     setCustomLoading(true);
     try {
       const formData = new FormData();
-      const data = {
-        name: customForm.name,
-        rarity: customForm.rarity,
-        condition: customForm.condition,
-        quantity: Number(customForm.quantity),
-      };
+      const data = { name: customForm.name, rarity: customForm.rarity, condition: customForm.condition, quantity: Number(customForm.quantity) };
       formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }), 'data.json');
-      if (customForm.image instanceof File) {
-        formData.append('image', customForm.image);
-      }
+      if (customForm.image instanceof File) formData.append('image', customForm.image);
       await cardService.addCustomToInventory(user.id, formData);
       addToast('success', 'Custom card added to your inventory!');
       setShowCustomModal(false);
@@ -234,10 +230,10 @@ function InventoryPage() {
       refetch();
     } catch (err) {
       addToast('error', parseApiError(err).message);
-    } finally {
-      setCustomLoading(false);
-    }
+    } finally { setCustomLoading(false); }
   }
+
+  const hasActiveFilters = filters.search || filters.gameId || filters.setId || filters.rarity || filters.condition;
 
   return (
     <MainLayout user={user} onLogout={logout}>
@@ -247,11 +243,72 @@ function InventoryPage() {
           <div className={styles.headerActions}>
             <Button label="Add from Catalog" onClick={() => setShowCatalogModal(true)} variant="secondary" />
             <Button label="Add Custom Card" onClick={() => setShowCustomModal(true)} variant="secondary" />
-            {isAdmin && (
-              <Button label="Create Catalog Card" onClick={() => navigate('/cards/create')} />
-            )}
+            {isAdmin && <Button label="Create Catalog Card" onClick={() => navigate('/cards/create')} />}
           </div>
         </div>
+
+        {/* ── Filtros ── */}
+        <div className={styles.filters}>
+          <Input
+            name="search"
+            placeholder="Search cards..."
+            value={filters.search}
+            onChange={e => setFilter('search', e.target.value)}
+          />
+          <select className={styles.select} value={filters.gameId} onChange={handleFilterGameChange} aria-label="Filter by game">
+            <option value="">All Games</option>
+            {filterGames.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
+          </select>
+          <select className={styles.select} value={filters.setId} onChange={e => setFilter('setId', e.target.value)}
+            disabled={!filters.gameId || filterSetsLoading} aria-label="Filter by set">
+            <option value="">{!filters.gameId ? 'Select a game first' : filterSetsLoading ? 'Loading...' : 'All Sets'}</option>
+            {filterSets.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+          </select>
+          <select className={styles.select} value={filters.rarity} onChange={e => setFilter('rarity', e.target.value)} aria-label="Filter by rarity">
+            <option value="">All Rarities</option>
+            {CARD_RARITIES.map(r => <option key={r} value={r}>{RARITY_LABELS[r]}</option>)}
+          </select>
+          <select className={styles.select} value={filters.condition} onChange={e => setFilter('condition', e.target.value)} aria-label="Filter by condition">
+            <option value="">All Conditions</option>
+            {CARD_CONDITIONS.map(c => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
+          </select>
+        </div>
+
+        {/* ── Chips filtros activos ── */}
+        {hasActiveFilters && (
+          <div className={styles.activeFilters}>
+            <span className={styles.activeFiltersLabel}>Active filters:</span>
+            {filters.search && (
+              <span className={styles.chip}>"{filters.search}"
+                <button onClick={() => setFilter('search', '')} className={styles.chipClose}>×</button>
+              </span>
+            )}
+            {filters.gameId && (
+              <span className={styles.chip}>{filterGames.find(g => g.id === filters.gameId)?.name}
+                <button onClick={() => { setFilter('gameId', ''); setFilter('setId', ''); }} className={styles.chipClose}>×</button>
+              </span>
+            )}
+            {filters.setId && (
+              <span className={styles.chip}>{filterSets.find(s => s.id === filters.setId)?.name}
+                <button onClick={() => setFilter('setId', '')} className={styles.chipClose}>×</button>
+              </span>
+            )}
+            {filters.rarity && (
+              <span className={styles.chip}>{RARITY_LABELS[filters.rarity]}
+                <button onClick={() => setFilter('rarity', '')} className={styles.chipClose}>×</button>
+              </span>
+            )}
+            {filters.condition && (
+              <span className={styles.chip}>{CONDITION_LABELS[filters.condition]}
+                <button onClick={() => setFilter('condition', '')} className={styles.chipClose}>×</button>
+              </span>
+            )}
+            <button className={styles.clearAll} onClick={() => {
+              setFilter('search', ''); setFilter('gameId', '');
+              setFilter('setId', ''); setFilter('rarity', ''); setFilter('condition', '');
+            }}>Clear all</button>
+          </div>
+        )}
 
         {error && <p className={styles.error}>{error}</p>}
 
@@ -261,6 +318,7 @@ function InventoryPage() {
           emptyMessage="No cards in your inventory yet."
           showQuantity
           onDelete={card => setDeleteTarget(card)}
+          onUpdateQuantity={handleUpdateQuantity}
         />
 
         {pagination.totalPages > 1 && (
@@ -272,7 +330,7 @@ function InventoryPage() {
         )}
       </div>
 
-      {/* Remove from inventory */}
+      {/* Modals sin cambios */}
       <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Remove Card">
         <p>Remove <strong>{deleteTarget?.name}</strong> from your inventory?</p>
         <p className={styles.deleteWarning}>Cards in active trades cannot be removed.</p>
@@ -282,62 +340,18 @@ function InventoryPage() {
         </div>
       </Modal>
 
-      {/* Add from catalog */}
       <Modal isOpen={showCatalogModal} onClose={handleCloseCatalogModal} title="Add Card from Catalog">
         <form onSubmit={handleAddFromCatalog}>
-
-          {/* 1. Game */}
-          <CascadeDropdown
-            label="Game"
-            options={games}
-            value={selectedGame?.id}
-            onSelect={handleSelectGame}
-            loading={gamesLoading}
-            placeholder="Select a game"
-          />
-
-          {/* 2. Set — enabled after game selected */}
-          <CascadeDropdown
-            label="Set / Collection"
-            options={sets}
-            value={selectedSet?.id}
-            onSelect={handleSelectSet}
-            disabled={!selectedGame}
-            loading={setsLoading}
-            placeholder={selectedGame ? 'Select a set' : 'Select a game first'}
-          />
-
-          {/* 3. Card — enabled after set selected */}
-          <CascadeDropdown
-            label="Card"
-            options={catalogCards}
-            value={selectedCard?.id}
-            onSelect={handleSelectCard}
-            disabled={!selectedSet}
-            loading={catalogCardsLoading}
-            placeholder={selectedSet ? 'Select a card' : 'Select a set first'}
-          />
-
+          <CascadeDropdown label="Game" options={games} value={selectedGame?.id} onSelect={handleSelectGame} loading={gamesLoading} placeholder="Select a game" />
+          <CascadeDropdown label="Set / Collection" options={sets} value={selectedSet?.id} onSelect={handleSelectSet} disabled={!selectedGame} loading={setsLoading} placeholder={selectedGame ? 'Select a set' : 'Select a game first'} />
+          <CascadeDropdown label="Card" options={catalogCards} value={selectedCard?.id} onSelect={handleSelectCard} disabled={!selectedSet} loading={catalogCardsLoading} placeholder={selectedSet ? 'Select a card' : 'Select a set first'} />
           <div className={styles.field}>
             <label className={styles.label}>Condition</label>
-            <select
-              className={styles.select}
-              value={catalogForm.condition}
-              onChange={e => setCatalogForm(f => ({ ...f, condition: e.target.value }))}
-            >
+            <select className={styles.select} value={catalogForm.condition} onChange={e => setCatalogForm(f => ({ ...f, condition: e.target.value }))}>
               {CARD_CONDITIONS.map(c => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
             </select>
           </div>
-
-          <Input
-            name="quantity"
-            label="Quantity"
-            type="number"
-            value={catalogForm.quantity}
-            onChange={e => setCatalogForm(f => ({ ...f, quantity: e.target.value }))}
-            min={1}
-          />
-
+          <Input name="quantity" label="Quantity" type="number" value={catalogForm.quantity} onChange={e => setCatalogForm(f => ({ ...f, quantity: e.target.value }))} min={1} />
           <div className={styles.modalActions}>
             <Button label="Cancel" type="button" onClick={handleCloseCatalogModal} variant="secondary" />
             <Button label="Add to Inventory" type="submit" isLoading={catalogLoading} disabled={!catalogForm.cardId} />
@@ -345,50 +359,25 @@ function InventoryPage() {
         </form>
       </Modal>
 
-      {/* Add custom card */}
       <Modal isOpen={showCustomModal} onClose={() => setShowCustomModal(false)} title="Add Custom Card">
         <form onSubmit={handleAddCustom}>
-          <Input
-            name="name"
-            label="Card Name"
-            value={customForm.name}
-            onChange={e => setCustomForm(f => ({ ...f, name: e.target.value }))}
-            placeholder="My custom card"
-            required
-          />
+          <Input name="name" label="Card Name" value={customForm.name} onChange={e => setCustomForm(f => ({ ...f, name: e.target.value }))} placeholder="My custom card" required />
           <div className={styles.field}>
             <label className={styles.label}>Rarity</label>
-            <select
-              className={styles.select}
-              value={customForm.rarity}
-              onChange={e => setCustomForm(f => ({ ...f, rarity: e.target.value }))}
-            >
+            <select className={styles.select} value={customForm.rarity} onChange={e => setCustomForm(f => ({ ...f, rarity: e.target.value }))}>
               {CARD_RARITIES.map(r => <option key={r} value={r}>{RARITY_LABELS[r]}</option>)}
             </select>
           </div>
           <div className={styles.field}>
             <label className={styles.label}>Condition</label>
-            <select
-              className={styles.select}
-              value={customForm.condition}
-              onChange={e => setCustomForm(f => ({ ...f, condition: e.target.value }))}
-            >
+            <select className={styles.select} value={customForm.condition} onChange={e => setCustomForm(f => ({ ...f, condition: e.target.value }))}>
               {CARD_CONDITIONS.map(c => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
             </select>
           </div>
-          <Input
-            name="quantity"
-            label="Quantity"
-            type="number"
-            value={customForm.quantity}
-            onChange={e => setCustomForm(f => ({ ...f, quantity: e.target.value }))}
-            min={1}
-          />
+          <Input name="quantity" label="Quantity" type="number" value={customForm.quantity} onChange={e => setCustomForm(f => ({ ...f, quantity: e.target.value }))} min={1} />
           <div className={styles.field}>
             <label className={styles.label}>Image (optional)</label>
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
+            <input type="file" accept="image/jpeg,image/png,image/webp"
               onChange={e => {
                 const file = e.target.files[0] || null;
                 const imgErr = file ? validateImageFile(file) : null;
