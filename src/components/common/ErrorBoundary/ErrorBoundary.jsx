@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from '../../../i18n/i18n';
 import styles from './ErrorBoundary.module.css';
 
 class ErrorBoundary extends React.Component {
@@ -19,15 +20,15 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div className={styles.fallback}>
-          <h2 className={styles.title}>Something went wrong</h2>
+          <h2 className={styles.title}>{i18n.t('common.somethingWentWrong')}</h2>
           <p className={styles.message}>
-            An unexpected error occurred. Please refresh the page to continue.
+            {i18n.t('common.unexpectedErrorMessage')}
           </p>
           <button
             className={styles.refreshBtn}
             onClick={() => window.location.reload()}
           >
-            Refresh Page
+            {i18n.t('common.refreshPage')}
           </button>
         </div>
       );

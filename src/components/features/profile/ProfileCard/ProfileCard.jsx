@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import styles from './ProfileCard.module.css';
 
 function ProfileCard({ profile, showEmail, onImageUpload, uploadLoading }) {
+  const { t } = useTranslation();
   const fileRef = useRef(null);
   const initials = profile.username?.charAt(0).toUpperCase() || '?';
   const avatarUrl = profile.profileImageUrl || profile.avatarUrl;
@@ -19,7 +21,7 @@ function ProfileCard({ profile, showEmail, onImageUpload, uploadLoading }) {
         <div
           className={`${styles.avatarWrapper} ${onImageUpload ? styles.avatarClickable : ''}`}
           onClick={() => onImageUpload && fileRef.current?.click()}
-          title={onImageUpload ? 'Change profile photo' : undefined}
+          title={onImageUpload ? t('profile.changePhoto') : undefined}
         >
           {avatarUrl
             ? <img src={avatarUrl} alt={profile.username} className={styles.avatarImg} />
@@ -38,7 +40,7 @@ function ProfileCard({ profile, showEmail, onImageUpload, uploadLoading }) {
             accept="image/jpeg,image/png,image/webp"
             onChange={handleFileChange}
             className={styles.fileInputHidden}
-            aria-label="Upload profile photo"
+            aria-label={t('profile.uploadPhoto')}
           />
         )}
       </div>

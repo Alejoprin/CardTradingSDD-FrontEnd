@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Button from '../../common/Button/Button';
+import LanguageToggle from '../../common/LanguageToggle/LanguageToggle';
 import { useUI } from '../../../context/UIContext';
 import styles from './Header.module.css';
 
 function Header({ user, onLogout }) {
+  const { t } = useTranslation();
   const { toggleSidebar } = useUI();
 
   return (
@@ -16,7 +19,7 @@ function Header({ user, onLogout }) {
         <button
           className={styles.hamburger}
           onClick={toggleSidebar}
-          aria-label="Toggle menu"
+          aria-label={t('common.toggleMenu')}
         >
           <span /><span /><span />
         </button>
@@ -26,15 +29,16 @@ function Header({ user, onLogout }) {
         </Link>
 
         <nav className={styles.nav} aria-label="Main navigation">
-          <Link to="/dashboard" className={styles.navLink}>Dashboard</Link>
-          <Link to="/inventory" className={styles.navLink}>My Cards</Link>
-          <Link to="/catalog" className={styles.navLink}>Catalog</Link>
-          <Link to="/trades" className={styles.navLink}>Trades</Link>
+          <Link to="/dashboard" className={styles.navLink}>{t('navigation.dashboard')}</Link>
+          <Link to="/inventory" className={styles.navLink}>{t('navigation.myCards')}</Link>
+          <Link to="/catalog" className={styles.navLink}>{t('navigation.catalog')}</Link>
+          <Link to="/trades" className={styles.navLink}>{t('navigation.trades')}</Link>
         </nav>
 
         <div className={styles.actions}>
+          <LanguageToggle />
           {user && (
-            <Link to="/profile" className={styles.userInfo} aria-label="My profile">
+            <Link to="/profile" className={styles.userInfo} aria-label={t('navigation.profile')}>
               {(user.profileImageUrl || user.avatarUrl)
                 ? <img src={user.profileImageUrl || user.avatarUrl} alt={user.username} className={styles.avatar} />
                 : <span className={styles.avatarPlaceholder}>{user.username?.charAt(0).toUpperCase()}</span>
@@ -43,7 +47,7 @@ function Header({ user, onLogout }) {
             </Link>
           )}
           {onLogout && (
-            <Button label="Logout" onClick={onLogout} variant="ghost" />
+            <Button label={t('auth.signOut')} onClick={onLogout} variant="ghost" />
           )}
         </div>
       </div>

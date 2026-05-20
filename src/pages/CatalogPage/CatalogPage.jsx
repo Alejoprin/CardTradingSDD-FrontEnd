@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -9,7 +10,7 @@ import Modal from '../../components/common/Modal/Modal';
 import Input from '../../components/common/Input/Input';
 import Button from '../../components/common/Button/Button';
 import {
-  CARD_RARITIES, RARITY_LABELS, CARD_CONDITIONS, CONDITION_LABELS
+  CARD_RARITIES, CARD_CONDITIONS
 } from '../../utils/constants';
 import cardService from '../../services/cardService';
 import api from '../../services/api';
@@ -19,6 +20,7 @@ import styles from './CatalogPage.module.css';
 const EMPTY_ADD_FORM = { condition: 'NEAR_MINT', quantity: 1 };
 
 function CatalogPage() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const { addToast } = useNotification();
   const navigate = useNavigate();
@@ -60,7 +62,7 @@ function CatalogPage() {
   function handleGameChange(e) {
     const gameId = e.target.value;
     setFilter('gameId', gameId);
-    setFilter('setId', ''); // reset set al cambiar game
+    setFilter('setId', '');
   }
 
   function handleSetChange(e) {
@@ -76,7 +78,7 @@ function CatalogPage() {
         condition: addForm.condition,
         quantity: Number(addForm.quantity),
       });
-      addToast('success', `"${addTarget.name}" added to your inventory!`);
+      addToast('success', t('inventory.addedToInventory', { name: addTarget.name }));
       setAddTarget(null);
       setAddForm(EMPTY_ADD_FORM);
     } catch (err) {
@@ -91,7 +93,7 @@ function CatalogPage() {
     setDeleteLoading(true);
     try {
       await cardService.deleteCard(deleteTarget.id);
-      addToast('success', `"${deleteTarget.name}" deleted successfully`);
+      addToast('success', t('inventory.deletedSuccessfully', { name: deleteTarget.name }));
       setDeleteTarget(null);
       refetch();
     } catch (err) {
@@ -106,11 +108,11 @@ function CatalogPage() {
       <div className={styles.page}>
         <div className={styles.header}>
           <div>
-            <h1 className={styles.title}>Card Catalog</h1>
-            <p className={styles.subtitle}>Browse all available cards</p>
+            <h1 className={styles.title}>{t('catalog.title')}</h1>
+            <p className={styles.subtitle}>{t('catalog.subtitle')}</p>
           </div>
           {isAdmin && (
-            <Button label="Add Catalog Card" onClick={() => navigate('/cards/create')} />
+            <Button label={t('catalog.addCatalogCard')} onClick={() => navigate('/cards/create')} />
           )}
         </div>
 
@@ -118,7 +120,7 @@ function CatalogPage() {
         <div className={styles.filters}>
           <Input
             name="search"
-            placeholder="Search cards..."
+            placeholder={t('catalog.searchCards')}
             value={filters.search}
             onChange={e => setFilter('search', e.target.value)}
           />
@@ -128,9 +130,9 @@ function CatalogPage() {
             className={styles.select}
             value={filters.gameId}
             onChange={handleGameChange}
-            aria-label="Filter by game"
+            aria-label={t('catalog.filterByGame')}
           >
-            <option value="">All Games</option>
+            <option value="">{t('catalog.allGames')}</option>
             {games.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
           </select>
 
@@ -140,10 +142,10 @@ function CatalogPage() {
             value={filters.setId}
             onChange={handleSetChange}
             disabled={!filters.gameId || setsLoading}
-            aria-label="Filter by set"
+            aria-label={t('catalog.filterBySet')}
           >
             <option value="">
-              {!filters.gameId ? 'Select a game first' : setsLoading ? 'Loading...' : 'All Sets'}
+              {!filters.gameId ? t('inventory.selectGameFirst') : setsLoading ? t('common.loading') : t('catalog.allSets')}
             </option>
             {sets.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
@@ -153,17 +155,17 @@ function CatalogPage() {
             className={styles.select}
             value={filters.rarity}
             onChange={e => setFilter('rarity', e.target.value)}
-            aria-label="Filter by rarity"
+            aria-label={t('catalog.filterByRarity')}
           >
-            <option value="">All Rarities</option>
-            {CARD_RARITIES.map(r => <option key={r} value={r}>{RARITY_LABELS[r]}</option>)}
+            <option value="">{t('catalog.allRarities')}</option>
+            {CARD_RARITIES.map(r => <option key={r} value={r}>{t(`cardRarities.${r.toLowerCase()}`)}</option>)}
           </select>
         </div>
 
         {/* Chips de filtros activos */}
         {(filters.gameId || filters.setId || filters.rarity || filters.search) && (
           <div className={styles.activeFilters}>
-            <span className={styles.activeFiltersLabel}>Active filters:</span>
+            <span className={styles.activeFiltersLabel}>{t('common.activeFilters')}</span>
             {filters.search && (
               <span className={styles.chip}>
                 "{filters.search}"
@@ -184,7 +186,7 @@ function CatalogPage() {
             )}
             {filters.rarity && (
               <span className={styles.chip}>
-                {RARITY_LABELS[filters.rarity]}
+                {t(`cardRarities.${filters.rarity.toLowerCase()}`)}
                 <button onClick={() => setFilter('rarity', '')} className={styles.chipClose}>×</button>
               </span>
             )}
@@ -194,7 +196,7 @@ function CatalogPage() {
               setFilter('setId', '');
               setFilter('rarity', '');
             }}>
-              Clear all
+              {t('common.clearAll')}
             </button>
           </div>
         )}
@@ -204,7 +206,7 @@ function CatalogPage() {
         <CardGrid
           cards={cards}
           loading={loading}
-          emptyMessage="No cards found matching your search."
+          emptyMessage={t('inventory.noCardsFound')}
           onAddToInventory={card => setAddTarget(card)}
           onEdit={isAdmin ? card => navigate(`/cards/${card.id}/edit`) : undefined}
           onDelete={isAdmin ? card => setDeleteTarget(card) : undefined}
@@ -212,48 +214,48 @@ function CatalogPage() {
 
         {pagination.totalPages > 1 && (
           <div className={styles.pagination}>
-            <Button label="Previous" onClick={() => setPage(pagination.page - 1)} disabled={pagination.page <= 1} variant="secondary" />
-            <span className={styles.pageInfo}>Page {pagination.page} of {pagination.totalPages}</span>
-            <Button label="Next" onClick={() => setPage(pagination.page + 1)} disabled={pagination.page >= pagination.totalPages} variant="secondary" />
+            <Button label={t('common.previous')} onClick={() => setPage(pagination.page - 1)} disabled={pagination.page <= 1} variant="secondary" />
+            <span className={styles.pageInfo}>{t('common.page')} {pagination.page} {t('common.of')} {pagination.totalPages}</span>
+            <Button label={t('common.next')} onClick={() => setPage(pagination.page + 1)} disabled={pagination.page >= pagination.totalPages} variant="secondary" />
           </div>
         )}
       </div>
 
       {/* Add to inventory modal */}
-      <Modal isOpen={!!addTarget} onClose={() => setAddTarget(null)} title={`Add "${addTarget?.name}" to Inventory`}>
+      <Modal isOpen={!!addTarget} onClose={() => setAddTarget(null)} title={t('inventory.addCardToInventory', { name: addTarget?.name })}>
         <form onSubmit={handleAddToInventory}>
           <div className={styles.field}>
-            <label className={styles.label}>Condition</label>
+            <label className={styles.label}>{t('inventory.condition')}</label>
             <select
               className={styles.select}
               value={addForm.condition}
               onChange={e => setAddForm(f => ({ ...f, condition: e.target.value }))}
             >
-              {CARD_CONDITIONS.map(c => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
+              {CARD_CONDITIONS.map(c => <option key={c} value={c}>{t(`cardConditions.${c.toLowerCase()}`)}</option>)}
             </select>
           </div>
           <Input
             name="quantity"
-            label="Quantity"
+            label={t('inventory.quantity')}
             type="number"
             value={addForm.quantity}
             onChange={e => setAddForm(f => ({ ...f, quantity: e.target.value }))}
             min={1}
           />
           <div className={styles.modalActions}>
-            <Button label="Cancel" type="button" onClick={() => setAddTarget(null)} variant="secondary" />
-            <Button label="Add to Inventory" type="submit" isLoading={addLoading} />
+            <Button label={t('common.cancel')} type="button" onClick={() => setAddTarget(null)} variant="secondary" />
+            <Button label={t('inventory.addToInventory')} type="submit" isLoading={addLoading} />
           </div>
         </form>
       </Modal>
 
       {/* Admin: delete catalog card */}
-      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Delete Catalog Card">
-        <p>Permanently delete <strong>{deleteTarget?.name}</strong> from the catalog?</p>
-        <p className={styles.warning}>This will also remove it from all user inventories.</p>
+      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title={t('catalog.deleteCatalogCard')}>
+        <p>{t('catalog.deleteCatalogConfirm', { name: deleteTarget?.name })}</p>
+        <p className={styles.warning}>{t('inventory.deleteWarning')}</p>
         <div className={styles.modalActions}>
-          <Button label="Cancel" onClick={() => setDeleteTarget(null)} variant="secondary" />
-          <Button label="Delete" onClick={handleDelete} variant="danger" isLoading={deleteLoading} />
+          <Button label={t('common.cancel')} onClick={() => setDeleteTarget(null)} variant="secondary" />
+          <Button label={t('common.delete')} onClick={handleDelete} variant="danger" isLoading={deleteLoading} />
         </div>
       </Modal>
     </MainLayout>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import useTradeManagement from '../../../../hooks/useTradeManagement';
 import TradeDetail from '../../trades/TradeDetail/TradeDetail';
 import Badge from '../../../common/Badge/Badge';
@@ -6,13 +7,14 @@ import Button from '../../../common/Button/Button';
 import Input from '../../../common/Input/Input';
 import Modal from '../../../common/Modal/Modal';
 import Spinner from '../../../common/Spinner/Spinner';
-import { TRADE_STATUS_BADGE_VARIANTS, TRADE_STATUS_LABELS, TRADE_STATUSES } from '../../../../utils/constants';
+import { TRADE_STATUS_BADGE_VARIANTS, TRADE_STATUSES } from '../../../../utils/constants';
 import { formatDate } from '../../../../utils/formatters';
 import styles from './TradeManagement.module.css';
 
 TradeManagement.propTypes = {};
 
 function TradeManagement() {
+  const { t } = useTranslation();
   const {
     trades, loading, error, pagination,
     searchQuery, setSearchQuery,
@@ -31,7 +33,7 @@ function TradeManagement() {
       <div className={styles.filters}>
         <Input
           name="search"
-          placeholder="Search by username..."
+          placeholder={t('trades.searchByUsername')}
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
         />
@@ -39,13 +41,13 @@ function TradeManagement() {
           className={styles.select}
           value={statusFilter}
           onChange={e => setStatusFilter(e.target.value)}
-          aria-label="Filter by status"
+          aria-label={t('trades.status')}
         >
-          <option value="">All Statuses</option>
-          {TRADE_STATUSES.map(s => <option key={s} value={s}>{TRADE_STATUS_LABELS[s]}</option>)}
+          <option value="">{t('trades.allStatuses')}</option>
+          {TRADE_STATUSES.map(s => <option key={s} value={s}>{t(`tradeStatuses.${s.toLowerCase()}`)}</option>)}
         </select>
-        <Input name="from" label="From date" type="date" value={dateRange.from} onChange={e => setDateRange(prev => ({ ...prev, from: e.target.value }))} />
-        <Input name="to" label="To date" type="date" value={dateRange.to} onChange={e => setDateRange(prev => ({ ...prev, to: e.target.value }))} />
+        <Input name="from" label={t('trades.fromDate')} type="date" value={dateRange.from} onChange={e => setDateRange(prev => ({ ...prev, from: e.target.value }))} />
+        <Input name="to" label={t('trades.toDate')} type="date" value={dateRange.to} onChange={e => setDateRange(prev => ({ ...prev, to: e.target.value }))} />
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
@@ -58,18 +60,18 @@ function TradeManagement() {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Initiator</th>
-                <th>Counterparty</th>
-                <th>Status</th>
-                <th>Offered</th>
-                <th>Requested</th>
-                <th>Created</th>
-                <th>Actions</th>
+                <th>{t('trades.initiator')}</th>
+                <th>{t('trades.counterparty')}</th>
+                <th>{t('trades.status')}</th>
+                <th>{t('trades.offered')}</th>
+                <th>{t('trades.requested')}</th>
+                <th>{t('trades.createdDate')}</th>
+                <th>{t('trades.actions')}</th>
               </tr>
             </thead>
             <tbody>
               {trades.length === 0 ? (
-                <tr><td colSpan={8} className={styles.empty}>No trades found.</td></tr>
+                <tr><td colSpan={8} className={styles.empty}>{t('trades.noTrades')}</td></tr>
               ) : trades.map(trade => (
                 <tr key={trade.id}>
                   <td className={styles.tradeId}>#{trade.id.slice(-6)}</td>
@@ -77,7 +79,7 @@ function TradeManagement() {
                   <td>{trade.counterpartyUsername || trade.counterpartyEmail}</td>
                   <td>
                     <Badge
-                      label={TRADE_STATUS_LABELS[trade.status] || trade.status}
+                      label={t(`tradeStatuses.${trade.status.toLowerCase()}`) || trade.status}
                       variant={TRADE_STATUS_BADGE_VARIANTS[trade.status] || 'neutral'}
                     />
                   </td>
@@ -85,7 +87,7 @@ function TradeManagement() {
                   <td>{trade.requestedCards?.length ?? 0}</td>
                   <td>{formatDate(trade.createdAt)}</td>
                   <td>
-                    <Button label="View" onClick={() => setSelectedTrade(trade)} variant="secondary" />
+                    <Button label={t('trades.view')} onClick={() => setSelectedTrade(trade)} variant="secondary" />
                   </td>
                 </tr>
               ))}
@@ -96,13 +98,13 @@ function TradeManagement() {
 
       {pagination.totalPages > 1 && (
         <div className={styles.pagination}>
-          <Button label="Previous" onClick={() => setPage(page - 1)} disabled={page <= 1} variant="secondary" />
-          <span>Page {page} of {pagination.totalPages}</span>
-          <Button label="Next" onClick={() => setPage(page + 1)} disabled={page >= pagination.totalPages} variant="secondary" />
+          <Button label={t('common.previous')} onClick={() => setPage(page - 1)} disabled={page <= 1} variant="secondary" />
+          <span>{t('common.page')} {page} {t('common.of')} {pagination.totalPages}</span>
+          <Button label={t('common.next')} onClick={() => setPage(page + 1)} disabled={page >= pagination.totalPages} variant="secondary" />
         </div>
       )}
 
-      <Modal isOpen={!!selectedTrade} onClose={() => setSelectedTrade(null)} title="Trade Details" size="lg">
+      <Modal isOpen={!!selectedTrade} onClose={() => setSelectedTrade(null)} title={t('trades.tradeDetails')} size="lg">
         {selectedTrade && (
           <TradeDetail
             trade={selectedTrade}

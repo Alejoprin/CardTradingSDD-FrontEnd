@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -12,6 +13,7 @@ import Button from '../../components/common/Button/Button';
 import styles from './EditProfilePage.module.css';
 
 function EditProfilePage() {
+  const { t } = useTranslation();
   const { user, logout, updateUser } = useAuth();
   const { addToast } = useNotification();
   const navigate = useNavigate();
@@ -47,7 +49,7 @@ function EditProfilePage() {
     try {
       const updated = await userService.updateUserProfile(user.id, formData);
       updateUser(updated);
-      addToast('success', 'Profile updated!');
+      addToast('success', t('profile.updated'));
       navigate('/profile', { replace: true });
     } catch (err) {
       addToast('error', parseApiError(err).message);
@@ -59,13 +61,13 @@ function EditProfilePage() {
   return (
     <MainLayout user={user} onLogout={logout}>
       <div className={styles.page}>
-        <h1 className={styles.title}>Edit Profile</h1>
+        <h1 className={styles.title}>{t('profile.editProfile')}</h1>
         <div className={styles.formWrapper}>
           <form onSubmit={handleSubmit} className={styles.form} noValidate>
             <div className={styles.field}>
-              <label className={styles.label}>Profile Picture</label>
+              <label className={styles.label}>{t('profile.profilePicture')}</label>
               <input type="file" accept="image/jpeg,image/png,image/webp" ref={fileRef} onChange={handleFile} />
-              {avatar && <img src={URL.createObjectURL(avatar)} alt="Preview" className={styles.preview} />}
+              {avatar && <img src={URL.createObjectURL(avatar)} alt={t('inventory.preview')} className={styles.preview} />}
               {errors.avatar && <span className={styles.error}>{errors.avatar}</span>}
             </div>
 
@@ -78,23 +80,23 @@ function EditProfilePage() {
                 onChange={e => setBio(e.target.value)}
                 maxLength={MAX_BIO_LENGTH}
                 rows={4}
-                placeholder="Tell others about yourself..."
+                placeholder={t('profile.bioPlaceholder')}
               />
               {errors.bio && <span className={styles.error}>{errors.bio}</span>}
             </div>
 
             <Input
               name="location"
-              label="Location"
+              label={t('profile.location')}
               value={location}
               onChange={e => setLocation(e.target.value)}
               error={errors.location}
-              placeholder="Buenos Aires, Argentina"
+              placeholder={t('profile.locationPlaceholder')}
             />
 
             <div className={styles.actions}>
-              <Button label="Cancel" onClick={() => navigate('/profile')} variant="secondary" type="button" />
-              <Button label="Save Changes" type="submit" isLoading={submitting} disabled={submitting} />
+              <Button label={t('common.cancel')} onClick={() => navigate('/profile')} variant="secondary" type="button" />
+              <Button label={t('common.saveChanges')} type="submit" isLoading={submitting} disabled={submitting} />
             </div>
           </form>
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
 import authService from '../../../services/authService';
 import useForm from '../../../hooks/useForm';
@@ -9,7 +10,7 @@ import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import styles from './RegisterForm.module.css';
 
-function validate(values) {
+function validate(values, t) {
   return {
     email: validateEmail(values.email),
     username: validateUsername(values.username),
@@ -19,10 +20,11 @@ function validate(values) {
 }
 
 function RegisterForm({ onSuccess }) {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const { values, errors, touched, isSubmitting, handleChange, handleBlur, handleSubmit, setFieldError } = useForm(
     { email: '', username: '', password: '', confirmPassword: '' },
-    validate
+    (vals) => validate(vals, t)
   );
 
   const onSubmit = handleSubmit(async (vals) => {
@@ -40,46 +42,46 @@ function RegisterForm({ onSuccess }) {
     <form onSubmit={onSubmit} className={styles.form} noValidate>
       <Input
         name="email"
-        label="Email"
+        label={t('auth.email')}
         type="email"
         value={values.email}
         onChange={handleChange}
         onBlur={handleBlur}
         error={touched.email && errors.email}
-        placeholder="you@example.com"
+        placeholder={t('auth.emailPlaceholder')}
       />
       <Input
         name="username"
-        label="Username"
+        label={t('auth.username')}
         type="text"
         value={values.username}
         onChange={handleChange}
         onBlur={handleBlur}
         error={touched.username && errors.username}
-        placeholder="trader42"
+        placeholder={t('auth.usernamePlaceholder')}
       />
       <Input
         name="password"
-        label="Password"
+        label={t('auth.password')}
         type="password"
         value={values.password}
         onChange={handleChange}
         onBlur={handleBlur}
         error={touched.password && errors.password}
-        placeholder="At least 8 characters"
+        placeholder={t('auth.passwordMinChars')}
       />
       <Input
         name="confirmPassword"
-        label="Confirm Password"
+        label={t('auth.confirmPassword')}
         type="password"
         value={values.confirmPassword}
         onChange={handleChange}
         onBlur={handleBlur}
         error={touched.confirmPassword && errors.confirmPassword}
-        placeholder="Repeat password"
+        placeholder={t('auth.repeatPassword')}
       />
       <Button
-        label="Create Account"
+        label={t('auth.createAccount')}
         type="submit"
         isLoading={isSubmitting}
         disabled={isSubmitting}

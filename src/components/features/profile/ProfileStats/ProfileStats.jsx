@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import styles from './ProfileStats.module.css';
 
 function StatItem({ label, value }) {
@@ -12,12 +13,13 @@ function StatItem({ label, value }) {
 }
 
 function ProfileStats({ stats }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.wrapper}>
-      <StatItem label="Total Cards" value={stats.totalCards} />
-      <StatItem label="Completed Trades" value={stats.completedTrades} />
-      <StatItem label="Pending Trades" value={stats.pendingTrades} />
-      <StatItem label="Rating" value={stats.rating != null ? stats.rating.toFixed(1) : null} />
+      <StatItem label={t('dashboard.totalCards')} value={stats.totalCards} />
+      <StatItem label={t('dashboard.completedTrades')} value={stats.completedTrades} />
+      <StatItem label={t('dashboard.pendingTrades')} value={stats.pendingTrades} />
+      <StatItem label={t('profile.rating')} value={stats.rating != null ? stats.rating.toFixed(1) : null} />
     </div>
   );
 }

@@ -1,24 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import TradeCard from '../TradeCard/TradeCard';
 import Spinner from '../../../common/Spinner/Spinner';
 import styles from './TradeList.module.css';
 
-const TABS = [
-  { key: 'PENDING', label: 'Pending' },
-  { key: 'COMPLETED', label: 'Completed' },
-  { key: 'REJECTED', label: 'Rejected' },
-  { key: 'CANCELLED', label: 'Cancelled' },
-];
-
-const EMPTY_MESSAGES = {
-  PENDING: 'No pending trades.',
-  COMPLETED: 'No completed trades yet.',
-  REJECTED: 'No rejected trades.',
-  CANCELLED: 'No cancelled trades.',
-};
-
 function TradeList({ trades, activeTab, onTabChange, currentUserId, loading, onAccept, onReject, onCancel }) {
+  const { t } = useTranslation();
+
+  const TABS = [
+    { key: 'PENDING', label: t('trades.pending') },
+    { key: 'COMPLETED', label: t('trades.completed') },
+    { key: 'REJECTED', label: t('trades.rejected') },
+    { key: 'CANCELLED', label: t('trades.cancelled') },
+  ];
+
+  const EMPTY_MESSAGES = {
+    PENDING: t('trades.noPendingTrades'),
+    COMPLETED: t('trades.noCompletedTrades'),
+    REJECTED: t('trades.noRejectedTrades'),
+    CANCELLED: t('trades.noCancelledTrades'),
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.tabs} role="tablist">
@@ -39,7 +42,7 @@ function TradeList({ trades, activeTab, onTabChange, currentUserId, loading, onA
         {loading ? (
           <div className={styles.center}><Spinner size="lg" /></div>
         ) : trades.length === 0 ? (
-          <p className={styles.empty}>{EMPTY_MESSAGES[activeTab] || 'No trades found.'}</p>
+          <p className={styles.empty}>{EMPTY_MESSAGES[activeTab] || t('trades.noTradesFound')}</p>
         ) : (
           <div className={styles.list}>
             {trades.map(trade => (

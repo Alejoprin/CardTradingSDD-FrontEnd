@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 function OAuth2CallbackPage() {
+  const { t } = useTranslation();
   const { loginWithGoogle, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -36,7 +38,7 @@ function OAuth2CallbackPage() {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <p>Iniciando sesión...</p>
+      <p>{t('common.signInProgress')}</p>
     </div>
   );
 }

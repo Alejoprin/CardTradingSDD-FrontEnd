@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -7,6 +8,7 @@ import TradeBuilder from '../../components/features/trades/TradeBuilder/TradeBui
 import styles from './CreateTradePage.module.css';
 
 function CreateTradePage() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const { addToast } = useNotification();
   const navigate = useNavigate();
@@ -16,14 +18,14 @@ function CreateTradePage() {
   const cardId = searchParams.get('userCardId') || '';
 
   function handleSuccess() {
-    addToast('success', 'Trade proposal sent!');
+    addToast('success', t('trades.proposalSent'));
     navigate('/trades', { replace: true });
   }
 
   return (
     <MainLayout user={user} onLogout={logout}>
       <div className={styles.page}>
-        <h1 className={styles.title}>Propose a Trade</h1>
+        <h1 className={styles.title}>{t('trades.proposeTradeTitle')}</h1>
         <TradeBuilder
           initialTargetUserId={targetUserId}
           initialCardId={cardId}

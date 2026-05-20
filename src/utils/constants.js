@@ -24,15 +24,6 @@ export const CARD_RARITIES = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY',
 
 export const CARD_CONDITIONS = ['MINT', 'NEAR_MINT', 'EXCELLENT', 'GOOD', 'PLAYED', 'POOR'];
 
-export const CONDITION_LABELS = {
-  MINT: 'Mint',
-  NEAR_MINT: 'Near Mint',
-  EXCELLENT: 'Excellent',
-  GOOD: 'Good',
-  PLAYED: 'Played',
-  POOR: 'Poor',
-};
-
 export const TRADE_STATUSES = ['PENDING', 'ACCEPTED', 'COMPLETED', 'REJECTED', 'CANCELLED'];
 
 export const ACTIVITY_EVENT_TYPES = {
@@ -44,29 +35,6 @@ export const ACTIVITY_EVENT_TYPES = {
   TRADE_REJECTED: 'trade_rejected',
   TRADE_CANCELLED: 'trade_cancelled',
   PROFILE_UPDATED: 'profile_updated',
-};
-
-export const TRADE_STATUS_LABELS = {
-  PENDING: 'Pending',
-  ACCEPTED: 'Accepted',
-  COMPLETED: 'Completed',
-  REJECTED: 'Rejected',
-  CANCELLED: 'Cancelled',
-};
-
-export const RARITY_LABELS = {
-  COMMON: 'Common',
-  UNCOMMON: 'Uncommon',
-  RARE: 'Rare',
-  EPIC: 'Epic',
-  LEGENDARY: 'Legendary',
-  SECRET: 'Secret',
-};
-
-export const CARD_TYPE_LABELS = {
-  MONSTER: 'Monster',
-  SPELL: 'Spell',
-  TRAP: 'Trap',
 };
 
 export const RARITY_BADGE_VARIANTS = {
