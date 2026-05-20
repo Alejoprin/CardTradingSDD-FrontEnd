@@ -296,7 +296,7 @@
   },
   "cardConditions": {
     "mint": "Mint",
-    "nearMint": "Near Mint",
+    "near_mint": "Near Mint",
     "excellent": "Excellent",
     "good": "Good",
     "played": "Played",
