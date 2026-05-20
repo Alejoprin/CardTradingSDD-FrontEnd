@@ -8,7 +8,7 @@ import { RARITY_LABELS, RARITY_BADGE_VARIANTS, getImageUrl } from '../../../../u
 import styles from './CardCard.module.css';
 
 function CardCard({ card, showOwner = false, showQuantity = false,
-  onEdit, onDelete, onProposeTrade, onAddToInventory, onUpdateQuantity }) {
+  onEdit, onDelete, onProposeTrade, onAddToInventory, onUpdateQuantity, unowned = false }) {
   const navigate = useNavigate();
   const [qty, setQty] = useState(card.quantity || 1);
   const [qtyLoading, setQtyLoading] = useState(false);
@@ -25,7 +25,7 @@ function CardCard({ card, showOwner = false, showQuantity = false,
   }
 
   return (
-    <div className={styles.card}>
+    <div className={`${styles.card} ${unowned ? styles.cardUnowned : ''}`}>
       <div
         className={styles.imageWrapper}
         onClick={() => navigate(`/cards/${card.cardId || card.id}`)}
@@ -38,10 +38,10 @@ function CardCard({ card, showOwner = false, showQuantity = false,
           ? <img src={getImageUrl(card.imageSmallUrl || card.imageUrl)} alt={card.name} className={styles.image} />
           : <Placeholder size="md" />
         }
-        {/* Badge de cantidad encima de la imagen */}
-        {showQuantity && (
+        {showQuantity && !unowned && (
           <span className={styles.quantityBadge}>{qty}</span>
         )}
+        {unowned && <div className={styles.unownedOverlay}>Not owned</div>}
       </div>
 
       <div className={styles.info}>
@@ -61,7 +61,7 @@ function CardCard({ card, showOwner = false, showQuantity = false,
         )}
       </div>
 
-      <div className={styles.actions}>
+      {!unowned && <div className={styles.actions}>
         {/* Controles de cantidad */}
         {showQuantity && onUpdateQuantity && (
           <div className={styles.qtyControls}>
@@ -105,7 +105,7 @@ function CardCard({ card, showOwner = false, showQuantity = false,
             Delete
           </button>
         )}
-      </div>
+      </div>}
     </div>
   );
 }

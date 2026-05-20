@@ -36,6 +36,7 @@ function CardGrid({
         <CardCard
           key={card.id}
           card={card}
+          unowned={card.owned === false}
           showOwner={showOwner}
           showQuantity={showQuantity}
           onEdit={onEdit}

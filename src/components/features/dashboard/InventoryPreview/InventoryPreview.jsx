@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './InventoryPreview.module.css';
 
 function InventoryPreview({ cards, loading }) {
+  const navigate = useNavigate();
   const [selectedGame, setSelectedGame] = useState(null);
 
   const games = useMemo(
@@ -67,7 +68,14 @@ function InventoryPreview({ cards, loading }) {
                 </div>
                 <div className={styles.cardStrip}>
                   {setCards.map(card => (
-                    <div key={card.userCardId} className={styles.cardThumb} title={card.cardName}>
+                    <div
+                      key={card.userCardId}
+                      className={styles.cardThumb}
+                      title={card.cardName}
+                      onClick={() => navigate('/inventory', {
+                        state: { gameName: card.gameName, setName: card.setName }
+                      })}
+                    >
                       {card.imageSmallUrl ? (
                         <img
                           src={card.imageSmallUrl}

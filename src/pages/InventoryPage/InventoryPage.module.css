@@ -268,3 +268,43 @@
 .clearAll:hover {
   color: var(--color-text-primary);
 }
+
+/* ── Full Set toggle ── */
+.viewToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.viewToggleLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.viewToggleBtns {
+  display: flex;
+  background: var(--color-neutral-100);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.toggleBtn {
+  padding: 6px 18px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.toggleBtnActive {
+  background: var(--color-bg-paper);
+  color: var(--color-text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Modal.module.css';
 
-function Modal({ isOpen, onClose, title, children, size }) {
+function Modal({ isOpen, onClose, title, children, size = 'md' }) {
   const dialogRef = useRef(null);
 
   // Focus first focusable element only when modal opens
@@ -55,8 +55,5 @@ Modal.propTypes = {
   size: PropTypes.oneOf(['sm', 'md', 'lg']),
 };
 
-Modal.defaultProps = {
-  size: 'md',
-};
 
 export default Modal;

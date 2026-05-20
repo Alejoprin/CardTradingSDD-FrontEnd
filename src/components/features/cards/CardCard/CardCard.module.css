@@ -162,3 +162,32 @@
   background: var(--color-error, #ef4444);
   color: #fff;
 }
+
+/* Unowned card (full-set mode) */
+.cardUnowned {
+  opacity: 0.55;
+}
+
+.cardUnowned .imageWrapper {
+  filter: grayscale(90%);
+}
+
+.cardUnowned:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.unownedOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+  padding: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}

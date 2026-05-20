@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import useInventory from '../../hooks/useInventory';
@@ -79,7 +79,21 @@ function InventoryPage() {
   const { user, logout } = useAuth();
   const { addToast } = useNotification();
   const navigate = useNavigate();
-  const { cards, loading, error, pagination, filters, setFilter, setPage, refetch } = useInventory(user?.id); // ← añadido filters y setFilter
+  const location = useLocation();
+  const { cards, loading, error, pagination, filters, setFilter, setPage, refetch } = useInventory(user?.id);
+  const appliedStateRef = useRef(false);
+  const pendingFiltersRef = useRef(null); // { gameName?, setName? }
+
+  // Step 1 — read location.state once on mount
+  useEffect(() => {
+    if (appliedStateRef.current) return;
+    const { gameName, setName } = location.state || {};
+    if (!gameName) return;
+    appliedStateRef.current = true;
+    pendingFiltersRef.current = { gameName, setName: setName || null };
+    navigate(location.pathname, { replace: true, state: {} });
+  }, [location.state, location.pathname, navigate]);
+
   const isAdmin = user?.role === 'ADMIN';
 
   // ── Filtros ──────────────────────────────────────────────────────────────
@@ -103,6 +117,27 @@ function InventoryPage() {
       .catch(() => setFilterSets([]))
       .finally(() => setFilterSetsLoading(false));
   }, [filters.gameId]);
+
+  // Step 2 — resolve gameName → gameId once filterGames loads
+  useEffect(() => {
+    if (!pendingFiltersRef.current?.gameName || filterGames.length === 0) return;
+    const game = filterGames.find(g => g.name === pendingFiltersRef.current.gameName);
+    if (game) {
+      const setName = pendingFiltersRef.current.setName;
+      pendingFiltersRef.current = setName ? { setName } : null;
+      setFilter('gameId', String(game.id));
+    } else {
+      pendingFiltersRef.current = null;
+    }
+  }, [filterGames, setFilter]);
+
+  // Step 3 — resolve setName → setId once filterSets loads (triggered by gameId change)
+  useEffect(() => {
+    if (!pendingFiltersRef.current?.setName || filterSets.length === 0) return;
+    const set = filterSets.find(s => s.name === pendingFiltersRef.current.setName);
+    if (set) setFilter('setId', String(set.id));
+    pendingFiltersRef.current = null;
+  }, [filterSets, setFilter]);
 
   function handleFilterGameChange(e) {
     const gameId = e.target.value;
@@ -289,6 +324,57 @@ function InventoryPage() {
     } finally { setCustomLoading(false); }
   }
 
+  // ── Full Set view ────────────────────────────────────────────────────────
+  const [showFullSet, setShowFullSet] = useState(false);
+  const [allSetCards, setAllSetCards] = useState([]);
+  const [allSetCardsLoading, setAllSetCardsLoading] = useState(false);
+  const [allSetError, setAllSetError] = useState(null);
+
+  // Reset when the selected set changes
+  useEffect(() => {
+    setShowFullSet(false);
+    setAllSetCards([]);
+    setAllSetError(null);
+  }, [filters.setId]);
+
+  // Fetch all cards in the set when Full Set mode is on
+  useEffect(() => {
+    if (!showFullSet || !filters.setId) return;
+    setAllSetCardsLoading(true);
+    setAllSetError(null);
+    // Use the same catalog endpoint that useCatalog uses — known to return data.content
+    api.get('/cards', { params: { setId: filters.setId, ...(filters.gameId ? { gameId: filters.gameId } : {}), page: 0, size: 500 } })
+      .then(res => {
+        const arr = Array.isArray(res.data?.content) ? res.data.content
+          : Array.isArray(res.data) ? res.data
+          : [];
+        setAllSetCards(arr);
+      })
+      .catch(() => {
+        setAllSetError('Could not load the full set. Try again.');
+        setAllSetCards([]);
+      })
+      .finally(() => setAllSetCardsLoading(false));
+  }, [showFullSet, filters.setId, filters.gameId]);
+
+  // Merge set cards with owned inventory for the Full Set view
+  const displayCards = useMemo(() => {
+    if (!showFullSet || !filters.setId || !Array.isArray(allSetCards) || allSetCards.length === 0) return cards;
+    // Build lookup: try cardId first, fall back to id
+    const ownedMap = new Map();
+    cards.forEach(c => {
+      const key = c.cardId ?? c.id;
+      if (key != null) ownedMap.set(String(key), c);
+    });
+    const merged = allSetCards.map(setCard => {
+      const key = String(setCard.id ?? setCard.cardId ?? '');
+      const ownedCard = ownedMap.get(key);
+      if (ownedCard) return { ...ownedCard, owned: true };
+      return { ...setCard, name: setCard.name || setCard.cardName, owned: false };
+    });
+    return merged.sort((a, b) => (b.owned === true ? 1 : 0) - (a.owned === true ? 1 : 0));
+  }, [showFullSet, filters.setId, allSetCards, cards]);
+
   const hasActiveFilters = filters.search || filters.gameId || filters.setId || filters.rarity || filters.condition;
 
   return (
@@ -367,17 +453,38 @@ function InventoryPage() {
         )}
 
         {error && <p className={styles.error}>{error}</p>}
+        {allSetError && <p className={styles.error}>{allSetError}</p>}
+
+        {filters.setId && (
+          <div className={styles.viewToggle}>
+            <span className={styles.viewToggleLabel}>Show:</span>
+            <div className={styles.viewToggleBtns}>
+              <button
+                className={`${styles.toggleBtn} ${!showFullSet ? styles.toggleBtnActive : ''}`}
+                onClick={() => setShowFullSet(false)}
+              >
+                My Cards
+              </button>
+              <button
+                className={`${styles.toggleBtn} ${showFullSet ? styles.toggleBtnActive : ''}`}
+                onClick={() => setShowFullSet(true)}
+              >
+                Full Set{allSetCards.length > 0 ? ` (${allSetCards.length})` : ''}
+              </button>
+            </div>
+          </div>
+        )}
 
         <CardGrid
-          cards={cards}
-          loading={loading}
-          emptyMessage="No cards in your inventory yet."
-          showQuantity
+          cards={displayCards}
+          loading={loading || allSetCardsLoading}
+          emptyMessage={showFullSet ? 'No cards found in this set.' : 'No cards in your inventory yet.'}
+          showQuantity={!showFullSet}
           onDelete={card => setDeleteTarget(card)}
           onUpdateQuantity={handleUpdateQuantity}
         />
 
-        {pagination.totalPages > 1 && (
+        {!showFullSet && pagination.totalPages > 1 && (
           <div className={styles.pagination}>
             <Button label="Previous" onClick={() => setPage(pagination.page - 1)} disabled={pagination.page <= 1} variant="secondary" />
             <span className={styles.pageInfo}>Page {pagination.page} of {pagination.totalPages}</span>
@@ -407,7 +514,7 @@ function InventoryPage() {
               {CARD_CONDITIONS.map(c => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
             </select>
           </div>
-          <Input name="quantity" label="Quantity" type="number" value={catalogForm.quantity} onChange={e => setCatalogForm(f => ({ ...f, quantity: e.target.value }))} min={1} />
+          <Input name="quantity" label="Quantity" type="number" value={String(catalogForm.quantity)} onChange={e => setCatalogForm(f => ({ ...f, quantity: e.target.value }))} min={1} />
           <div className={styles.modalActions}>
             <Button label="Cancel" type="button" onClick={handleCloseCatalogModal} variant="secondary" />
             <Button label="Add to Inventory" type="submit" isLoading={catalogLoading} disabled={!catalogForm.cardId} />
@@ -464,7 +571,7 @@ function InventoryPage() {
               {CARD_CONDITIONS.map(c => <option key={c} value={c}>{CONDITION_LABELS[c]}</option>)}
             </select>
           </div>
-          <Input name="quantity" label="Quantity" type="number" value={customForm.quantity} onChange={e => setCustomForm(f => ({ ...f, quantity: e.target.value }))} min={1} />
+          <Input name="quantity" label="Quantity" type="number" value={String(customForm.quantity)} onChange={e => setCustomForm(f => ({ ...f, quantity: e.target.value }))} min={1} />
           <div className={styles.field}>
             <label className={styles.label}>Image (optional)</label>
             <input type="file" accept="image/jpeg,image/png,image/webp"
