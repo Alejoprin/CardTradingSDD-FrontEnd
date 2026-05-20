@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Badge.module.css';
 
-function Badge({ label, variant }) {
+function Badge({ label, variant = 'neutral' }) {
   return (
     <span className={`${styles.badge} ${styles[variant] || styles.neutral}`}>
       {label}
@@ -15,8 +15,5 @@ Badge.propTypes = {
   variant: PropTypes.oneOf(['success', 'warning', 'error', 'info', 'neutral']),
 };
 
-Badge.defaultProps = {
-  variant: 'neutral',
-};
 
 export default Badge;

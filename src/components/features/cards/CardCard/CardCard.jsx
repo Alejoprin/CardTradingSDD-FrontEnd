@@ -9,7 +9,7 @@ import { RARITY_BADGE_VARIANTS, getImageUrl } from '../../../../utils/constants'
 import styles from './CardCard.module.css';
 
 function CardCard({ card, showOwner = false, showQuantity = false,
-  onEdit, onDelete, onProposeTrade, onAddToInventory, onUpdateQuantity }) {
+  onEdit, onDelete, onProposeTrade, onAddToInventory, onUpdateQuantity, unowned = false }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [qty, setQty] = useState(card.quantity || 1);
@@ -27,7 +27,7 @@ function CardCard({ card, showOwner = false, showQuantity = false,
   }
 
   return (
-    <div className={styles.card}>
+    <div className={`${styles.card} ${unowned ? styles.cardUnowned : ''}`}>
       <div
         className={styles.imageWrapper}
         onClick={() => navigate(`/cards/${card.cardId || card.id}`)}
@@ -40,10 +40,10 @@ function CardCard({ card, showOwner = false, showQuantity = false,
           ? <img src={getImageUrl(card.imageSmallUrl || card.imageUrl)} alt={card.name} className={styles.image} />
           : <Placeholder size="md" />
         }
-        {/* Badge de cantidad encima de la imagen */}
-        {showQuantity && (
+        {showQuantity && !unowned && (
           <span className={styles.quantityBadge}>{qty}</span>
         )}
+        {unowned && <div className={styles.unownedOverlay}>{t('card.notOwned')}</div>}
       </div>
 
       <div className={styles.info}>
@@ -63,8 +63,7 @@ function CardCard({ card, showOwner = false, showQuantity = false,
         )}
       </div>
 
-      <div className={styles.actions}>
-        {/* Controles de cantidad */}
+      {!unowned && <div className={styles.actions}>
         {showQuantity && onUpdateQuantity && (
           <div className={styles.qtyControls}>
             <button
@@ -107,7 +106,7 @@ function CardCard({ card, showOwner = false, showQuantity = false,
             {t('common.delete')}
           </button>
         )}
-      </div>
+      </div>}
     </div>
   );
 }
@@ -132,6 +131,7 @@ CardCard.propTypes = {
   onProposeTrade: PropTypes.func,
   onAddToInventory: PropTypes.func,
   onUpdateQuantity: PropTypes.func,
+  unowned: PropTypes.bool,
 };
 
 export default CardCard;

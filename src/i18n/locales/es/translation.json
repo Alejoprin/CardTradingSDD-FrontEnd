@@ -152,15 +152,11 @@
     "couldNotLoadGames": "No se pudieron cargar los juegos",
     "couldNotLoadSets": "No se pudieron cargar las colecciones",
     "couldNotLoadCards": "No se pudieron cargar las cartas de esta colección",
+    "couldNotLoadFullSet": "No se pudo cargar la colección completa. Inténtalo de nuevo.",
     "viewAll": "Ver todo",
-    "filterByGame": "Filtrar por juego",
-    "filterBySet": "Filtrar por colección",
-    "filterByRarity": "Filtrar por rareza",
-    "filterByCondition": "Filtrar por condición",
-    "searchCards": "Buscar cartas...",
-    "cardCreated": "¡Carta creada exitosamente!",
-    "cardUpdated": "¡Carta actualizada exitosamente!",
-    "addNewCard": "Agregar Nueva Carta"
+    "show": "Mostrar",
+    "myCards": "Mis Cartas",
+    "fullSet": "Colección Completa"
   },
   "catalog": {
     "title": "Catálogo de Cartas",
@@ -295,7 +291,8 @@
     "createdSuccessfully": "¡Carta creada exitosamente!",
     "updatedSuccessfully": "¡Carta actualizada exitosamente!",
     "noCardsFound": "No se encontraron cartas.",
-    "by": "por"
+    "by": "por",
+    "notOwned": "No poseída"
   },
   "cardConditions": {
     "mint": "Mint",

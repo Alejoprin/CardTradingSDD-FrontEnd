@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import styles from './Modal.module.css';
 
-function Modal({ isOpen, onClose, title, children, size }) {
+function Modal({ isOpen, onClose, title, children, size = 'md' }) {
   const { t } = useTranslation();
   const dialogRef = useRef(null);
 
@@ -55,10 +55,6 @@ Modal.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
   size: PropTypes.oneOf(['sm', 'md', 'lg']),
-};
-
-Modal.defaultProps = {
-  size: 'md',
 };
 
 export default Modal;
