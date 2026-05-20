@@ -57,7 +57,7 @@ function CardCard({ card, showOwner = false, showQuantity = false,
         {card.setName && (
           <p className={styles.condition}>{card.setName}{card.gameName ? ` · ${card.gameName}` : ''}</p>
         )}
-        {card.condition && <p className={styles.condition}>{card.condition}</p>}
+        {card.condition && <p className={styles.condition}>{t(`cardConditions.${card.condition.toLowerCase()}`) || card.condition}</p>}
         {showOwner && card.username && (
           <p className={styles.owner}>{t('card.by')} {card.username}</p>
         )}

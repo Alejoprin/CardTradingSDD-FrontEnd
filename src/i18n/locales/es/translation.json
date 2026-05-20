@@ -300,8 +300,8 @@
     "notOwned": "No poseída"
   },
   "cardConditions": {
-    "mint": "Mint",
-    "near_mint": "Near Mint",
+    "mint": "Perfecta",
+    "near_mint": "Casi Perfecta",
     "excellent": "Excelente",
     "good": "Buena",
     "played": "Jugada",

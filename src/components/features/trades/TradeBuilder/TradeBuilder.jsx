@@ -158,7 +158,7 @@ function OwnerList({ cardId, onSelectOwner, selectedOwnerId }) {
             </div>
             <div className={styles.ownerInfo}>
               <span className={styles.ownerName}>{owner.username}</span>
-              <span className={styles.ownerMeta}>Qty: {owner.quantity} · {owner.condition.replace('_', ' ')}</span>
+              <span className={styles.ownerMeta}>Qty: {owner.quantity} · {t(`cardConditions.${owner.condition.toLowerCase()}`) || owner.condition.replace('_', ' ')}</span>
             </div>
             {selectedOwnerId === owner.userId && (
               <span className={styles.ownerCheck}>✓</span>
