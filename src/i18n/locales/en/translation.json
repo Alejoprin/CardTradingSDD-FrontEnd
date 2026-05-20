@@ -156,7 +156,12 @@
     "viewAll": "View all",
     "show": "Show",
     "myCards": "My Cards",
-    "fullSet": "Full Set"
+    "fullSet": "Full Set",
+    "searchCards": "Search cards...",
+    "filterByGame": "Filter by game",
+    "filterBySet": "Filter by set",
+    "filterByRarity": "Filter by rarity",
+    "filterByCondition": "Filter by condition"
   },
   "catalog": {
     "title": "Card Catalog",

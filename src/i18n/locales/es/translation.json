@@ -156,7 +156,12 @@
     "viewAll": "Ver todo",
     "show": "Mostrar",
     "myCards": "Mis Cartas",
-    "fullSet": "Colección Completa"
+    "fullSet": "Colección Completa",
+    "searchCards": "Buscar cartas...",
+    "filterByGame": "Filtrar por juego",
+    "filterBySet": "Filtrar por colección",
+    "filterByRarity": "Filtrar por rareza",
+    "filterByCondition": "Filtrar por condición"
   },
   "catalog": {
     "title": "Catálogo de Cartas",
