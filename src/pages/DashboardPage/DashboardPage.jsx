@@ -21,6 +21,17 @@ const ACTIVITY_LABELS = {
   [ACTIVITY_EVENT_TYPES.PROFILE_UPDATED]: 'Updated profile',
 };
 
+const ACTIVITY_ICONS = {
+  [ACTIVITY_EVENT_TYPES.CARD_CREATED]: '➕',
+  [ACTIVITY_EVENT_TYPES.CARD_UPDATED]: '✏️',
+  [ACTIVITY_EVENT_TYPES.CARD_DELETED]: '🗑️',
+  [ACTIVITY_EVENT_TYPES.TRADE_PROPOSED]: '📤',
+  [ACTIVITY_EVENT_TYPES.TRADE_ACCEPTED]: '🤝',
+  [ACTIVITY_EVENT_TYPES.TRADE_REJECTED]: '✖',
+  [ACTIVITY_EVENT_TYPES.TRADE_CANCELLED]: '↩',
+  [ACTIVITY_EVENT_TYPES.PROFILE_UPDATED]: '👤',
+};
+
 function DashboardPage() {
   const { user, logout } = useAuth();
   const { stats, activities, loading, error } = useDashboard(user?.id);
@@ -29,30 +40,38 @@ function DashboardPage() {
   return (
     <MainLayout user={user} onLogout={logout}>
       <div className={styles.page}>
+
         <div className={styles.welcome}>
-          <h1 className={styles.title}>Welcome back, {user?.username}!</h1>
-          <p className={styles.subtitle}>Here's what's happening in your collection.</p>
+          <div className={styles.welcomeText}>
+            <h1 className={styles.title}>
+              Welcome back, <span className={styles.username}>{user?.username}</span>!
+            </h1>
+            <p className={styles.subtitle}>Here's what's happening in your collection.</p>
+          </div>
         </div>
 
         {error && <p className={styles.error}>{error}</p>}
 
         <DashboardStats stats={stats} loading={loading} />
 
+        <InventoryPreview cards={inventoryCards} loading={inventoryLoading} />
+
         <div className={styles.lower}>
           <QuickActions />
-
-          <InventoryPreview cards={inventoryCards} loading={inventoryLoading} />
 
           <div className={styles.feed}>
             <h2 className={styles.feedTitle}>Recent Activity</h2>
             {loading ? (
               <p className={styles.feedEmpty}>Loading activity...</p>
             ) : activities.length === 0 ? (
-              <p className={styles.feedEmpty}>No recent activity.</p>
+              <p className={styles.feedEmpty}>No recent activity yet.</p>
             ) : (
               <ul className={styles.feedList}>
                 {activities.map((event, i) => (
                   <li key={i} className={styles.feedItem}>
+                    <span className={styles.feedIcon}>
+                      {ACTIVITY_ICONS[event.eventType] || '•'}
+                    </span>
                     <span className={styles.feedEvent}>
                       {ACTIVITY_LABELS[event.eventType] || event.eventType}
                       {event.entityName ? `: ${event.entityName}` : ''}
@@ -64,6 +83,7 @@ function DashboardPage() {
             )}
           </div>
         </div>
+
       </div>
     </MainLayout>
   );

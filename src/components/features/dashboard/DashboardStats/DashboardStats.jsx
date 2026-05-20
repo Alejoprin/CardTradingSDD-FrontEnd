@@ -3,14 +3,41 @@ import PropTypes from 'prop-types';
 import Spinner from '../../../common/Spinner/Spinner';
 import styles from './DashboardStats.module.css';
 
-function StatCard({ label, value, loading }) {
+const STAT_CONFIG = [
+  {
+    key: 'totalCards',
+    label: 'Total Cards',
+    icon: '🃏',
+    accent: '#1E88E5',
+    accentBg: '#E3F2FD',
+  },
+  {
+    key: 'pendingTrades',
+    label: 'Pending Trades',
+    icon: '⏳',
+    accent: '#FF9800',
+    accentBg: '#FFF3E0',
+  },
+  {
+    key: 'completedTrades',
+    label: 'Completed Trades',
+    icon: '✔',
+    accent: '#4CAF50',
+    accentBg: '#E8F5E9',
+  },
+];
+
+function StatCard({ label, value, loading, icon, accent, accentBg }) {
   return (
-    <div className={styles.statCard}>
-      <span className={styles.statLabel}>{label}</span>
-      {loading
-        ? <Spinner size="sm" />
-        : <span className={styles.statValue}>{value ?? '—'}</span>
-      }
+    <div className={styles.statCard} style={{ '--accent': accent, '--accent-bg': accentBg }}>
+      <div className={styles.iconBubble}>{icon}</div>
+      <div className={styles.body}>
+        <span className={styles.statLabel}>{label}</span>
+        {loading
+          ? <Spinner size="sm" />
+          : <span className={styles.statValue}>{value ?? '—'}</span>
+        }
+      </div>
     </div>
   );
 }
@@ -18,9 +45,17 @@ function StatCard({ label, value, loading }) {
 function DashboardStats({ stats, loading }) {
   return (
     <div className={styles.grid}>
-      <StatCard label="Total Cards" value={stats?.totalCards} loading={loading} />
-      <StatCard label="Pending Trades" value={stats?.pendingTrades} loading={loading} />
-      <StatCard label="Completed Trades" value={stats?.completedTrades} loading={loading} />
+      {STAT_CONFIG.map(({ key, label, icon, accent, accentBg }) => (
+        <StatCard
+          key={key}
+          label={label}
+          value={stats?.[key]}
+          loading={loading}
+          icon={icon}
+          accent={accent}
+          accentBg={accentBg}
+        />
+      ))}
     </div>
   );
 }

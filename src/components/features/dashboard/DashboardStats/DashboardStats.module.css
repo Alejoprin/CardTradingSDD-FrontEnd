@@ -11,12 +11,37 @@
 .statCard {
   background-color: var(--color-bg-paper);
   border: 1px solid var(--color-border);
+  border-top: 3px solid var(--accent, var(--color-accent-main));
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
+  align-items: center;
+  gap: var(--spacing-md);
   box-shadow: var(--shadow-sm);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.iconBubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--accent-bg, var(--color-accent-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .statLabel {
@@ -29,4 +54,5 @@
   font-size: var(--font-size-xxxl);
   font-weight: var(--font-weight-bold);
   color: var(--color-neutral-900);
+  line-height: 1;
 }

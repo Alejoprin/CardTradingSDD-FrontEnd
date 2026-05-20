@@ -1,103 +1,170 @@
 .container {
-  background: var(--color-surface, #fff);
-  border-radius: 12px;
-  padding: 20px;
-  border: 1px solid var(--color-border, #e5e7eb);
+  background-color: var(--color-bg-paper);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-md);
 }
 
 .title {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
   margin: 0;
-  color: var(--color-text, #111);
 }
 
 .viewAll {
-  font-size: 0.85rem;
-  color: var(--color-primary, #6366f1);
+  font-size: var(--font-size-sm);
+  color: var(--color-accent-main);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .viewAll:hover {
   text-decoration: underline;
 }
 
-.grid {
+.empty {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin: var(--spacing-md) 0 0;
+}
+
+/* Game filter pills */
+.gamePills {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-lg);
+}
+
+.pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-default);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.pill:hover {
+  border-color: var(--color-accent-main);
+  color: var(--color-accent-main);
+}
+
+.pillActive {
+  background: var(--color-accent-main);
+  border-color: var(--color-accent-main);
+  color: #fff;
+}
+
+.pillActive:hover {
+  color: #fff;
+}
+
+/* Set sections */
+.setList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
-.card {
+.setSection {}
+
+.setHeader {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px;
-  border-radius: 8px;
-  background: var(--color-bg, #f9fafb);
-  border: 1px solid var(--color-border, #e5e7eb);
+  align-items: baseline;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
 }
 
-.imageWrapper {
-  width: 48px;
-  height: 64px;
+.setName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.setCount {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-disabled);
+  background: var(--color-neutral-100);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* Card strip */
+.cardStrip {
+  display: flex;
+  gap: var(--spacing-sm);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-xs);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.cardStrip::-webkit-scrollbar {
+  height: 4px;
+}
+
+.cardStrip::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cardStrip::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+.cardThumb {
+  position: relative;
+  width: 56px;
+  height: 78px;
   flex-shrink: 0;
-  border-radius: 4px;
+  border-radius: 5px;
   overflow: hidden;
-  background: #e5e7eb;
+  background: var(--color-neutral-100);
+  border: 1px solid var(--color-border);
+  transition: transform 0.15s, box-shadow 0.15s;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.image {
+.cardThumb:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+.thumbImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.imagePlaceholder {
-  font-size: 1.5rem;
+.thumbPlaceholder {
+  font-size: 1.4rem;
 }
 
-.info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.cardName {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-text, #111);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.gameName {
-  font-size: 0.78rem;
-  color: var(--color-primary, #6366f1);
-  font-weight: 500;
-}
-
-.setName {
-  font-size: 0.75rem;
-  color: var(--color-text-muted, #6b7280);
-}
-
-.empty {
-  color: var(--color-text-muted, #6b7280);
-  font-size: 0.9rem;
-  text-align: center;
-  padding: 16px 0;
+/* Quantity badge for duplicates */
+.quantityBadge {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  padding: 1px 4px;
+  border-radius: 4px;
+  line-height: 1.4;
 }
