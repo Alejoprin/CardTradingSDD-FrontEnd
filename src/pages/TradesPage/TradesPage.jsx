@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import useTradesList from '../../hooks/useTradesList';
@@ -10,11 +11,12 @@ import Modal from '../../components/common/Modal/Modal';
 import styles from './TradesPage.module.css';
 
 function TradesPage() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { trades, loading, error, activeTab, changeTab, refetch } = useTradesList();
   const { loading: actionLoading, accept, reject, cancel } = useTradeAction();
-  const [confirmModal, setConfirmModal] = useState(null); // { action, trade }
+  const [confirmModal, setConfirmModal] = useState(null);
 
   async function handleConfirm() {
     if (!confirmModal) return;
@@ -31,17 +33,23 @@ function TradesPage() {
   }
 
   const confirmMessages = {
-    accept: 'Accept this trade? Both inventories will be updated immediately.',
-    reject: 'Reject this trade proposal?',
-    cancel: 'Cancel this trade proposal? The other user will be notified.',
+    accept: t('trades.acceptMessage'),
+    reject: t('trades.rejectMessage'),
+    cancel: t('trades.cancelMessage'),
+  };
+
+  const confirmTitles = {
+    accept: t('trades.acceptTrade'),
+    reject: t('trades.rejectTrade'),
+    cancel: t('trades.cancelTrade'),
   };
 
   return (
     <MainLayout user={user} onLogout={logout}>
       <div className={styles.page}>
         <div className={styles.header}>
-          <h1 className={styles.title}>My Trades</h1>
-          <Button label="Propose Trade" onClick={() => navigate('/trades/create')} />
+          <h1 className={styles.title}>{t('trades.title')}</h1>
+          <Button label={t('trades.proposeTrade')} onClick={() => navigate('/trades/create')} />
         </div>
 
         {error && <p className={styles.error}>{error}</p>}
@@ -61,13 +69,13 @@ function TradesPage() {
       <Modal
         isOpen={!!confirmModal}
         onClose={() => setConfirmModal(null)}
-        title={confirmModal ? `${confirmModal.action.charAt(0).toUpperCase() + confirmModal.action.slice(1)} Trade` : ''}
+        title={confirmModal ? confirmTitles[confirmModal.action] : ''}
       >
         {confirmModal && <p>{confirmMessages[confirmModal.action]}</p>}
         <div className={styles.modalActions}>
-          <Button label="Back" onClick={() => setConfirmModal(null)} variant="secondary" />
+          <Button label={t('common.back')} onClick={() => setConfirmModal(null)} variant="secondary" />
           <Button
-            label="Confirm"
+            label={t('common.confirm')}
             onClick={handleConfirm}
             variant={confirmModal?.action === 'accept' ? 'primary' : confirmModal?.action === 'reject' ? 'secondary' : 'ghost'}
             isLoading={actionLoading}

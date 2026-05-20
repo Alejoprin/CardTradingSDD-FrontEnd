@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import Spinner from '../../../common/Spinner/Spinner';
 import styles from './AdminDashboard.module.css';
 
@@ -22,13 +23,14 @@ function KpiCard({ label, value, trend, loading }) {
 }
 
 function AdminDashboard({ stats, loading }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.grid}>
-      <KpiCard label="Total Users" value={stats?.totalUsers} trend={stats?.trendUsers} loading={loading} />
-      <KpiCard label="Total Cards" value={stats?.totalCards} loading={loading} />
-      <KpiCard label="Total Trades" value={stats?.totalTrades} trend={stats?.trendTrades} loading={loading} />
-      <KpiCard label="Active Today" value={stats?.activeUsersToday} loading={loading} />
-      <KpiCard label="Trades Today" value={stats?.tradesCompletedToday} loading={loading} />
+      <KpiCard label={t('admin.totalUsers')} value={stats?.totalUsers} trend={stats?.trendUsers} loading={loading} />
+      <KpiCard label={t('admin.totalCards')} value={stats?.totalCards} loading={loading} />
+      <KpiCard label={t('admin.totalTrades')} value={stats?.totalTrades} trend={stats?.trendTrades} loading={loading} />
+      <KpiCard label={t('admin.activeToday')} value={stats?.activeUsersToday} loading={loading} />
+      <KpiCard label={t('admin.tradesToday')} value={stats?.tradesCompletedToday} loading={loading} />
     </div>
   );
 }

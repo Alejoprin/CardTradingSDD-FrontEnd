@@ -1,17 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 
-const NAV_ITEMS = [
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/inventory', label: 'My Inventory' },
-  { to: '/catalog', label: 'Catalog' },
-  { to: '/trades', label: 'Trades' },
-  { to: '/profile', label: 'Profile' },
-];
-
 function Sidebar({ isOpen }) {
+  const { t } = useTranslation();
+
+  const NAV_ITEMS = [
+    { to: '/dashboard', label: t('navigation.dashboard') },
+    { to: '/inventory', label: t('navigation.myInventory') },
+    { to: '/catalog', label: t('navigation.catalog') },
+    { to: '/trades', label: t('navigation.trades') },
+    { to: '/profile', label: t('navigation.profile') },
+  ];
+
   return (
     <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`} aria-label="Sidebar navigation">
       <nav>

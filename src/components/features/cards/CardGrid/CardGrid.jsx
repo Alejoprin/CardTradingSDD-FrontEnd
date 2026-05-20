@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import CardCard from '../CardCard/CardCard';
 import Spinner from '../../../common/Spinner/Spinner';
 import styles from './CardGrid.module.css';
@@ -15,10 +16,11 @@ function CardGrid({
   onAddToInventory,
   onUpdateQuantity,
 }) {
+  const { t } = useTranslation();
   if (loading) {
     return (
       <div className={styles.center}>
-        <Spinner size="lg" label="Loading cards..." />
+        <Spinner size="lg" label={t('common.loadingCards')} />
       </div>
     );
   }
@@ -26,7 +28,7 @@ function CardGrid({
   if (!cards || cards.length === 0) {
     return (
       <div className={styles.empty}>
-        <p>{emptyMessage || 'No cards found.'}</p>
+        <p>{emptyMessage || t('card.noCardsFound')}</p>
       </div>
     );
   }

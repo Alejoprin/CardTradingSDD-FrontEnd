@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -14,6 +15,7 @@ import Spinner from '../../components/common/Spinner/Spinner';
 import styles from './ProfilePage.module.css';
 
 function ProfilePage() {
+  const { t } = useTranslation();
   const { user, logout, updateUser } = useAuth();
   const { addToast } = useNotification();
   const navigate = useNavigate();
@@ -27,7 +29,7 @@ function ProfilePage() {
     try {
       const updated = await userService.uploadProfileImage(user.id, file);
       updateUser({ profileImageUrl: updated.profileImageUrl });
-      addToast('success', 'Profile photo updated!');
+      addToast('success', t('profile.photoUpdated'));
     } catch (err) {
       addToast('error', parseApiError(err).message);
     } finally {
@@ -38,7 +40,7 @@ function ProfilePage() {
   return (
     <MainLayout user={user} onLogout={logout}>
       <div className={styles.page}>
-        <h1 className={styles.title}>My Profile</h1>
+        <h1 className={styles.title}>{t('profile.title')}</h1>
 
         {loading && <div className={styles.center}><Spinner size="lg" /></div>}
         {error && <p className={styles.error}>{error}</p>}
@@ -53,9 +55,9 @@ function ProfilePage() {
             />
             <ProfileStats stats={profile.stats || {}} />
             <div className={styles.actions}>
-              <Button label="Edit Profile" onClick={() => navigate('/profile/edit')} variant="secondary" />
-              <Button label="Change Password" onClick={() => navigate('/profile/change-password')} variant="ghost" />
-              <Button label="Logout" onClick={logout} variant="danger" />
+              <Button label={t('profile.editProfile')} onClick={() => navigate('/profile/edit')} variant="secondary" />
+              <Button label={t('profile.changePassword')} onClick={() => navigate('/profile/change-password')} variant="ghost" />
+              <Button label={t('profile.logout')} onClick={logout} variant="danger" />
             </div>
           </>
         )}

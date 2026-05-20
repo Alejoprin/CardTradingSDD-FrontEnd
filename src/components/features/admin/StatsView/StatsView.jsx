@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import {
   BarChart, Bar, PieChart, Pie, Cell, LineChart, Line,
   XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
@@ -11,16 +12,17 @@ import styles from './StatsView.module.css';
 const RARITY_COLORS = ['#9E9E9E', '#1E88E5', '#FF9800', '#4CAF50'];
 
 function StatsView({ stats, period, onPeriodChange }) {
+  const { t } = useTranslation();
   function handleExportCSV() {
     if (!stats) return;
 
     const rows = [
       ['Metric', 'Value'],
-      ['Total Users', stats.totalUsers],
-      ['Total Cards', stats.totalCards],
-      ['Total Trades', stats.totalTrades],
-      ['Active Users Today', stats.activeUsersToday],
-      ['Trades Completed Today', stats.tradesCompletedToday],
+      [t('admin.totalUsers'), stats.totalUsers],
+      [t('admin.totalCards'), stats.totalCards],
+      [t('admin.totalTrades'), stats.totalTrades],
+      [t('admin.activeToday'), stats.activeUsersToday],
+      [t('admin.tradesToday'), stats.tradesCompletedToday],
       [],
       ['Date', 'New Users'],
       ...(stats.usersByPeriod || []).map(r => [r.date, r.count]),
@@ -56,12 +58,12 @@ function StatsView({ stats, period, onPeriodChange }) {
             </button>
           ))}
         </div>
-        <Button label="Export CSV" onClick={handleExportCSV} variant="secondary" />
+        <Button label={t('admin.exportCSV')} onClick={handleExportCSV} variant="secondary" />
       </div>
 
       <div className={styles.charts}>
         <div className={styles.chartBox}>
-          <h3 className={styles.chartTitle}>New Users by Period</h3>
+          <h3 className={styles.chartTitle}>{t('admin.newUsersByPeriod')}</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={stats?.usersByPeriod || []}>
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />
@@ -73,7 +75,7 @@ function StatsView({ stats, period, onPeriodChange }) {
         </div>
 
         <div className={styles.chartBox}>
-          <h3 className={styles.chartTitle}>Cards by Rarity</h3>
+          <h3 className={styles.chartTitle}>{t('admin.cardsByRarity')}</h3>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <Pie
@@ -95,7 +97,7 @@ function StatsView({ stats, period, onPeriodChange }) {
         </div>
 
         <div className={styles.chartBox}>
-          <h3 className={styles.chartTitle}>Trades by Status</h3>
+          <h3 className={styles.chartTitle}>{t('admin.tradesByStatus')}</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={stats?.tradesByStatus || []}>
               <XAxis dataKey="status" tick={{ fontSize: 11 }} />
@@ -107,7 +109,7 @@ function StatsView({ stats, period, onPeriodChange }) {
         </div>
 
         <div className={styles.chartBox}>
-          <h3 className={styles.chartTitle}>Acceptance vs Rejection Rates</h3>
+          <h3 className={styles.chartTitle}>{t('admin.acceptanceRejectionRates')}</h3>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={stats?.tradeRates || []}>
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />

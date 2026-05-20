@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../../context/AuthContext';
 import useTradeBuilder from '../../../../hooks/useTradeBuilder';
 import cardService from '../../../../services/cardService';
@@ -11,8 +12,9 @@ import Spinner from '../../../common/Spinner/Spinner';
 import styles from './TradeBuilder.module.css';
 
 function CardPickerGrid({ cards, selectedIds, onToggle, loading }) {
+  const { t } = useTranslation();
   if (loading) return <div className={styles.center}><Spinner /></div>;
-  if (!cards.length) return <p className={styles.empty}>No cards available.</p>;
+  if (!cards.length) return <p className={styles.empty}>{t('tradeBuilder.noCardsAvailable')}</p>;
   return (
     <div className={styles.pickerGrid}>
       {cards.map(card => (
@@ -22,7 +24,7 @@ function CardPickerGrid({ cards, selectedIds, onToggle, loading }) {
           onClick={() => onToggle(card)}
           className={`${styles.pickerCard} ${selectedIds.includes(card.id) ? styles.selected : ''}`}
           aria-pressed={selectedIds.includes(card.id)}
-          aria-label={`${selectedIds.includes(card.id) ? 'Deselect' : 'Select'} ${card.name}`}
+          aria-label={`${selectedIds.includes(card.id) ? t('common.deselect') || 'Deselect' : t('common.select') || 'Select'} ${card.name}`}
         >
           {(card.imageSmallUrl || card.imageUrl)
             ? <img src={card.imageSmallUrl || card.imageUrl} alt={card.name} className={styles.pickerImg} />
@@ -38,6 +40,7 @@ function CardPickerGrid({ cards, selectedIds, onToggle, loading }) {
 
 // ── Card search autocomplete ──────────────────────────────────────────────────
 function CardSearchInput({ onSelectCard }) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [searching, setSearching] = useState(false);
@@ -84,7 +87,7 @@ function CardSearchInput({ onSelectCard }) {
         <input
           className={styles.searchInput}
           type="text"
-          placeholder="Search a card by name..."
+          placeholder={t('tradeBuilder.searchCard')}
           value={query}
           onChange={handleChange}
           autoComplete="off"
@@ -114,7 +117,7 @@ function CardSearchInput({ onSelectCard }) {
         </ul>
       )}
       {open && !searching && results.length === 0 && (
-        <div className={styles.searchEmpty}>No cards found</div>
+        <div className={styles.searchEmpty}>{t('tradeBuilder.noCardsFound')}</div>
       )}
     </div>
   );
@@ -122,6 +125,7 @@ function CardSearchInput({ onSelectCard }) {
 
 // ── Owner list ────────────────────────────────────────────────────────────────
 function OwnerList({ cardId, onSelectOwner, selectedOwnerId }) {
+  const { t } = useTranslation();
   const [owners, setOwners] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -135,7 +139,7 @@ function OwnerList({ cardId, onSelectOwner, selectedOwnerId }) {
   }, [cardId]);
 
   if (loading) return <div className={styles.center}><Spinner /></div>;
-  if (!owners.length) return <p className={styles.empty}>No users have this card available.</p>;
+  if (!owners.length) return <p className={styles.empty}>{t('tradeBuilder.noOwners')}</p>;
 
   return (
     <ul className={styles.ownerList}>
@@ -168,6 +172,7 @@ function OwnerList({ cardId, onSelectOwner, selectedOwnerId }) {
 
 // ── Main TradeBuilder ─────────────────────────────────────────────────────────
 function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const {
     step, selectedOwnCards, selectedTargetCards, targetUserId,
@@ -214,10 +219,10 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
   return (
     <div className={styles.builder}>
       <div className={styles.stepIndicator}>
-        {['Your Cards', "Their Cards", 'Review'].map((label, i) => (
+        {['tradeBuilder.yourCards', 'tradeBuilder.theirCards', 'tradeBuilder.review'].map((label, i) => (
           <div key={i} className={`${styles.stepDot} ${step > i + 1 ? styles.done : ''} ${step === i + 1 ? styles.current : ''}`}>
             <span className={styles.dotNum}>{i + 1}</span>
-            <span className={styles.dotLabel}>{label}</span>
+            <span className={styles.dotLabel}>{t(label)}</span>
           </div>
         ))}
       </div>
@@ -227,11 +232,11 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
       {/* Step 1 — sin cambios */}
       {step === 1 && (
         <div>
-          <h2 className={styles.stepTitle}>Step 1: Select your cards to offer</h2>
-          <p className={styles.hint}>Select up to {MAX_TRADE_CARDS_PER_SIDE} cards. Selected: {selectedOwnCards.length}/{MAX_TRADE_CARDS_PER_SIDE}</p>
+          <h2 className={styles.stepTitle}>{t('tradeBuilder.step1Title')}</h2>
+          <p className={styles.hint}>{t('tradeBuilder.step1Hint', { max: MAX_TRADE_CARDS_PER_SIDE, selected: selectedOwnCards.length })}</p>
           <CardPickerGrid cards={ownCards} selectedIds={ownSelectedIds} onToggle={toggleOwnCard} loading={ownLoading} />
           <div className={styles.nav}>
-            <Button label="Next" onClick={nextStep} disabled={!selectedOwnCards.length} />
+            <Button label={t('common.next')} onClick={nextStep} disabled={!selectedOwnCards.length} />
           </div>
         </div>
       )}
@@ -239,11 +244,11 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
       {/* Step 2 — nuevo flujo */}
       {step === 2 && (
         <div>
-          <h2 className={styles.stepTitle}>Step 2: Select cards to request</h2>
+          <h2 className={styles.stepTitle}>{t('tradeBuilder.step2Title')}</h2>
 
           {/* 2a — buscar carta */}
           <div className={styles.stepSection}>
-            <p className={styles.sectionLabel}>1. Search for a card</p>
+            <p className={styles.sectionLabel}>1. {t('tradeBuilder.searchCard')}</p>
             <CardSearchInput onSelectCard={(card) => {
               setSelectedCatalogCard(card);
               setSelectedOwner(null);
@@ -255,7 +260,7 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
           {selectedCatalogCard && (
             <div className={styles.stepSection}>
               <p className={styles.sectionLabel}>
-                2. Select a user who has <strong>{selectedCatalogCard.name}</strong>
+                2. {t('tradeBuilder.selectUser', { cardName: selectedCatalogCard.name })}
               </p>
               <OwnerList
                 cardId={selectedCatalogCard.id}
@@ -269,9 +274,9 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
           {targetUserId && (
             <div className={styles.stepSection}>
               <p className={styles.sectionLabel}>
-                3. Select cards from <strong>{selectedOwner?.username}</strong>'s inventory
+                3. {t('tradeBuilder.selectFromInventory', { username: selectedOwner?.username })}
               </p>
-              <p className={styles.hint}>Selected: {selectedTargetCards.length}/{MAX_TRADE_CARDS_PER_SIDE}</p>
+              <p className={styles.hint}>{t('tradeBuilder.selectedCount', { selected: selectedTargetCards.length, max: MAX_TRADE_CARDS_PER_SIDE })}</p>
               <CardPickerGrid
                 cards={targetCards}
                 selectedIds={targetSelectedIds}
@@ -282,8 +287,8 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
           )}
 
           <div className={styles.nav}>
-            <Button label="Back" onClick={prevStep} variant="secondary" />
-            <Button label="Review Trade" onClick={nextStep} disabled={!selectedTargetCards.length} />
+            <Button label={t('common.back')} onClick={prevStep} variant="secondary" />
+            <Button label={t('tradeBuilder.reviewTrade')} onClick={nextStep} disabled={!selectedTargetCards.length} />
           </div>
         </div>
       )}
@@ -291,21 +296,21 @@ function TradeBuilder({ initialTargetUserId, initialCardId, onSuccess }) {
       {/* Step 3 — sin cambios */}
       {step === 3 && (
         <div>
-          <h2 className={styles.stepTitle}>Step 3: Review and confirm</h2>
+          <h2 className={styles.stepTitle}>{t('tradeBuilder.step3Title')}</h2>
           <div className={styles.review}>
             <div className={styles.reviewCol}>
-              <h3>You offer</h3>
+              <h3>{t('tradeBuilder.reviewYouOffer')}</h3>
               {selectedOwnCards.map(c => <p key={c.id}>{c.name}</p>)}
             </div>
             <span className={styles.reviewArrow}>⇄</span>
             <div className={styles.reviewCol}>
-              <h3>You receive</h3>
+              <h3>{t('tradeBuilder.reviewYouReceive')}</h3>
               {selectedTargetCards.map(c => <p key={c.id}>{c.name}</p>)}
             </div>
           </div>
           <div className={styles.nav}>
-            <Button label="Back" onClick={prevStep} variant="secondary" />
-            <Button label="Send Proposal" onClick={() => submit(onSuccess)} isLoading={loading} />
+            <Button label={t('common.back')} onClick={prevStep} variant="secondary" />
+            <Button label={t('tradeBuilder.sendProposal')} onClick={() => submit(onSuccess)} isLoading={loading} />
           </div>
         </div>
       )}

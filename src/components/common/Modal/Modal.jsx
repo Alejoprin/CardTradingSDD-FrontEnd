@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import styles from './Modal.module.css';
 
 function Modal({ isOpen, onClose, title, children, size }) {
+  const { t } = useTranslation();
   const dialogRef = useRef(null);
 
   // Focus first focusable element only when modal opens
@@ -35,7 +37,7 @@ function Modal({ isOpen, onClose, title, children, size }) {
       >
         <div className={styles.header}>
           {title && <h2 id="modal-title" className={styles.title}>{title}</h2>}
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Close modal">
+          <button className={styles.closeBtn} onClick={onClose} aria-label={t('common.closeModal')}>
             &#x2715;
           </button>
         </div>

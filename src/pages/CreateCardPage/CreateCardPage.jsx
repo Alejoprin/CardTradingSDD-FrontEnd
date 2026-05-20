@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../../context/NotificationContext';
 import { useAuth } from '../../context/AuthContext';
@@ -7,19 +8,20 @@ import CardForm from '../../components/forms/CardForm/CardForm';
 import styles from './CreateCardPage.module.css';
 
 function CreateCardPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { addToast } = useNotification();
   const { user, logout } = useAuth();
 
   function handleSuccess() {
-    addToast('success', 'Card created successfully!');
+    addToast('success', t('inventory.cardCreated'));
     navigate('/inventory', { replace: true });
   }
 
   return (
     <MainLayout user={user} onLogout={logout}>
       <div className={styles.page}>
-        <h1 className={styles.title}>Add New Card</h1>
+        <h1 className={styles.title}>{t('inventory.addNewCard')}</h1>
         <div className={styles.formWrapper}>
           <CardForm mode="create" onSuccess={handleSuccess} />
         </div>

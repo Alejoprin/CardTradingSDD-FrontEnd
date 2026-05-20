@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import useCardDetail from '../../hooks/useCardDetail';
@@ -11,6 +12,7 @@ import Spinner from '../../components/common/Spinner/Spinner';
 import styles from './CardDetailPage.module.css';
 
 function CardDetailPage() {
+  const { t } = useTranslation();
   const { cardId } = useParams();
   const { user, logout } = useAuth();
   const { card, loading, error } = useCardDetail(cardId);
@@ -38,14 +40,14 @@ function CardDetailPage() {
       <Modal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
-        title="Delete Card"
+        title={t('card.deleteCardTitle')}
       >
-        <p>Are you sure you want to permanently delete <strong>{card?.name}</strong>?</p>
-        <p className={styles.warning}>This cannot be undone. Cards in pending trades cannot be deleted.</p>
+        <p>{t('card.deleteConfirm', { name: card?.name })}</p>
+        <p className={styles.warning}>{t('card.deleteWarning')}</p>
         <div className={styles.modalActions}>
-          <Button label="Cancel" onClick={() => setShowDeleteModal(false)} variant="secondary" />
+          <Button label={t('common.cancel')} onClick={() => setShowDeleteModal(false)} variant="secondary" />
           <Button
-            label="Delete"
+            label={t('common.delete')}
             onClick={() => { setShowDeleteModal(false); deleteCard(cardId, card?.name); }}
             variant="danger"
             isLoading={deleting}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import useProfile from '../../hooks/useProfile';
@@ -12,6 +13,7 @@ import Spinner from '../../components/common/Spinner/Spinner';
 import styles from './PublicProfilePage.module.css';
 
 function PublicProfilePage() {
+  const { t } = useTranslation();
   const { userId } = useParams();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -33,19 +35,19 @@ function PublicProfilePage() {
 
             {!isOwnProfile && (
               <Button
-                label="Propose Trade"
+                label={t('trades.proposeTrade')}
                 onClick={() => navigate(`/trades/create?targetUserId=${userId}`)}
                 className={styles.tradeBtn}
               />
             )}
 
             <div className={styles.cardsSection}>
-              <h2 className={styles.cardsTitle}>{profile.username}'s Cards</h2>
+              <h2 className={styles.cardsTitle}>{t('profile.cardsTitle', { username: profile.username })}</h2>
               <CardGrid
                 cards={cards}
                 loading={cardsLoading}
                 showOwner={false}
-                emptyMessage={`${profile.username} has no cards yet.`}
+                emptyMessage={t('profile.noCardsYet', { username: profile.username })}
                 onProposeTrade={!isOwnProfile ? card => navigate(`/trades/create?targetUserId=${userId}&userCardId=${card.id}`) : undefined}
               />
             </div>

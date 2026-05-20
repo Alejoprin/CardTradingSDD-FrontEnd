@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
 import useForm from '../../../hooks/useForm';
 import { validateEmail, validatePassword } from '../../../utils/validators';
@@ -8,7 +9,7 @@ import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import styles from './LoginForm.module.css';
 
-function validate(values) {
+function validate(values, t) {
   return {
     email: validateEmail(values.email),
     password: validatePassword(values.password),
@@ -16,10 +17,11 @@ function validate(values) {
 }
 
 function LoginForm({ onSuccess }) {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const { values, errors, touched, isSubmitting, handleChange, handleBlur, handleSubmit, setFieldError } = useForm(
     { email: '', password: '' },
-    validate
+    (vals) => validate(vals, t)
   );
 
   const onSubmit = handleSubmit(async (vals) => {
@@ -36,33 +38,33 @@ function LoginForm({ onSuccess }) {
     <form onSubmit={onSubmit} className={styles.form} noValidate>
       <Input
         name="email"
-        label="Email"
+        label={t('auth.email')}
         type="email"
         value={values.email}
         onChange={handleChange}
         onBlur={handleBlur}
         error={touched.email && errors.email}
-        placeholder="you@example.com"
+        placeholder={t('auth.emailPlaceholder')}
       />
       <Input
         name="password"
-        label="Password"
+        label={t('auth.password')}
         type="password"
         value={values.password}
         onChange={handleChange}
         onBlur={handleBlur}
         error={touched.password && errors.password}
-        placeholder="Your password"
+        placeholder={t('auth.passwordPlaceholder')}
       />
       <Button
-        label="Sign In"
+        label={t('auth.signIn')}
         type="submit"
         isLoading={isSubmitting}
         disabled={isSubmitting}
       />
       {/* Separador */}
       <div className={styles.divider}>
-        <span>or</span>
+        <span>{t('common.or')}</span>
       </div>
 
       {/* Botón Google */}
@@ -80,7 +82,7 @@ function LoginForm({ onSuccess }) {
           width={20}
           height={20}
         />
-        Continue with Google
+        {t('auth.continueWithGoogle')}
       </button>
     </form>
   );

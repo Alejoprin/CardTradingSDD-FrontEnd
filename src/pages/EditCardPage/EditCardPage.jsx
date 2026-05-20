@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -10,6 +11,7 @@ import Spinner from '../../components/common/Spinner/Spinner';
 import styles from './EditCardPage.module.css';
 
 function EditCardPage() {
+  const { t } = useTranslation();
   const { cardId } = useParams();
   const { user, logout } = useAuth();
   const { addToast } = useNotification();
@@ -33,14 +35,14 @@ function EditCardPage() {
   }, [cardId]);
 
   function handleSuccess() {
-    addToast('success', 'Card updated successfully!');
+    addToast('success', t('inventory.cardUpdated'));
     navigate(`/cards/${cardId}`, { replace: true });
   }
 
   return (
     <MainLayout user={user} onLogout={logout}>
       <div className={styles.page}>
-        <h1 className={styles.title}>Edit Card</h1>
+        <h1 className={styles.title}>{t('card.edit')}</h1>
         {loading && <div className={styles.center}><Spinner size="lg" /></div>}
         {error && <p className={styles.error}>{error}</p>}
         {card && (

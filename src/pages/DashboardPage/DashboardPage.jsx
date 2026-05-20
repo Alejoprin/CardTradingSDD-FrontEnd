@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import useDashboard from '../../hooks/useDashboard';
 import useInventory from '../../hooks/useInventory';
@@ -10,32 +11,33 @@ import { ACTIVITY_EVENT_TYPES } from '../../utils/constants';
 import { formatRelativeTime } from '../../utils/formatters';
 import styles from './DashboardPage.module.css';
 
-const ACTIVITY_LABELS = {
-  [ACTIVITY_EVENT_TYPES.CARD_CREATED]: 'Added a card',
-  [ACTIVITY_EVENT_TYPES.CARD_UPDATED]: 'Updated a card',
-  [ACTIVITY_EVENT_TYPES.CARD_DELETED]: 'Deleted a card',
-  [ACTIVITY_EVENT_TYPES.TRADE_PROPOSED]: 'Proposed a trade',
-  [ACTIVITY_EVENT_TYPES.TRADE_ACCEPTED]: 'Accepted a trade',
-  [ACTIVITY_EVENT_TYPES.TRADE_REJECTED]: 'Rejected a trade',
-  [ACTIVITY_EVENT_TYPES.TRADE_CANCELLED]: 'Cancelled a trade',
-  [ACTIVITY_EVENT_TYPES.PROFILE_UPDATED]: 'Updated profile',
-};
-
-const ACTIVITY_ICONS = {
-  [ACTIVITY_EVENT_TYPES.CARD_CREATED]: '➕',
-  [ACTIVITY_EVENT_TYPES.CARD_UPDATED]: '✏️',
-  [ACTIVITY_EVENT_TYPES.CARD_DELETED]: '🗑️',
-  [ACTIVITY_EVENT_TYPES.TRADE_PROPOSED]: '📤',
-  [ACTIVITY_EVENT_TYPES.TRADE_ACCEPTED]: '🤝',
-  [ACTIVITY_EVENT_TYPES.TRADE_REJECTED]: '✖',
-  [ACTIVITY_EVENT_TYPES.TRADE_CANCELLED]: '↩',
-  [ACTIVITY_EVENT_TYPES.PROFILE_UPDATED]: '👤',
-};
-
 function DashboardPage() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const { stats, activities, loading, error } = useDashboard(user?.id);
   const { cards: inventoryCards, loading: inventoryLoading } = useInventory(user?.id);
+
+  const ACTIVITY_LABELS = {
+    [ACTIVITY_EVENT_TYPES.CARD_CREATED]: t('dashboard.activityAddedCard'),
+    [ACTIVITY_EVENT_TYPES.CARD_UPDATED]: t('dashboard.activityUpdatedCard'),
+    [ACTIVITY_EVENT_TYPES.CARD_DELETED]: t('dashboard.activityDeletedCard'),
+    [ACTIVITY_EVENT_TYPES.TRADE_PROPOSED]: t('dashboard.activityProposedTrade'),
+    [ACTIVITY_EVENT_TYPES.TRADE_ACCEPTED]: t('dashboard.activityAcceptedTrade'),
+    [ACTIVITY_EVENT_TYPES.TRADE_REJECTED]: t('dashboard.activityRejectedTrade'),
+    [ACTIVITY_EVENT_TYPES.TRADE_CANCELLED]: t('dashboard.activityCancelledTrade'),
+    [ACTIVITY_EVENT_TYPES.PROFILE_UPDATED]: t('dashboard.activityUpdatedProfile'),
+  };
+
+  const ACTIVITY_ICONS = {
+    [ACTIVITY_EVENT_TYPES.CARD_CREATED]: '➕',
+    [ACTIVITY_EVENT_TYPES.CARD_UPDATED]: '✏️',
+    [ACTIVITY_EVENT_TYPES.CARD_DELETED]: '🗑️',
+    [ACTIVITY_EVENT_TYPES.TRADE_PROPOSED]: '📤',
+    [ACTIVITY_EVENT_TYPES.TRADE_ACCEPTED]: '🤝',
+    [ACTIVITY_EVENT_TYPES.TRADE_REJECTED]: '✖',
+    [ACTIVITY_EVENT_TYPES.TRADE_CANCELLED]: '↩',
+    [ACTIVITY_EVENT_TYPES.PROFILE_UPDATED]: '👤',
+  };
 
   return (
     <MainLayout user={user} onLogout={logout}>
@@ -44,9 +46,9 @@ function DashboardPage() {
         <div className={styles.welcome}>
           <div className={styles.welcomeText}>
             <h1 className={styles.title}>
-              Welcome back, <span className={styles.username}>{user?.username}</span>!
+              {t('dashboard.welcomeBack')}, <span className={styles.username}>{user?.username}</span>!
             </h1>
-            <p className={styles.subtitle}>Here's what's happening in your collection.</p>
+            <p className={styles.subtitle}>{t('dashboard.hereIsHappening')}</p>
           </div>
         </div>
 
@@ -60,11 +62,11 @@ function DashboardPage() {
           <QuickActions />
 
           <div className={styles.feed}>
-            <h2 className={styles.feedTitle}>Recent Activity</h2>
+            <h2 className={styles.feedTitle}>{t('dashboard.recentActivity')}</h2>
             {loading ? (
-              <p className={styles.feedEmpty}>Loading activity...</p>
+              <p className={styles.feedEmpty}>{t('dashboard.loadingActivity')}</p>
             ) : activities.length === 0 ? (
-              <p className={styles.feedEmpty}>No recent activity yet.</p>
+              <p className={styles.feedEmpty}>{t('dashboard.noRecentActivity')}</p>
             ) : (
               <ul className={styles.feedList}>
                 {activities.map((event, i) => (
