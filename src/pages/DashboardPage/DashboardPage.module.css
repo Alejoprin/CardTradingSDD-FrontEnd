@@ -6,9 +6,10 @@
 
 /* Welcome */
 .welcome {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--spacing-xl);
   padding: var(--spacing-lg) var(--spacing-xl);
   background: linear-gradient(135deg, var(--color-accent-dark) 0%, var(--color-accent-main) 100%);
   border-radius: var(--radius-lg);

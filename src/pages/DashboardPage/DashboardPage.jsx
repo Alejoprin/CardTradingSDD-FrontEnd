@@ -7,6 +7,7 @@ import MainLayout from '../../components/layout/MainLayout/MainLayout';
 import DashboardStats from '../../components/features/dashboard/DashboardStats/DashboardStats';
 import QuickActions from '../../components/features/dashboard/QuickActions/QuickActions';
 import InventoryPreview from '../../components/features/dashboard/InventoryPreview/InventoryPreview';
+import SetScroller from '../../components/features/dashboard/SetScroller/SetScroller';
 import { ACTIVITY_EVENT_TYPES } from '../../utils/constants';
 import { formatRelativeTime } from '../../utils/formatters';
 import styles from './DashboardPage.module.css';
@@ -50,6 +51,7 @@ function DashboardPage() {
             </h1>
             <p className={styles.subtitle}>{t('dashboard.hereIsHappening')}</p>
           </div>
+          <SetScroller />
         </div>
 
         {error && <p className={styles.error}>{error}</p>}
