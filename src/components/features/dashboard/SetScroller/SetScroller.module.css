@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-sm);
-  max-width: 380px;
+  max-width: 420px;
   margin-left: auto;
 }
 
@@ -10,7 +10,7 @@
   transform: rotate(2deg);
   overflow: hidden;
   border-radius: 8px;
-  height: 280px;
+  height: 320px;
   position: relative;
 
   mask-image: linear-gradient(
@@ -32,7 +32,7 @@
 .track {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   padding: 4px;
 }
 
@@ -107,7 +107,7 @@
 }
 
 .cardName {
-  font-size: 10px;
+  font-size: 11px;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;

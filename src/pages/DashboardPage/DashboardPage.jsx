@@ -69,7 +69,9 @@ function DashboardPage() {
 
         {error && <p className={styles.error}>{error}</p>}
 
-        <DashboardStats stats={stats} loading={loading} />
+        <div className={styles.statsWrapper}>
+          <DashboardStats stats={stats} loading={loading} />
+        </div>
 
         <InventoryPreview cards={inventoryCards} loading={inventoryLoading} />
 

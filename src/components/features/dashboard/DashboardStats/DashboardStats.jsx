@@ -12,29 +12,23 @@ function DashboardStats({ stats, loading }) {
       key: 'totalCards',
       label: t('dashboard.totalCards'),
       icon: '🃏',
-      accent: '#1E88E5',
-      accentBg: '#E3F2FD',
     },
     {
       key: 'pendingTrades',
       label: t('dashboard.pendingTrades'),
       icon: '⏳',
-      accent: '#FF9800',
-      accentBg: '#FFF3E0',
     },
     {
       key: 'completedTrades',
       label: t('dashboard.completedTrades'),
       icon: '✔',
-      accent: '#4CAF50',
-      accentBg: '#E8F5E9',
     },
   ];
 
   return (
     <div className={styles.grid}>
-      {STAT_CONFIG.map(({ key, label, icon, accent, accentBg }) => (
-        <div key={key} className={styles.statCard} style={{ '--accent': accent, '--accent-bg': accentBg }}>
+      {STAT_CONFIG.map(({ key, label, icon }) => (
+        <div key={key} className={styles.statCard}>
           <div className={styles.iconBubble}>{icon}</div>
           <div className={styles.body}>
             <span className={styles.statLabel}>{label}</span>
