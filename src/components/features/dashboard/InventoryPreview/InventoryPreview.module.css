@@ -1,9 +1,5 @@
 .container {
-  background-color: var(--color-bg-paper);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
-  box-shadow: var(--shadow-sm);
 }
 
 .header {
@@ -30,142 +26,176 @@
   text-decoration: underline;
 }
 
-.empty {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  margin: var(--spacing-md) 0 0;
-}
-
-/* Game filter pills */
-.gamePills {
+/* Filters */
+.filterRow {
   display: flex;
-  gap: var(--spacing-sm);
-  flex-wrap: wrap;
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
+  justify-content: center;
 }
 
-.pill {
-  padding: 6px 14px;
-  border-radius: 999px;
+.select {
+  padding: 8px 12px;
   border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
   background: var(--color-bg-default);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-}
-
-.pill:hover {
-  border-color: var(--color-accent-main);
-  color: var(--color-accent-main);
-}
-
-.pillActive {
-  background: var(--color-accent-main);
-  border-color: var(--color-accent-main);
-  color: #fff;
-}
-
-.pillActive:hover {
-  color: #fff;
-}
-
-/* Set sections */
-.setList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.setSection {}
-
-.setHeader {
-  display: flex;
-  align-items: baseline;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-sm);
-}
-
-.setName {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
+  cursor: pointer;
+  min-width: 180px;
 }
 
-.setCount {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-disabled);
-  background: var(--color-neutral-100);
-  padding: 2px 8px;
-  border-radius: 999px;
+.select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* Card strip */
-.cardStrip {
-  display: flex;
-  gap: var(--spacing-sm);
-  overflow-x: auto;
-  padding-bottom: var(--spacing-xs);
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border) transparent;
-}
-
-.cardStrip::-webkit-scrollbar {
-  height: 4px;
-}
-
-.cardStrip::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.cardStrip::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 2px;
-}
-
-.cardThumb {
+/* Carousel */
+.carouselWrapper {
   position: relative;
-  width: 56px;
-  height: 78px;
-  flex-shrink: 0;
-  border-radius: 5px;
+}
+
+.viewport {
   overflow: hidden;
-  background: var(--color-neutral-100);
+  margin: 0 32px;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+}
+
+.track {
+  display: flex;
+  gap: 12px;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cardSlot {
+  flex-shrink: 0;
+  width: 144px;
+}
+
+
+/* Arrow buttons */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
   border: 1px solid var(--color-border);
-  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  transition: box-shadow 0.15s, background 0.15s;
+  color: var(--color-text-secondary);
 }
 
-.cardThumb:hover {
-  transform: translateY(-3px) scale(1.05);
+.arrow:hover:not(:disabled) {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1;
+  background: #fff;
+  color: var(--color-text-primary);
 }
 
-.thumbImg {
+.arrow:disabled {
+  opacity: 0.2;
+  cursor: default;
+  box-shadow: none;
+}
+
+.arrowLeft {
+  left: -4px;
+}
+
+.arrowRight {
+  right: -4px;
+}
+
+.arrowIcon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Empty state */
+.empty {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: var(--spacing-xxl) 0;
+  margin: 0;
+}
+
+/* Skeleton */
+.skeleton {
+  flex-shrink: 0;
+  width: 144px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeletonImage {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-100) 25%,
+    var(--color-neutral-200) 50%,
+    var(--color-neutral-100) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
-.thumbPlaceholder {
-  font-size: 1.4rem;
-}
-
-/* Quantity badge for duplicates */
-.quantityBadge {
-  position: absolute;
-  bottom: 3px;
-  right: 3px;
-  background: rgba(0, 0, 0, 0.65);
-  color: #fff;
-  font-size: 10px;
-  font-weight: var(--font-weight-bold);
-  padding: 1px 4px;
+.skeletonName {
+  width: 80%;
+  height: 14px;
   border-radius: 4px;
-  line-height: 1.4;
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-100) 25%,
+    var(--color-neutral-200) 50%,
+    var(--color-neutral-100) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (max-width: 768px) {
+  .filterRow {
+    flex-direction: column;
+  }
+
+  .select {
+    min-width: 100%;
+  }
+
+  .viewport {
+    margin: 0 28px;
+  }
+
+  .cardSlot {
+    width: 120px;
+  }
 }

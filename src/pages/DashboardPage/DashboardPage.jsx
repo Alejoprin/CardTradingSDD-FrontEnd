@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import useDashboard from '../../hooks/useDashboard';
-import useInventory from '../../hooks/useInventory';
 import MainLayout from '../../components/layout/MainLayout/MainLayout';
 import DashboardStats from '../../components/features/dashboard/DashboardStats/DashboardStats';
 import QuickActions from '../../components/features/dashboard/QuickActions/QuickActions';
@@ -16,7 +15,6 @@ function DashboardPage() {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
   const { stats, activities, loading, error } = useDashboard(user?.id);
-  const { cards: inventoryCards, loading: inventoryLoading } = useInventory(user?.id);
 
   const ACTIVITY_LABELS = {
     [ACTIVITY_EVENT_TYPES.CARD_CREATED]: t('dashboard.activityAddedCard'),
@@ -73,7 +71,7 @@ function DashboardPage() {
           <DashboardStats stats={stats} loading={loading} />
         </div>
 
-        <InventoryPreview cards={inventoryCards} loading={inventoryLoading} />
+        <InventoryPreview />
 
         <div className={styles.lower}>
           <QuickActions />
