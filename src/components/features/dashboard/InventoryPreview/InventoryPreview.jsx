@@ -245,7 +245,7 @@ function InventoryPreview() {
     }
   }
 
-  const maxIndex = Math.max(0, cards.length - cardsPerView);
+  const maxIndex = Math.max(0, cards.length - 1);
 
   const handlePrev = useCallback(() => {
     setCurrentIndex(prev => Math.max(0, prev - 1));
@@ -319,8 +319,8 @@ function InventoryPreview() {
             </div>
           ) : cards.length > 0 ? (
             <div className={styles.track} style={{ transform: `translateX(${translateX}px)` }}>
-              {cards.map(card => (
-                <div key={card.id} className={styles.cardSlot}>
+              {cards.map((card, index) => (
+                <div key={card.id} className={`${styles.cardSlot} ${index === currentIndex ? styles.focused : ''}`}>
                   <CardCard
                     card={card}
                     unowned={!card.owned}

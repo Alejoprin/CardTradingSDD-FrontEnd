@@ -56,22 +56,32 @@
 }
 
 .viewport {
+  --card-w: 144px;
+  position: relative;
   overflow: hidden;
   margin: 0 32px;
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 8%,
-    black 92%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 8%,
-    black 92%,
-    transparent 100%
-  );
+  padding: 0 calc(50% - var(--card-w) / 2);
+}
+
+.viewport::before,
+.viewport::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 48px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.viewport::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-bg-default), transparent);
+}
+
+.viewport::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-bg-default), transparent);
 }
 
 .track {
@@ -82,7 +92,13 @@
 
 .cardSlot {
   flex-shrink: 0;
-  width: 144px;
+  width: var(--card-w, 144px);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.focused {
+  transform: scale(1.08);
+  z-index: 1;
 }
 
 
@@ -192,10 +208,16 @@
   }
 
   .viewport {
+    --card-w: 120px;
     margin: 0 28px;
   }
 
+  .viewport::before,
+  .viewport::after {
+    width: 32px;
+  }
+
   .cardSlot {
-    width: 120px;
+    width: var(--card-w);
   }
 }
