@@ -1,0 +1,112 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.typeToggle {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.typeBtn {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-paper);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.typeBtn:hover {
+  border-color: var(--color-accent-main);
+}
+
+.typeActive {
+  background: var(--color-accent-main);
+  color: #fff;
+  border-color: var(--color-accent-main);
+}
+
+.textarea {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  resize: vertical;
+  font-family: inherit;
+}
+
+.selectedCard {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-paper);
+  font-size: var(--font-size-sm);
+}
+
+.selectedImg {
+  width: 32px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+
+.inventoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--spacing-xs);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.invCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-paper);
+  cursor: pointer;
+  transition: border-color 0.15s;
+  font-family: inherit;
+}
+
+.invCard:hover {
+  border-color: var(--color-accent-main);
+}
+
+.invImg {
+  width: 48px;
+  height: 67px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+
+.invName {
+  font-size: var(--font-size-xs);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}

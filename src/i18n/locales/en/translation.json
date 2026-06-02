@@ -76,6 +76,8 @@
     "myCards": "My Cards",
     "catalog": "Catalog",
     "trades": "Trades",
+    "ads": "Ads",
+    "chats": "Chats",
     "profile": "Profile",
     "admin": "Admin"
   },
@@ -227,6 +229,35 @@
     "actions": "Actions",
     "view": "View",
     "noTrades": "No trades found."
+  },
+  "ads": {
+    "title": "Ads",
+    "sell": "Sell",
+    "trade": "Trade",
+    "createAd": "Create Ad",
+    "myAds": "My Ads",
+    "adType": "Ad Type",
+    "price": "Price",
+    "description": "Description",
+    "descriptionPlaceholder": "Describe the condition, what you're looking for...",
+    "selectCard": "Select a card",
+    "publish": "Publish",
+    "contact": "Contact",
+    "viewAd": "View Ad",
+    "backToAds": "Back to ads",
+    "noAds": "No active ads yet.",
+    "cardPlaceholder": "Search card by name...",
+    "postedBy": "Posted by",
+    "you": "You"
+  },
+  "chats": {
+    "title": "Chats",
+    "send": "Send",
+    "empty": "No conversations yet.",
+    "noMessages": "No messages yet. Start the conversation!",
+    "typeMessage": "Type a message...",
+    "proposeTrade": "Propose Trade",
+    "backToChats": "Back to chats"
   },
   "profile": {
     "title": "My Profile",

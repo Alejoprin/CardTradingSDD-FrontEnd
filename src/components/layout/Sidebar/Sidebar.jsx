@@ -12,6 +12,8 @@ function Sidebar({ isOpen }) {
     { to: '/inventory', label: t('navigation.myInventory') },
     { to: '/catalog', label: t('navigation.catalog') },
     { to: '/trades', label: t('navigation.trades') },
+    { to: '/ads', label: t('navigation.ads') },
+    { to: '/chats', label: t('navigation.chats') },
     { to: '/profile', label: t('navigation.profile') },
   ];
 

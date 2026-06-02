@@ -1,0 +1,21 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  height: calc(100vh - 200px);
+}
+
+.back {
+  font-size: var(--font-size-sm);
+  color: var(--color-accent-main);
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.error {
+  color: var(--color-error);
+}

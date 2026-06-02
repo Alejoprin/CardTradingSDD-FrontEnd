@@ -31,6 +31,13 @@ import ChangePasswordPage from './pages/ChangePasswordPage/ChangePasswordPage';
 import PublicProfilePage from './pages/PublicProfilePage/PublicProfilePage';
 import OAuth2CallbackPage from './pages/OAuth2CallbackPage/OAuth2CallbackPage';
 
+// P2P pages
+import AdsPage from './pages/AdsPage/AdsPage';
+import CreateAdPage from './pages/CreateAdPage/CreateAdPage';
+import AdDetailPage from './pages/AdDetailPage/AdDetailPage';
+import ChatsPage from './pages/ChatsPage/ChatsPage';
+import ChatPage from './pages/ChatPage/ChatPage';
+
 // Admin pages
 import AdminPage from './pages/AdminPage/AdminPage';
 
@@ -56,6 +63,12 @@ const router = createBrowserRouter([
       { path: '/profile/edit', element: <EditProfilePage /> },
       { path: '/profile/change-password', element: <ChangePasswordPage /> },
       { path: '/users/:userId', element: <PublicProfilePage /> },
+      // P2P routes
+      { path: '/ads', element: <AdsPage /> },
+      { path: '/ads/create', element: <CreateAdPage /> },
+      { path: '/ads/:adId', element: <AdDetailPage /> },
+      { path: '/chats', element: <ChatsPage /> },
+      { path: '/chats/:chatId', element: <ChatPage /> },
     ],
   },
 
@@ -70,7 +83,7 @@ const router = createBrowserRouter([
   },
 
   { path: '/', element: <Navigate to="/dashboard" replace /> },
-  { path: '*', element: <Navigate to="/login" replace /> },
+  { path: '*', element: <OAuth2CallbackPage /> },
 ], {
   basename: import.meta.env.BASE_URL,
 });

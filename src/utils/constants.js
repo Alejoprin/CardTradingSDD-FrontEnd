@@ -26,6 +26,13 @@ export const CARD_CONDITIONS = ['MINT', 'NEAR_MINT', 'EXCELLENT', 'GOOD', 'PLAYE
 
 export const TRADE_STATUSES = ['PENDING', 'ACCEPTED', 'COMPLETED', 'REJECTED', 'CANCELLED'];
 
+export const AD_TYPES = {
+  SELL: 'SELL',
+  TRADE: 'TRADE',
+};
+
+export const AD_STATUSES = ['ACTIVE', 'CLOSED'];
+
 export const ACTIVITY_EVENT_TYPES = {
   CARD_CREATED: 'card_created',
   CARD_UPDATED: 'card_updated',
@@ -52,6 +59,11 @@ export const TRADE_STATUS_BADGE_VARIANTS = {
   COMPLETED: 'success',
   REJECTED: 'error',
   CANCELLED: 'neutral',
+};
+
+export const AD_TYPE_BADGE_VARIANTS = {
+  SELL: 'success',
+  TRADE: 'info',
 };
 
 export const ADMIN_STATS_PERIODS = ['7d', '30d', '90d'];

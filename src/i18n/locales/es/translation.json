@@ -76,6 +76,8 @@
     "myCards": "Mis Cartas",
     "catalog": "Catálogo",
     "trades": "Intercambios",
+    "ads": "Anuncios",
+    "chats": "Mensajes",
     "profile": "Perfil",
     "admin": "Administración"
   },
@@ -227,6 +229,35 @@
     "actions": "Acciones",
     "view": "Ver",
     "noTrades": "No se encontraron intercambios."
+  },
+  "ads": {
+    "title": "Anuncios",
+    "sell": "Venta",
+    "trade": "Trueque",
+    "createAd": "Crear Anuncio",
+    "myAds": "Mis Anuncios",
+    "adType": "Tipo de Anuncio",
+    "price": "Precio",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Describe el estado, lo que buscas...",
+    "selectCard": "Seleccionar una carta",
+    "publish": "Publicar",
+    "contact": "Contactar",
+    "viewAd": "Ver Anuncio",
+    "backToAds": "Volver a anuncios",
+    "noAds": "Aún no hay anuncios activos.",
+    "cardPlaceholder": "Buscar carta por nombre...",
+    "postedBy": "Publicado por",
+    "you": "Tú"
+  },
+  "chats": {
+    "title": "Mensajes",
+    "send": "Enviar",
+    "empty": "Aún no tienes conversaciones.",
+    "noMessages": "Sin mensajes aún. ¡Inicia la conversación!",
+    "typeMessage": "Escribe un mensaje...",
+    "proposeTrade": "Proponer Intercambio",
+    "backToChats": "Volver a mensajes"
   },
   "profile": {
     "title": "Mi Perfil",

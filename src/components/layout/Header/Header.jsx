@@ -33,6 +33,8 @@ function Header({ user, onLogout }) {
           <Link to="/inventory" className={styles.navLink}>{t('navigation.myCards')}</Link>
           <Link to="/catalog" className={styles.navLink}>{t('navigation.catalog')}</Link>
           <Link to="/trades" className={styles.navLink}>{t('navigation.trades')}</Link>
+          <Link to="/ads" className={styles.navLink}>{t('navigation.ads')}</Link>
+          <Link to="/chats" className={styles.navLink}>{t('navigation.chats')}</Link>
         </nav>
 
         <div className={styles.actions}>

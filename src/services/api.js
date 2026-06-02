@@ -24,6 +24,7 @@ api.interceptors.request.use(
     }
     if (!(config.data instanceof FormData)) {
       config.headers['Content-Type'] = 'application/json';
+      config.headers['Accept'] = 'application/json; charset=utf-8';
     }
     return config;
   },
